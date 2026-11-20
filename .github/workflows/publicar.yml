@@ -1,0 +1,50 @@
+# Refaz os dados e publica o site no GitHub Pages.
+# Toda segunda de manhã: as datas andam para a semana corrente e os indicadores
+# do Banco Central chegam atualizados. Também roda a cada push na main.
+name: Publicar site
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 9 * * 1" # segunda, 6h de Brasília
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  montar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Conferir o código
+        run: ruff check . && ruff format --check .
+      - name: Gerar os dados
+        run: python -m gerador.gerar_tudo
+      - name: Montar o site
+        run: python -m publicar.montar_site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  publicar:
+    needs: montar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

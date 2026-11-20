@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlântida | Painéis em Shiny for Python</title>
+<meta name="description" content="Seis painéis de gestão em Shiny for Python, rodando no navegador, com dados fictícios de uma distribuidora de bebidas e indicadores públicos do Banco Central e do IBGE.">
+<link rel="icon" href="img/icone.svg" type="image/svg+xml">
+<style>
+  :root {
+    --fundo: #f3f5f4;
+    --texto: #1a1a1a;
+    --suave: #5b6470;
+    --linha: rgba(0, 0, 0, 0.08);
+    --escuro: #12312a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    color: var(--texto);
+    background: var(--fundo);
+    line-height: 1.5;
+  }
+  a { color: inherit; }
+  .topo {
+    background: linear-gradient(135deg, #06825d 0%, #254d71 35%, #5b3a78 65%, #7a2e1d 100%);
+    color: #fff;
+    padding: 2.5rem 1.25rem 4.5rem;
+  }
+  .conteudo { max-width: 1180px; margin: 0 auto; }
+  .marca { display: flex; align-items: center; gap: 0.9rem; }
+  .marca img { height: 46px; }
+  h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; margin: 2rem 0 0.8rem; max-width: 22ch; }
+  .lead { font-size: 1.15rem; max-width: 62ch; opacity: 0.95; margin: 0; }
+  .selos { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; }
+  .selo {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.75rem;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  main { padding: 0 1.25rem 3rem; }
+  .aviso {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+    margin: -2.6rem auto 2.2rem;
+    max-width: 1180px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .aviso strong { display: block; }
+  .aviso p { margin: 0.2rem 0 0; color: var(--suave); }
+  .grade { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+  .app {
+    background: #fff;
+    border: 1px solid var(--linha);
+    border-radius: 12px;
+    border-top: 5px solid var(--cor);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .app:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14); }
+  .app img { aspect-ratio: 16 / 10; border-bottom: 1px solid var(--linha); display: block; object-fit: cover; object-position: top left; width: 100%; }
+  .app-corpo { display: flex; flex: 1; flex-direction: column; padding: 1rem 1.15rem 1.15rem; }
+  .app h2 { color: var(--cor); font-size: 1.35rem; margin: 0; }
+  .app p { color: var(--suave); margin: 0.35rem 0 0.7rem; }
+  .app ul { margin: 0 0 1rem; padding-left: 1.1rem; }
+  .app li { margin: 0.15rem 0; }
+  .botao {
+    align-self: flex-start;
+    background: var(--cor);
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    margin-top: auto;
+    padding: 0.55rem 1.1rem;
+    text-decoration: none;
+  }
+  .botao:hover { filter: brightness(1.12); }
+  section.tecnica { max-width: 1180px; margin: 3rem auto 0; }
+  section.tecnica h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .colunas { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .bloco { background: #fff; border-radius: 12px; border: 1px solid var(--linha); padding: 1rem 1.15rem; }
+  .bloco h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
+  .bloco p { margin: 0; color: var(--suave); }
+  footer { color: var(--suave); font-size: 0.9rem; padding: 2rem 1.25rem 3rem; text-align: center; }
+</style>
+</head>
+<body>
+<header class="topo">
+  <div class="conteudo">
+    <div class="marca"><img src="img/logo.svg" alt="Atlântida Distribuidora"></div>
+    <h1>Painéis de gestão em Shiny for Python</h1>
+    <p class="lead">Seis aplicações de uma distribuidora de bebidas fictícia, a Atlântida, com quatro filiais no Nordeste:
+      vendas, logística, financeiro, fiscal e a administração dos próprios painéis. O desenho e a arquitetura vêm de um
+      sistema real em produção; os dados são inventados, com indicadores públicos de verdade.</p>
+    <div class="selos">
+      <span class="selo">Shiny for Python</span>
+      <span class="selo">Polars</span>
+      <span class="selo">ECharts</span>
+      <span class="selo">Shinylive (WebAssembly)</span>
+      <span class="selo">Banco Central e IBGE</span>
+      <span class="selo">GitHub Actions</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="aviso">
+    <div>
+      <strong>Tudo roda no seu navegador.</strong>
+      <p>Não existe servidor: o Python é carregado na própria página (Shinylive). A primeira abertura leva uns 15
+        segundos para baixar o ambiente; depois fica no cache e as outras abrem rápido.</p>
+    </div>
+  </div>
+
+  <div class="conteudo grade">
+    <article class="app" style="--cor:#06825d">
+      <img src="img/comercial.webp" alt="Diário de Vendas do app Comercial" loading="lazy">
+      <div class="app-corpo">
+        <h2>Comercial</h2>
+        <p>Acompanhamento diário de vendas contra a meta.</p>
+        <ul>
+          <li>Diário de Vendas com tendência, meta e cobertura por categoria e marca</li>
+          <li>Carteira de clientes com situação e histórico de cada um</li>
+          <li>Mapa comercial sobre a malha municipal do IBGE</li>
+          <li>Markup por produto, com comparação ao mês anterior</li>
+        </ul>
+        <a class="botao" href="comercial/">Abrir o Comercial</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#254d71">
+      <img src="img/logistico.webp" alt="Frotas do app Logístico" loading="lazy">
+      <div class="app-corpo">
+        <h2>Logístico</h2>
+        <p>Entregas, devoluções, frota e equipamentos em comodato.</p>
+        <ul>
+          <li>Romaneios do dia com o andamento de cada caminhão</li>
+          <li>Devoluções por motivo e índice diário</li>
+          <li>Frota com multas, IPVA, licenciamento e custo por km</li>
+          <li>Comodatos com contratos vencidos e recolhas pedidas</li>
+        </ul>
+        <a class="botao" href="logistico/">Abrir o Logístico</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#5b3a78">
+      <img src="img/financeiro.webp" alt="Fluxo de caixa do app Financeiro" loading="lazy">
+      <div class="app-corpo">
+        <h2>Financeiro</h2>
+        <p>Caixa realizado e projetado, com indicadores reais do Banco Central.</p>
+        <ul>
+          <li>Fluxo de caixa com projeção pelos títulos em aberto</li>
+          <li>Dólar, Selic e IPCA buscados no SGS do Banco Central</li>
+          <li>Contas a pagar por vencimento e centro de custo</li>
+          <li>Conciliação bancária automática e farol de fechamento de caixa</li>
+        </ul>
+        <a class="botao" href="financeiro/">Abrir o Financeiro</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#2e2b6b">
+      <img src="img/fiscal.webp" alt="Documentos do app Fiscal" loading="lazy">
+      <div class="app-corpo">
+        <h2>Fiscal</h2>
+        <p>Documentos fiscais recebidos: NF-e, CT-e e NFS-e.</p>
+        <ul>
+          <li>Painel do mês por tipo de documento</li>
+          <li>Busca por emitente, chave, produto ou NCM, com os itens da nota</li>
+          <li>Manifestação do destinatário com prazo (simulada)</li>
+          <li>Escrituração pendente e o motivo de cada pendência</li>
+        </ul>
+        <a class="botao" href="fiscal/">Abrir o Fiscal</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#7a2e1d">
+      <img src="img/monitoramento.webp" alt="Rotinas do app Monitoramento" loading="lazy">
+      <div class="app-corpo">
+        <h2>Monitoramento</h2>
+        <p>Quem usa os painéis e se os dados chegaram de madrugada.</p>
+        <ul>
+          <li>Sessões por dia, app e horário</li>
+          <li>Atividade de cada pessoa</li>
+          <li>Mapa de calor das rotinas noturnas</li>
+          <li>Erros agrupados pela mensagem</li>
+        </ul>
+        <a class="botao" href="monitoramento/">Abrir o Monitoramento</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#3e2352">
+      <img src="img/acessos.webp" alt="Permissões do app Acessos" loading="lazy">
+      <div class="app-corpo">
+        <h2>Acessos</h2>
+        <p>Quem pode ver cada página dos outros apps.</p>
+        <ul>
+          <li>Visão por papel e por app</li>
+          <li>Matriz pessoa × página com edição (simulada)</li>
+          <li>Histórico de concessões e retiradas</li>
+        </ul>
+        <a class="botao" href="acessos/">Abrir o Acessos</a>
+      </div>
+    </article>
+  </div>
+
+  <section class="tecnica">
+    <h2>Como foi feito</h2>
+    <div class="colunas">
+      <div class="bloco">
+        <h3>Uma arquitetura para os seis</h3>
+        <p>Cada app tem o mesmo esqueleto: menu lateral recolhível, filtros, indicadores, tabelas e gráficos. Só a
+          paleta muda. Cada página é um módulo independente, com a tela de um lado e os dados do outro.</p>
+      </div>
+      <div class="bloco">
+        <h3>Dados fictícios coerentes</h3>
+        <p>Um gerador com semente fixa cria a empresa inteira. O mesmo cliente compra no Comercial, recebe entrega no
+          Logístico, e a compra da fábrica vira título no Financeiro e NF-e no Fiscal.</p>
+      </div>
+      <div class="bloco">
+        <h3>Dados públicos de verdade</h3>
+        <p>Municípios e malhas do IBGE desenham o mapa; dólar, Selic e IPCA vêm do Banco Central. Toda semana um
+          workflow refaz os dados e publica o site de novo.</p>
+      </div>
+      <div class="bloco">
+        <h3>Leve o bastante para o navegador</h3>
+        <p>As telas leem arquivos Parquet já agregados com Polars, sem banco de dados. Os gráficos são ECharts
+          montados em Python.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Marlon Amaral · código em <a href="https://github.com/biuspoly/Shiny-Python-Portifolio">github.com/biuspoly/Shiny-Python-Portifolio</a><br>
+  A Atlântida Distribuidora, suas filiais, marcas, clientes e pessoas são fictícios.
+</footer>
+</body>
+</html>

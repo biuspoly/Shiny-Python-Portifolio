@@ -1,0 +1,15 @@
+[project]
+name = "portifolio-shiny"
+version = "1.0.0"
+description = "Seis painéis Shiny for Python de uma distribuidora fictícia"
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ["tmp", "site"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "pages", "gerador"]
