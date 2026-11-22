@@ -12,7 +12,6 @@ library(glue)
 
 source(glue("{diretorio}pages/Comodatos/Dados/banco_comodato.R"), local = TRUE, encoding = "UTF-8")
 
-# argumentos_bd = as.list(read.dcf("C:/Users/MARLON/Desktop/Acompanhamento RShiny/Acompanhamento RShinyPlus/Apps Shiny/Acompanhamento Logistico/Argumentos DBLocal.txt")[1,])
 
 
 

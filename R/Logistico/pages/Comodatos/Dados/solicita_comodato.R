@@ -11,7 +11,6 @@ source(glue("{diretorio}pages/Comodatos/Dados/banco_comodato.R"), local = TRUE, 
 
 # Configurações do banco --------------------------------------------------
 
-# argumentos_bd = as.list(read.dcf("C:/Users/MARLON/Desktop/Acompanhamento RShiny/Acompanhamento RShinyPlus/Apps Shiny/Acompanhamento Logistico/Argumentos DBLocal.txt")[1,])
 
 
 solicita_comodato = function(cliente, usuario, item, cod_prod, unid, qtd, preco, tabprd, revenda, endereco, contato, pto_ref, dia_visit, seq, cep, fone, cnpj, ven, prazo, tipo){

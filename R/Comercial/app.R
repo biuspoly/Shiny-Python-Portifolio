@@ -480,28 +480,6 @@ comercial_server <- function(input, output, session) {
   # })
 
 
-  ### Robô
-
-
-  # observeEvent(input$btn_acao, {
-  #
-  #
-  #   showModal(
-  #     modalDialog(
-  #       # title = "Assistente",
-  #
-  #       easyClose = TRUE,
-  #       bslib::card(style = "height:70vh; overflow-y:auto;",
-  #                   bslib::card_header("Robot shiny"),
-  #         bslib::card_body(chat_ui(paste0("chat_",input$tabs),messages = "Olá! Em que posso ajudar?",fill = TRUE),fill = TRUE,fillable = TRUE)
-  #
-  #       ),
-  #
-  #
-  #       footer = NULL
-  #     )
-  #   )
-  # })
   # observeEvent(input$keepalive_COM, {
   #   # mantém conexão viva
   # }, ignoreInit = TRUE)

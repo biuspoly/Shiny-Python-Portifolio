@@ -414,29 +414,6 @@ pag_frotas <- function() {
       ungroup()
   })
 
-  ### Robô --------------------------------------------------------
-
-
-  # observeEvent(input$chat_id_geral_frota_user_input, {
-  #   perguntar = function(pergunta){
-  #
-  #     dados_chat <- capture.output(print(tabela_frota_selecionada(), row.names = FALSE))
-  #     teste = chat_groq(
-  #       system_prompt = paste(
-  #         "Seja simples e direto",
-  #         "Só responda perguntas à respeito dos dados",
-  #         "Os dados se referem à uma tabela",
-  #         "Dê prioridade aos dados onde tem o maior DTA_EXEC",
-  #         "Não passe informações sensíveis, como renavam ou cnpj",
-  #         "Não passe códigos em forma de linguagem de programação",
-  #         paste("Os dados são esses: ", dados_chat, collapse = "\n"),
-  #         collapse = "\n"
-  #       ),api_key = Sys.getenv("GROQ_API_KEY"),model = "llama-3.1-8b-instant")
-  #     teste$chat(pergunta)
-  #   }
-  #
-  #   chat_append("chat_id_geral_frota",response = perguntar(input$chat_id_geral_frota_user_input))
-  # })
 
   ### Ajuda --------------------------------------------------------
 

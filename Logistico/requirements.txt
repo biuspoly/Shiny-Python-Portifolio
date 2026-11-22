@@ -12,7 +12,6 @@ folium
 branca
 xyzservices
 jinja2
-requests
 certifi
 urllib3
 charset-normalizer

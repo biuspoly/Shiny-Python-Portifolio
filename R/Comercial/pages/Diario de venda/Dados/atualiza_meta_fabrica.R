@@ -20,8 +20,8 @@ extrair_funcao_do_script <- function(caminho_arquivo, nome_funcao) {
 }
 
 # Portfólio: estas funções vêm dos scripts do pipeline (MySQL), que não fazem parte do portfólio.
-dir_dados <- "C:/webservice shiny/Shiny App/Acompanhamento Comercial/pages/Diario de venda/Dados"
-if (dir.exists(dir_dados)) {
+dir_dados <- paste0(diretorio, "pages/Diario de venda/Dados")
+if (file.exists(file.path(dir_dados, "atualiza_diario_venda_compacto.R"))) {
   
   calcular_compacto   <- extrair_funcao_do_script(file.path(dir_dados, "atualiza_diario_venda_compacto.R"),    "get_diario_venda_compacto")
   calcular_expandido  <- extrair_funcao_do_script(file.path(dir_dados, "atualiza_diario_venda_expandido.R"),    "get_diario_venda_familia")
@@ -113,7 +113,7 @@ rodar_pipeline_por_combinacao <- function(con, fn_calcular, revenda, mes, combin
 
 
 gravar_parquet_dv <- function(dados, tipo, sufixo, mes) {
-  base <- "C:/webservice shiny/Shiny App/Acompanhamento Comercial/pages/Diario de venda/Dados/parquet"
+  base <- paste0(diretorio, "pages/Diario de venda/Dados/parquet")
   dir_tipo <- file.path(base, tipo)
   dir.create(dir_tipo, recursive = TRUE, showWarnings = FALSE)
 
@@ -134,7 +134,7 @@ gravar_parquet_dv <- function(dados, tipo, sufixo, mes) {
 
 
 atualizar_parquet_bd_comercial_metas <- function(argumentos_bd) {
-  dir_bd  <- "C:/webservice shiny/Shiny App/Acompanhamento Comercial/pages/Diario de venda/Dados/parquet/bd_comercial"
+  dir_bd  <- paste0(diretorio, "pages/Diario de venda/Dados/parquet/bd_comercial")
   dir.create(dir_bd, recursive = TRUE, showWarnings = FALSE)
   pq_path <- gsub("\\\\", "/", normalizePath(file.path(dir_bd, "TB_META_FABRICA.parquet"), mustWork = FALSE))
 
@@ -193,7 +193,7 @@ atualizar_meta_fabrica <- function(revenda, mes, argumentos_bd) {
 # ----------------------------------------------------------------------------
 
 if (sys.nframe() == 0L) {
-  argumentos_bd <- as.list(read.dcf("C:/webservice shiny/Shiny App/Acompanhamento Comercial/Argumentos DBLocal.txt")[1,])
+  argumentos_bd <- list()  # Portfólio: sem banco
 
   revenda <- ""        # preencher com a revenda desejada, ex: "Filial F"
   mes     <- format(Sys.Date(), "%Y%m")

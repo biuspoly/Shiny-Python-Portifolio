@@ -333,39 +333,3 @@ distrato_pdf <- function(ncev, cliente, fantasia, cnpj_rev, cnpj_cli, end_cli,
 
   return(output_pdf)
 }
-
-# teste = gerar_recolha("Filial A", "7119")
-#
-# distrato_pdf("teste", "FORTEZINHA", "7119", "1111 - JOAQUINVIS", "00001548",
-#              "15200018789", "RUA VAI QUE VAI", "555587", "RUA VEM QUE VEM", "00000005", "alalala")
-# writexl::write_xlsx(cevped, "C:/Users/MARLON/Desktop/cevped1.xlsx")
-# writexl::write_xlsx(pedcp, "C:/Users/MARLON/Desktop/pedcp1.xlsx")
-# writexl::write_xlsx(pedit, "C:/Users/MARLON/Desktop/pedit1.xlsx")
-
-
-#
-# library(arsenal)
-# library(readxl)
-#
-# cevped_old <- read_xlsx("C:/Users/MARLON/Desktop/cevped.xlsx")
-# cevped_new <- read_xlsx("C:/Users/MARLON/Desktop/cevped1.xlsx")
-#
-# pedcp_old <- read_xlsx("C:/Users/MARLON/Desktop/pedcp.xlsx")
-# pedcp_new <- read_xlsx("C:/Users/MARLON/Desktop/pedcp1.xlsx")
-# pedcp_devol <- read_xlsx("C:/Users/MARLON/Desktop/pedcp_devol.xlsx")
-# pedcp_devol1 <- read_xlsx("C:/Users/MARLON/Desktop/pedcp_devol1.xlsx")
-#
-#
-# pedit_old <- read_xlsx("C:/Users/MARLON/Desktop/pedit.xlsx")
-# pedit_new <- read_xlsx("C:/Users/MARLON/Desktop/pedit1.xlsx")
-#
-# comp_cevped <- comparedf(cevped_old, cevped_new)
-# comp_pedcp  <- comparedf(pedcp_old, pedcp_new)
-# comp_pedcp  <- comparedf(pedcp_devol1, pedcp_new)
-# comp_pedit  <- comparedf(pedit_old, pedit_new)
-#
-# diffs(comp_cevped)
-# hum = data.frame(diffs(comp_pedcp))
-# diffs(comp_pedit)
-#
-# as.Date("2026-04-08")+180

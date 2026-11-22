@@ -11,7 +11,6 @@ if (!exists("fonte_parquet_dv2", mode = "function", inherits = TRUE)) {
 
 # Configurações do banco --------------------------------------------------
 
-# argumentos_bd = as.list(read.dcf("C:/webservice shiny/Shiny App/Acompanhamento Comercial/Argumentos DBLocal.txt")[1,])
 
 
 # Leitura de funcoes ------------------------------------------------------
