@@ -91,7 +91,11 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/echarts.min.js")),
     ui.tags.script(src=forca_style("js/diario_venda.js")),
     title=ui.div(
-        ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}", class_="cabecalho-app-nome"),
+        ui.div(
+            ui.tags.img(src="img/marca.svg", alt=""),
+            ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}"),
+            class_="cabecalho-marca",
+        ),
         ui.div(
             ui.output_ui("cabecalho_dias"),
             ui.output_ui("valuebox_atualizacao"),

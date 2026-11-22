@@ -265,3 +265,18 @@ shiny-data-frame table {
   font-size: 0.95rem;
   cursor: pointer;
 }
+
+/* Marca fictícia do portfólio, no lugar do logo da revenda. */
+.cabecalho-marca {
+  align-items: center;
+  display: flex;
+  gap: 0.7rem;
+}
+.cabecalho-marca img {
+  height: 2.2rem;
+}
+.cabecalho-marca b {
+  color: #fff;
+  font-size: 1.05rem;
+  white-space: nowrap;
+}

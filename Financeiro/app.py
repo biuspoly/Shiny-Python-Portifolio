@@ -128,7 +128,11 @@ app_ui = ui.page_sidebar(
     # O Fluxo Financeiro: Ctrl/Shift+clique marca a célula, dois cliques abrem o balão.
     ui.tags.script(src=forca_style("js/fluxo.js")),
     title=ui.div(
-        ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}", class_="cabecalho-app-nome"),
+        ui.div(
+            ui.tags.img(src="img/marca.svg", alt=""),
+            ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}"),
+            class_="cabecalho-marca",
+        ),
         # O nome da tela ao lado do título, num navset que troca junto com o conteúdo.
         ui.navset_hidden(
             *[

@@ -495,8 +495,8 @@ shiny-data-frame table {
 }
 
 .abas-frota {
-  min-width: 560px;
-  max-width: 760px;
+  min-width: 660px;
+  max-width: 840px;
 }
 .abas-frota .shiny-options-group {
   display: flex;
@@ -857,6 +857,28 @@ shiny-data-frame table {
 
 .switch-detalhado .form-check-input {
   border: 1px solid rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Frotas: cada filtro declara em data-abas as abas em que aparece. */
+.filtro-condicional {
+  display: none;
+}
+.frota-modulo:has(.abas-frota input[value="Geral"]:checked) .filtro-condicional[data-abas*="Geral"],
+.frota-modulo:has(.abas-frota input[value="Rest Adm"]:checked) .filtro-condicional[data-abas*="Rest Adm"],
+.frota-modulo:has(.abas-frota input[value="Renajud"]:checked) .filtro-condicional[data-abas*="Renajud"],
+.frota-modulo:has(.abas-frota input[value="Detran"]:checked) .filtro-condicional[data-abas*="Detran"] {
+  display: block;
+}
+
+/* "Ver detalhado" só em Renajud/Detran; em Combustível troca a tabela pelo mapa.
+   visibility, não display: o interruptor guarda o estado ao trocar de aba. */
+.switch-detalhado {
+  visibility: hidden;
+}
+.frota-modulo:has(.abas-frota input[value="Renajud"]:checked) .switch-detalhado,
+.frota-modulo:has(.abas-frota input[value="Detran"]:checked) .switch-detalhado,
+.frota-modulo:has(.abas-frota input[value="Combustível"]:checked) .switch-detalhado {
+  visibility: visible;
 }
 
 #shiny-disconnected-overlay {
@@ -4280,4 +4302,19 @@ a.chat-flutuante-enviar:hover {
   font-size: 0.72rem;
   font-weight: 600;
   padding: 0.35em 0.7em;
+}
+
+/* Marca fictícia do portfólio, no lugar do logo da revenda. */
+.cabecalho-marca {
+  align-items: center;
+  display: flex;
+  gap: 0.7rem;
+}
+.cabecalho-marca img {
+  height: 2.2rem;
+}
+.cabecalho-marca b {
+  color: #fff;
+  font-size: 1.05rem;
+  white-space: nowrap;
 }

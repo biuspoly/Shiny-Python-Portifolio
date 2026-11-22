@@ -77,7 +77,7 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/echarts.min.js")),
     ui.tags.script(src=forca_style("js/custom.js")),
     ui.tags.script(src=forca_style("js/tabela_resize.js")),
-    title=TITULO_APP,
+    title=ui.div(ui.tags.img(src="img/marca.svg", alt=""), ui.tags.b(TITULO_APP), class_="cabecalho-marca"),
     # Flatly já compilado: o Shinylive não tem o libsass que o tema usaria na hora.
     theme=PASTA_APP / "www" / "css" / "flatly.min.css",
     window_title=TITULO_APP,
