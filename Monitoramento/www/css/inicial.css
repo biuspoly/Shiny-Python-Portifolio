@@ -1,0 +1,15 @@
+body:not(.pronto)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 2147483647;
+  pointer-events: none;
+  animation: cobertura-inicial-sai 0.3s linear 15s forwards;
+}
+@keyframes cobertura-inicial-sai {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

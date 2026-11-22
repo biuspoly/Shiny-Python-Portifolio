@@ -1,156 +1,209 @@
-"""Documentos fiscais recebidos pela Atlântida: nascem dos mesmos títulos a pagar
-do Financeiro, para os dois apps contarem a mesma história."""
+"""Caches do Fiscal no esquema original: o livro de faturamento (saídas e entradas por CFOP, com
+os impostos) das quatro empresas fictícias."""
 
 import json
-from datetime import date, timedelta
+from datetime import datetime
 
 import polars as pl
 
 from gerador import base as b
-from gerador.financeiro import _titulos_pagar
+from gerador import comercial
 
-_CODIGO_UF = {"RN": 24, "CE": 23, "PI": 22, "MA": 21, "PE": 26, "PB": 25}
-_NCM = {
-    "Pilsen": "2203.00.00",
-    "Puro Malte": "2203.00.00",
-    "Premium": "2203.00.00",
-    "Zero Álcool": "2202.91.00",
-    "Não Alcoólicos": "2202.10.00",
-}
-TRANSPORTADORAS = ["Rodoviário {s} Ltda", "{s} Transportes e Logística", "Expresso {s}"]
-PENDENCIAS = [
-    "Fornecedor sem cadastro",
-    "CFOP sem de-para",
-    "Aguardando conferência física",
-    "Divergência de valor com o pedido",
+PASTA = b.RAIZ / "Fiscal" / "data" / "bd_fiscal"
+MESES = 24
+
+# (nome, CNPJ, porte relativo). Os CNPJs batem com Fiscal/config/empresas.json.
+EMPRESAS = [
+    ("Natal", "00000000000100", 1.0),
+    ("Fortaleza", "00000000000280", 1.35),
+    ("Teresina", "00000000000360", 0.75),
+    ("São Luís", "00000000000440", 0.8),
 ]
+# CFOP -> (livro, parte do faturamento, alíquota de ICMS próprio, tem ST)
+CFOPS = {
+    "5102": ("S", 0.38, 0.20, False),
+    "5405": ("S", 0.44, 0.0, True),
+    "6102": ("S", 0.06, 0.12, False),
+    "5910": ("S", 0.03, 0.20, False),
+    "5949": ("S", 0.015, 0.0, False),
+    "5927": ("S", 0.004, 0.0, False),
+    "1102": ("E", 0.10, 0.20, False),
+    "1403": ("E", 0.55, 0.0, True),
+    "2102": ("E", 0.08, 0.12, False),
+    "2403": ("E", 0.07, 0.0, True),
+    "1202": ("E", 0.012, 0.20, False),
+    "1411": ("E", 0.018, 0.0, True),
+    "2202": ("E", 0.002, 0.12, False),
+    "1556": ("E", 0.01, 0.0, False),
+}
+SAZONALIDADE = {
+    1: 1.18,
+    2: 1.22,
+    3: 1.0,
+    4: 0.94,
+    5: 0.92,
+    6: 0.97,
+    7: 0.9,
+    8: 0.9,
+    9: 0.95,
+    10: 1.0,
+    11: 1.06,
+    12: 1.3,
+}
 
 
-def _cnpj(r) -> str:
-    return "".join(str(r.randint(0, 9)) for _ in range(8)) + "0001" + "".join(str(r.randint(0, 9)) for _ in range(2))
-
-
-def chave_acesso(uf: str, emissao: date, cnpj: str, modelo: int, numero: int, r) -> str:
-    """44 dígitos no leiaute da SEFAZ, com o dígito verificador (módulo 11) calculado."""
-    corpo = f"{_CODIGO_UF.get(uf, 26):02d}{emissao:%y%m}{cnpj}{modelo:02d}001{numero:09d}1{r.randint(0, 99999999):08d}"
-    pesos = [2, 3, 4, 5, 6, 7, 8, 9]
-    soma = sum(int(d) * pesos[i % 8] for i, d in enumerate(reversed(corpo)))
-    resto = soma % 11
-    return corpo + str(0 if resto < 2 else 11 - resto)
-
-
-def _documentos() -> tuple[pl.DataFrame, pl.DataFrame]:
-    r = b.rng("fiscal")
-    f = b.faker("fiscal")
-    titulos = _titulos_pagar().filter(pl.col("emissao") <= b.HOJE)
-    produtos = b.produtos().to_dicts()
-    filial_uf = {fl.nome: fl.uf for fl in b.FILIAIS}
-    cnpjs: dict[str, tuple[str, str]] = {}
-    transportadoras = [
-        (t.format(s=f.last_name()).upper(), _cnpj(r), r.choice(["PE", "CE", "RN"])) for t in TRANSPORTADORAS
-    ]
-    docs, itens = [], []
-    numero = 1000
-    for t in titulos.iter_rows(named=True):
-        tipo_desp = t["tipo_despesa"]
-        if tipo_desp in ("Aluguel", "Impostos", "Energia e água"):
-            continue
-        if t["fornecedor"] not in cnpjs:
-            cnpjs[t["fornecedor"]] = (
-                _cnpj(r),
-                r.choice(["PE", "PB", "CE", "RN"]) if tipo_desp == "Fábrica" else filial_uf[t["filial"]],
-            )
-        cnpj, uf_emit = cnpjs[t["fornecedor"]]
-        modelo, tipo = (
-            (99, "NFS-e")
-            if tipo_desp in ("Serviços",) or (tipo_desp == "Manutenção de frota" and r.random() < 0.4)
-            else (55, "NF-e")
-        )
-        numero += r.randint(1, 40)
-        emissao = t["emissao"]
-        chave = chave_acesso(uf_emit, emissao, cnpj, modelo, numero, r) if tipo == "NF-e" else f"NFSE{numero:011d}"
-        recebida = emissao + timedelta(days=r.choice([0, 0, 1, 1, 2, 3]))
-        if recebida > b.HOJE:
-            continue  # ainda não chegou
-        escriturada = recebida < b.HOJE - timedelta(days=12) or r.random() < 0.55
-        cancelada = r.random() < 0.02
-        if tipo == "NF-e":
-            if cancelada:
-                manifestacao = "Sem manifestação"
-            elif recebida < b.HOJE - timedelta(days=60):
-                manifestacao = r.choices(["Confirmada", "Desconhecida"], weights=[97, 3])[0]
-            elif recebida < b.HOJE - timedelta(days=20):
-                manifestacao = r.choices(["Confirmada", "Ciência", "Desconhecida"], weights=[80, 17, 3])[0]
-            else:
-                manifestacao = r.choices(["Sem manifestação", "Ciência", "Confirmada"], weights=[45, 30, 25])[0]
-        else:
-            manifestacao = "Não se aplica"
-        doc = {
-            "chave": chave,
-            "tipo": tipo,
-            "numero": numero,
-            "emitente": t["fornecedor"],
-            "uf_emitente": uf_emit,
-            "destinatario": t["filial"],
-            "emissao": emissao,
-            "recebida_em": recebida,
-            "valor": t["valor"],
-            "situacao_sefaz": "Cancelada" if cancelada else "Autorizada",
-            "manifestacao": manifestacao,
-            "escriturada": escriturada and not cancelada,
-            "escriturada_em": (recebida + timedelta(days=r.randint(1, 10))) if escriturada and not cancelada else None,
-            "pendencia": None if (escriturada or cancelada) else r.choice(PENDENCIAS),
-            "titulo": t["titulo"],
-        }
-        if tipo == "NF-e":
-            doc["icms"] = round(t["valor"] * (0.18 if tipo_desp == "Fábrica" else 0.12), 2)
-            if tipo_desp == "Fábrica":
-                restante = t["valor"]
-                escolhidos = r.sample(produtos, k=r.randint(4, 9))
-                for i, p in enumerate(escolhidos):
-                    parte = restante if i == len(escolhidos) - 1 else round(t["valor"] * r.uniform(0.05, 0.22), 2)
-                    restante -= parte
-                    custo = p["custo_caixa"]
-                    itens.append(
+def _faturamento(r) -> pl.DataFrame:
+    linhas = []
+    for nome, cnpj, porte in EMPRESAS:
+        for n in range(MESES - 1, -1, -1):
+            mes = b.meses_atras(b.HOJE, n)
+            parcial = (b.HOJE.day / 30) if n == 0 else 1.0
+            crescimento = 1 + 0.06 * (MESES - 1 - n) / 12
+            vendas_mes = 4_200_000 * porte * SAZONALIDADE[mes.month] * crescimento * parcial * r.uniform(0.93, 1.07)
+            for cfop, (livro, parte, aliquota, st) in CFOPS.items():
+                # As entradas (compras) acompanham as vendas com algum descompasso de mês.
+                valor = round(
+                    vendas_mes * parte * (r.uniform(0.85, 1.15) if livro == "E" else r.uniform(0.95, 1.05)), 2
+                )
+                base = round(valor * (0.0 if aliquota == 0 else 1.0), 2)
+                for cancelada in (0, 1):
+                    fator = 1.0 if cancelada == 0 else r.uniform(0.002, 0.008)
+                    v = round(valor * fator, 2)
+                    linhas.append(
                         {
-                            "chave": chave,
-                            "item": i + 1,
-                            "cod_produto": p["cod_produto"],
-                            "produto": p["produto"],
-                            "ncm": _NCM[p["categoria"]],
-                            "cfop": "1102" if uf_emit == filial_uf[t["filial"]] else "2102",
-                            "quantidade": max(1, round(parte / custo)),
-                            "valor": round(parte, 2),
-                            "icms": round(parte * 0.18, 2),
+                            "LIVRO": livro,
+                            "MES": f"{mes:%Y-%m}",
+                            "EMITENTE": cnpj,
+                            "CFOP": cfop,
+                            "CANCELADA": cancelada,
+                            "VALOR": v,
+                            "LINHAS": max(1, int(v / r.uniform(900, 2500))),
+                            "BASE_ICMS": round(base * fator, 2),
+                            "ICMS": round(base * fator * aliquota, 2),
+                            "ISENTAS": round(v * 0.02, 2) if cfop in ("5910", "5927") else 0.0,
+                            "OUTRAS": round(v, 2) if aliquota == 0 and not st else 0.0,
+                            "ICMS_ST": round(v * 0.21, 2) if st else 0.0,
+                            "IPI": 0.0,
+                            "PIS": round(v * 0.0165, 2) if livro == "S" else round(v * 0.0165 * 0.9, 2),
+                            "COFINS": round(v * 0.076, 2) if livro == "S" else round(v * 0.076 * 0.9, 2),
+                            "CNPJ_REV": cnpj,
+                            "REVENDA": nome,
                         }
                     )
-                # O frete da fábrica vem num CT-e da transportadora.
-                tnome, tcnpj, tuf = r.choice(transportadoras)
-                numero += 1
-                docs.append(
+    return pl.DataFrame(linhas).with_columns(pl.col("CANCELADA").cast(pl.Int64), pl.col("LINHAS").cast(pl.Int64))
+
+
+MESES_ITENS = 3
+
+
+def _livro_itens(fat: pl.DataFrame, r) -> tuple[dict[str, pl.DataFrame], dict[str, pl.DataFrame]]:
+    """O livro item a item dos últimos meses: cada total de (empresa, mês, CFOP) do faturamento
+    repartido em itens de nota, para as duas visões baterem. Mais os cadastros que dão nome às linhas."""
+    f = b.faker("fiscal-itens")
+    produtos = comercial._catalogo().filter(pl.col("CANAL") != "OUTRO").select("CODRED", "PRODUTO", "PRECO").to_dicts()
+    clientes = [(10_000_000_000 + i * 7919, f"{f.last_name().upper()} COMERCIO DE BEBIDAS LTDA") for i in range(60)]
+    fabricas = [
+        (20_000_000_000 + i * 104_729, nome)
+        for i, nome in enumerate(b.fornecedores().filter(pl.col("tipo_despesa") == "Fábrica")["fornecedor"].to_list())
+    ]
+    meses = sorted(fat["MES"].unique().to_list())[-MESES_ITENS:]
+    por_mes: dict[str, list[dict]] = {m: [] for m in meses}
+    numero = 30_000
+    base = fat.filter(pl.col("MES").is_in(meses) & (pl.col("VALOR") > 0))
+    for x in base.iter_rows(named=True):
+        restante, notas = x["VALOR"], max(1, min(40, x["LINHAS"] // 6))
+        aliquota = (x["ICMS"] / x["BASE_ICMS"]) if x["BASE_ICMS"] else 0.0
+        for n in range(notas):
+            numero += 1
+            valor_nota = restante if n == notas - 1 else round(x["VALOR"] / notas * r.uniform(0.6, 1.4), 2)
+            restante = round(restante - valor_nota, 2)
+            participante = r.choice(clientes if x["LIVRO"] == "S" else fabricas)
+            dia = r.randint(1, 28)
+            itens = r.sample(produtos, k=r.randint(1, 4))
+            pesos = [r.uniform(0.5, 2) for _ in itens]
+            for p, peso in zip(itens, pesos):
+                valor = round(valor_nota * peso / sum(pesos), 2)
+                qtd = max(1.0, round(valor / p["PRECO"], 0))
+                base_icms = valor if aliquota else 0.0
+                por_mes[x["MES"]].append(
                     {
-                        **doc,
-                        "chave": chave_acesso(tuf, emissao, tcnpj, 57, numero, r),
-                        "tipo": "CT-e",
-                        "numero": numero,
-                        "emitente": tnome,
-                        "uf_emitente": tuf,
-                        "valor": round(t["valor"] * r.uniform(0.02, 0.04), 2),
-                        "icms": None,
-                        "manifestacao": "Não se aplica",
-                        "titulo": None,
+                        "LIVRO": x["LIVRO"],
+                        "DATA": f"{x['MES']}-{dia:02d}",
+                        "NUMERO": numero,
+                        "SERIE": 1,
+                        "CHAVE": f"{numero:044d}",
+                        "CNPJ_PARTICIPANTE": participante[0],
+                        "CFOP": x["CFOP"],
+                        "CODRED": int(p["CODRED"]),
+                        "QUANTIDADE": qtd,
+                        "QUANTIDADE_AVULSA": 0.0,
+                        "VALOR": valor,
+                        "FRETE": 0.0,
+                        "BASE_ICMS": base_icms,
+                        "ALIQ_ICMS": round(aliquota * 100, 2),
+                        "ICMS": round(base_icms * aliquota, 2),
+                        "ICMS_ST": round(valor * 0.21, 2) if x["ICMS_ST"] else 0.0,
+                        "IPI": 0.0,
+                        "CST_PIS": 1,
+                        "BASE_PIS": valor,
+                        "ALIQ_PIS": 1.65,
+                        "PIS": round(valor * 0.0165, 2),
+                        "CST_COFINS": 1,
+                        "BASE_COFINS": valor,
+                        "ALIQ_COFINS": 7.6,
+                        "COFINS": round(valor * 0.076, 2),
+                        "CANCELADA": x["CANCELADA"],
+                        "CNPJ_REV": x["CNPJ_REV"],
+                        "DESCRICAO": p["PRODUTO"],
+                        "EMITENTE": x["EMITENTE"],
+                        "MES": x["MES"],
                     }
                 )
-        else:
-            doc["icms"] = None
-        docs.append(doc)
-    return pl.DataFrame(docs, infer_schema_length=None), pl.DataFrame(itens)
+    itens = {
+        f"livro_itens/{m}": pl.DataFrame(linhas, infer_schema_length=None).with_columns(pl.col("DATA").str.to_date())
+        for m, linhas in por_mes.items()
+    }
+    itens["livro_itens/_meses"] = pl.DataFrame(
+        [
+            {"CNPJ_REV": cnpj, "MES": m, "LINHAS": sum(1 for i in por_mes[m] if i["CNPJ_REV"] == cnpj)}
+            for _, cnpj, _ in EMPRESAS
+            for m in meses
+        ]
+    )
+    cadastros = {
+        "control_produtos": pl.DataFrame(
+            [
+                {"CNPJ_REV": cnpj, "CODRED": int(p["CODRED"]), "PRODUTO": p["PRODUTO"]}
+                for _, cnpj, _ in EMPRESAS
+                for p in produtos
+            ]
+        ),
+        "control_clientes": pl.DataFrame(
+            [{"CNPJ_REV": cnpj, "CNPJ_CPF": c, "RAZAO": nome} for _, cnpj, _ in EMPRESAS for c, nome in clientes]
+        ),
+        "control_fornecedores": pl.DataFrame(
+            [{"CNPJ_REV": cnpj, "CNPJ_CPF": c, "RAZAO": nome} for _, cnpj, _ in EMPRESAS for c, nome in fabricas]
+        ),
+    }
+    return itens, cadastros
 
 
 def gerar() -> None:
     print("Fiscal")
-    docs, itens = _documentos()
-    b.gravar(docs, "Fiscal", "documentos")
-    b.gravar(itens, "Fiscal", "itens_nfe")
-    with open(b.RAIZ / "Fiscal" / "data" / "_gerado_em.json", "w", encoding="utf-8") as arq:
-        json.dump({"data_base": b.HOJE.isoformat(), "gerado_em": date.today().isoformat()}, arq)
+    r = b.rng("fiscal")
+    PASTA.mkdir(parents=True, exist_ok=True)
+    for antigo in PASTA.glob("*.parquet"):
+        antigo.unlink()
+    fat = _faturamento(r)
+    itens, cadastros = _livro_itens(fat, r)
+    (PASTA / "livro_itens").mkdir(exist_ok=True)
+    for antigo in (PASTA / "livro_itens").glob("*.parquet"):
+        antigo.unlink()
+    tabelas = {"faturamento": fat, **itens, **cadastros}
+    for nome, df in tabelas.items():
+        df.write_parquet(PASTA / f"{nome}.parquet", compression="zstd")
+        print(f"  bd_fiscal/{nome}.parquet: {df.height:,} linhas".replace(",", "."))
+    momento = datetime.combine(b.HOJE, datetime.min.time()).replace(hour=6, minute=15).isoformat(timespec="seconds")
+    (PASTA / "_atualizacoes.json").write_text(
+        json.dumps({n: momento for n in tabelas}, ensure_ascii=False, indent=2), encoding="utf-8"
+    )

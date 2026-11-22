@@ -1,10 +1,18 @@
 # Para rodar os apps localmente, gerar os dados e montar o site.
-# Cada app também tem o seu requirements.txt (só o que ele usa), lido pelo
-# Shinylive e pelo Posit Connect Cloud.
+# Cada app também tem o seu requirements.txt (só o que ele usa), lido pelo Shinylive.
 shiny==1.9.0
 polars==1.18.0
 pyarrow
+pandas
+duckdb
 faicons
+loguru
 faker
+pyecharts
+folium
+shapely
+fpdf2
+openpyxl
+tzdata
 shinylive==0.8.13
 ruff

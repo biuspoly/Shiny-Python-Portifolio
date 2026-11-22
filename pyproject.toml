@@ -1,7 +1,7 @@
 [project]
 name = "portifolio-shiny"
 version = "1.0.0"
-description = "Seis painéis Shiny for Python de uma distribuidora fictícia"
+description = "Portfólio Marlon Amaral: seis painéis Shiny for Python com dados fictícios"
 requires-python = ">=3.12"
 
 [tool.ruff]
@@ -10,6 +10,11 @@ extend-exclude = ["tmp", "site"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I"]
+# O código das telas vem do sistema original, com as linhas e os nomes de lá.
+ignore = ["E501", "E741"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["core", "pages", "gerador"]

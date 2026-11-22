@@ -1,0 +1,33 @@
+{
+  "_o_que_e": "Empresas do portfólio (fictícias): CNPJ, nome curto, revenda e o nome dela no ERP (control).",
+  "empresas": [
+    {
+      "cnpj": "00000000000100",
+      "nome": "Natal",
+      "revenda": "Natal",
+      "erp": "ERP",
+      "control": "Natal"
+    },
+    {
+      "cnpj": "00000000000280",
+      "nome": "Fortaleza",
+      "revenda": "Fortaleza",
+      "erp": "ERP",
+      "control": "Fortaleza"
+    },
+    {
+      "cnpj": "00000000000360",
+      "nome": "Teresina",
+      "revenda": "Teresina",
+      "erp": "ERP",
+      "control": "Teresina"
+    },
+    {
+      "cnpj": "00000000000440",
+      "nome": "São Luís",
+      "revenda": "São Luís",
+      "erp": "ERP",
+      "control": "São Luís"
+    }
+  ]
+}

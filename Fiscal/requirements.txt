@@ -1,4 +1,13 @@
 shiny==1.9.0
 polars==1.18.0
 pyarrow
+pandas
 faicons
+loguru
+fpdf2
+Pillow
+fonttools
+defusedxml
+pyecharts
+simplejson
+prettytable

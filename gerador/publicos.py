@@ -19,6 +19,10 @@ URL_MALHA_UF = (
     "https://servicodados.ibge.gov.br/api/v3/malhas/estados/{uf}"
     "?formato=application/vnd.geo%2Bjson&intrarregiao=municipio&qualidade=minima"
 )
+# Censo 2022, população residente (agregado 4709, variável 93), por município do estado.
+URL_POPULACAO_UF = (
+    "https://servicodados.ibge.gov.br/api/v3/agregados/4709/periodos/2022/variaveis/93?localidades=N6[N3[{codigo_uf}]]"
+)
 URL_SGS = (
     "https://api.bcb.gov.br/dados/serie/bcdata.sgs.{serie}/dados?formato=json&dataInicial={inicio}&dataFinal={fim}"
 )
@@ -61,6 +65,14 @@ def municipios() -> pl.DataFrame:
 def malha_uf(uf: str) -> dict:
     """GeoJSON dos municípios de um estado (IBGE), para o mapa do Comercial."""
     return json.loads(_com_cache(f"malha_{uf}.json", URL_MALHA_UF.format(uf=uf)))
+
+
+@cache
+def populacao_uf(uf: str) -> dict[int, int]:
+    """Código IBGE do município -> população do Censo 2022."""
+    codigo_uf = next(c for c, sigla in _CODIGO_UF.items() if sigla == uf)
+    bruto = json.loads(_com_cache(f"populacao_{uf}.json", URL_POPULACAO_UF.format(codigo_uf=codigo_uf)))
+    return {int(s["localidade"]["id"]): int(s["serie"]["2022"]) for s in bruto[0]["resultados"][0]["series"]}
 
 
 def serie_bcb(serie: int, nome: str, dias: int = 800) -> pl.DataFrame:

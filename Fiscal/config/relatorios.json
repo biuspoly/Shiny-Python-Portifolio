@@ -1,0 +1,13 @@
+{
+  "faturamento": {
+    "meses": 12,
+    "cfops": ["5102", "5405", "6102"],
+    "devolucoes": ["1202", "1411", "2202"]
+  },
+  "empresas": {
+    "00000000000100": {"razao": "DISTRIBUIDORA DE BEBIDAS NATAL LTDA", "endereco": "AVENIDA DAS DUNAS", "numero": "1200", "bairro": "LAGOA NOVA", "municipio": "NATAL", "uf": "RN", "cep": "59000000", "ie": "200000001", "atividade": "4635-4/02 Comércio atacadista de cerveja, chope e refrigerante", "natureza_juridica": "206-2 Sociedade Empresária Limitada"},
+    "00000000000280": {"razao": "DISTRIBUIDORA DE BEBIDAS FORTALEZA LTDA", "endereco": "AVENIDA DO LITORAL", "numero": "850", "bairro": "CENTRO", "municipio": "FORTALEZA", "uf": "CE", "cep": "60000000", "ie": "060000002", "atividade": "4635-4/02 Comércio atacadista de cerveja, chope e refrigerante", "natureza_juridica": "206-2 Sociedade Empresária Limitada"},
+    "00000000000360": {"razao": "DISTRIBUIDORA DE BEBIDAS TERESINA LTDA", "endereco": "RUA DO SERTÃO", "numero": "77", "bairro": "CENTRO", "municipio": "TERESINA", "uf": "PI", "cep": "64000000", "ie": "190000003", "atividade": "4635-4/02 Comércio atacadista de cerveja, chope e refrigerante", "natureza_juridica": "206-2 Sociedade Empresária Limitada"},
+    "00000000000440": {"razao": "DISTRIBUIDORA DE BEBIDAS SÃO LUÍS LTDA", "endereco": "AVENIDA DOS LENÇÓIS", "numero": "410", "bairro": "RENASCENÇA", "municipio": "SÃO LUÍS", "uf": "MA", "cep": "65000000", "ie": "120000004", "atividade": "4635-4/02 Comércio atacadista de cerveja, chope e refrigerante", "natureza_juridica": "206-2 Sociedade Empresária Limitada"}
+  }
+}

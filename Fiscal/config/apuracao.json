@@ -1,0 +1,30 @@
+{
+  "_o_que_e": "Como a Apuração agrupa os CFOPs (versão do portfólio).",
+  "cfops": {
+    "1102": {"resumo": "Compra para comercialização", "operacao": "Compras"},
+    "2102": {"resumo": "Compra para comercialização (interestadual)", "operacao": "Compras"},
+    "1403": {"resumo": "Compra para comercialização com ST", "operacao": "Compras com ST"},
+    "2403": {"resumo": "Compra para comercialização com ST (interestadual)", "operacao": "Compras com ST"},
+    "1202": {"resumo": "Devolução de venda", "operacao": "Devoluções de venda"},
+    "1411": {"resumo": "Devolução de venda com ST", "operacao": "Devoluções de venda"},
+    "2202": {"resumo": "Devolução de venda (interestadual)", "operacao": "Devoluções de venda"},
+    "1556": {"resumo": "Compra de material para uso e consumo", "operacao": "Uso e consumo"},
+    "5102": {"resumo": "Venda de mercadoria adquirida de terceiros", "operacao": "Vendas"},
+    "5405": {"resumo": "Venda de mercadoria com ST", "operacao": "Vendas com ST"},
+    "6102": {"resumo": "Venda de mercadoria (interestadual)", "operacao": "Vendas"},
+    "5910": {"resumo": "Remessa em bonificação", "operacao": "Bonificações"},
+    "5927": {"resumo": "Baixa de estoque por perda", "operacao": "Perdas"},
+    "5949": {"resumo": "Outra saída não especificada", "operacao": "Outras saídas"}
+  },
+  "receita_bruta": {
+    "vendas": ["5102", "5405", "6102"],
+    "devolucao_de_compra": ["5202", "5411", "6202", "6411"],
+    "devolucao_de_venda": ["1202", "1411", "2202"],
+    "compras": ["1102", "1403", "2102", "2403"],
+    "combustiveis": ["1653"]
+  },
+  "bonificacoes": {"entrada": ["1910", "2910"], "saida": ["5910", "6910"]},
+  "deducoes_por_despesa": {"alugueis_pj": [], "energia_eletrica": []},
+  "aliquotas_dos_outros_creditos": {"pis": 1.65, "cofins": 7.6},
+  "antecipado_por_despesa": []
+}

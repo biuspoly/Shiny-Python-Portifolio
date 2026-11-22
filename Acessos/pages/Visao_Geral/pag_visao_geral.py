@@ -1,114 +1,200 @@
-from datetime import timedelta
+import asyncio
+import io
+from datetime import date
 
-import polars as pl
-from shiny import module, render, ui
+from faicons import icon_svg
+from pyecharts import options as opts
+from pyecharts.charts import Bar, Line
+from shiny import module, reactive, render, ui
 
-from core import cores
-from core.dados import data_base, ler
-from core.formato import numero
-from core.graficos import grafico
-from core.layout import cartao, kpi, linha_kpis
-from pages.Visao_Geral.Dados import dados_visao_geral as dados
+from core.compat import para_pandas
+from core.cores import ACESSO_ATENCAO, ACESSO_ATIVO, ACESSO_INATIVO, ACESSO_NUNCA, DESTAQUE
+from core.largura_tabela import ColunaLargura, gerar_css_larguras
+from core.pyecharts_shiny import renderizar
+from core.tabela_paginada import TabelaPaginada
+from pages.Visao_Geral.Dados.dados_visao_geral import (
+    kpis_acesso,
+    tendencia_acessos,
+    ultimo_acesso_usuario,
+)
+
+INTERVALO_ATUALIZACAO_S = 60
+
+_RÓTULOS = {
+    "login": "Login",
+    "nome": "Nome",
+    "cargo": "Cargo",
+    "revenda": "Revenda",
+    "ultimo_acesso": "Último Acesso",
+    "acessos_30d": "Acessos (30d)",
+    "dias_inativo": "Dias Sem Acesso",
+}
+
+_ORDEM_COLUNAS_TABELA = ["Login", "Nome", "Cargo", "Revenda", "Último Acesso", "Acessos (30d)", "Dias Sem Acesso"]
+_LARGURA_POR_COLUNA = {
+    "Login": 140,
+    "Nome": 200,
+    "Cargo": 160,
+    "Revenda": 160,
+    "Último Acesso": 160,
+    "Acessos (30d)": 120,
+    "Dias Sem Acesso": 140,
+}
+
+
+def _carregar_tudo() -> dict:
+    return {
+        "kpis": kpis_acesso(),
+        "tendencia": tendencia_acessos(),
+        "ultimo": ultimo_acesso_usuario(),
+    }
 
 
 @module.ui
-def visao_geral_ui():
+def pag_visao_geral_ui() -> ui.Tag:
     return ui.div(
         ui.output_ui("kpis"),
-        ui.layout_columns(
-            cartao("Pessoas com acesso, por app", ui.output_ui("grafico_app")),
-            cartao("Papéis", ui.output_data_frame("papeis")),
-            col_widths=(6, 6),
+        ui.card(
+            ui.card_header("Tendência de Acessos — últimos 30 dias"),
+            ui.output_ui("grafico_tendencia"),
+            class_="my-4",
         ),
-        cartao(
-            "Acesso amplo (12 páginas ou mais)",
-            ui.output_data_frame("amplo"),
-            ui.div("Quem enxerga muita coisa é o primeiro a revisar quando alguém muda de função.", class_="legenda"),
+        ui.card(
+            ui.card_header(
+                ui.div(
+                    ui.span("Último Acesso por Usuário"),
+                    ui.download_button(
+                        "exportar",
+                        None,
+                        icon=icon_svg("download", a11y="deco"),
+                        class_="btn-exportar-acessos ms-auto",
+                    ),
+                    class_="d-flex justify-content-between align-items-center",
+                ),
+            ),
+            ui.div(ui.output_data_frame("tabela"), class_="tabela-resize"),
+            ui.output_ui("controles_tabela"),
+            ui.output_ui("css_largura_tabela"),
         ),
+        class_="acessos-modulo",
     )
 
 
 @module.server
-def visao_geral_server(input, output, session):
-    @render.ui
-    def kpis():
-        u = ler("usuarios")
-        h = ler("historico")
-        ultimos_30 = h.filter(pl.col("momento").dt.date() > data_base() - timedelta(days=30))
-        return linha_kpis(
-            kpi(
-                "Pessoas ativas", numero(u["ativo"].sum()), f"{numero((~u['ativo']).sum())} desativadas", cores.POSITIVO
-            ),
-            kpi("Papéis", numero(u["papel"].n_unique()), "grupos de permissão"),
-            kpi(
-                "Páginas protegidas",
-                numero(ler("paginas").height),
-                f"em {numero(ler('paginas')['app'].n_unique())} apps",
-            ),
-            kpi(
-                "Alterações em 30 dias",
-                numero(ultimos_30.height),
-                f"{numero((ultimos_30['acao'] != 'Concedeu').sum())} retiradas ou desativações",
-                cores.ALERTA,
-            ),
-        )
+def pag_visao_geral_server(input, output, session):
+    @reactive.calc
+    async def dados():
+        reactive.invalidate_later(INTERVALO_ATUALIZACAO_S)
+        return await asyncio.to_thread(_carregar_tudo)
 
     @render.ui
-    def grafico_app():
-        a = dados.usuarios_por_app()
-        return grafico(
-            {
-                "tooltip": {"trigger": "axis"},
-                "grid": {"left": 90, "right": 40, "top": 10, "bottom": 25},
-                "xAxis": {"type": "value", "minInterval": 1},
-                "yAxis": {"type": "category", "data": a["app"].to_list(), "inverse": True},
-                "series": [
-                    {
-                        "type": "bar",
-                        "name": "Pessoas",
-                        "label": {"show": True, "position": "right"},
-                        "data": [
-                            {"value": v, "itemStyle": {"color": cores.APPS[app], "borderRadius": [0, 4, 4, 0]}}
-                            for app, v in a.iter_rows()
-                        ],
-                    }
-                ],
-            },
-            altura="30vh",
+    async def kpis():
+        k = (await dados())["kpis"]
+        return ui.layout_columns(
+            ui.value_box(
+                "Usuários Ativos",
+                k["total_usuarios"],
+                showcase=icon_svg("users"),
+                theme=ui.value_box_theme(bg=DESTAQUE, fg="#fff"),
+            ),
+            ui.value_box(
+                "Painéis Ativos",
+                k["total_paineis"],
+                showcase=icon_svg("desktop"),
+                theme=ui.value_box_theme(bg=DESTAQUE, fg="#fff"),
+            ),
+            ui.value_box(
+                "Acessos (7 dias)",
+                k["acessos_7_dias"],
+                showcase=icon_svg("right-to-bracket"),
+                theme=ui.value_box_theme(bg=DESTAQUE, fg="#fff"),
+            ),
+            ui.value_box(
+                "Usuários Ativos (7 dias)",
+                k["usuarios_ativos_7_dias"],
+                showcase=icon_svg("user-check"),
+                theme=ui.value_box_theme(bg=DESTAQUE, fg="#fff"),
+            ),
         )
 
-    @render.data_frame
-    def papeis():
-        p = dados.por_papel()
-        return render.DataGrid(
-            pl.DataFrame(
-                {
-                    "Papel": p["papel"],
-                    "Pessoas": p["pessoas"].cast(pl.String),
-                    "Ativas": p["ativas"].cast(pl.String),
-                    "Páginas em média": [numero(v or 0, 1) for v in p["media_paginas"]],
-                }
-            ),
-            width="100%",
-            height="auto",
-            summary=False,
+    @render.ui
+    async def grafico_tendencia():
+        df = (await dados())["tendencia"]
+        if df.height == 0:
+            return ui.p("Sem dados no período.")
+
+        datas = [d.strftime("%d/%m") for d in df["data"].to_list()]
+        total = df["total_acessos"].to_list()
+        distintos = df["usuarios_distintos"].to_list()
+
+        bar = (
+            Bar()
+            .add_xaxis(datas)
+            .add_yaxis("Total de acessos", total, color=DESTAQUE, z=1)
+            .extend_axis(yaxis=opts.AxisOpts(name="Usuários únicos", position="right"))
+            .set_global_opts(
+                xaxis_opts=opts.AxisOpts(axislabel_opts=opts.LabelOpts(rotate=45)),
+                yaxis_opts=opts.AxisOpts(name="Total acessos"),
+                tooltip_opts=opts.TooltipOpts(trigger="axis"),
+                legend_opts=opts.LegendOpts(pos_top="0%"),
+            )
         )
+        linha = Line().add_xaxis(datas).add_yaxis("Usuários únicos", distintos, yaxis_index=1, color="#E74C3C", z=2)
+        return ui.HTML(renderizar(bar.overlap(linha), altura="300px"))
+
+    paginador = TabelaPaginada("pag_ultimo_acesso", input, session)
+
+    async def _tabela_pronta():
+        df = (await dados())["ultimo"].rename(_RÓTULOS)
+        pandas_df = df.with_columns(
+            df["Último Acesso"].dt.strftime("%d/%m/%Y %H:%M").fill_null(""),
+        ).pipe(para_pandas)
+
+        estilos = []
+        for posicao, dias in enumerate(df["Dias Sem Acesso"].to_list()):
+            if dias is None:
+                cor = ACESSO_NUNCA
+            elif dias > 30:
+                cor = ACESSO_INATIVO
+            elif dias > 7:
+                cor = ACESSO_ATENCAO
+            else:
+                cor = ACESSO_ATIVO
+            estilos.append(
+                {
+                    "rows": [posicao],
+                    "cols": ["Dias Sem Acesso"],
+                    "style": {"color": cor, "font-weight": "bold"},
+                }
+            )
+        return pandas_df, estilos
 
     @render.data_frame
-    def amplo():
-        a = dados.acesso_amplo()
-        return render.DataGrid(
-            pl.DataFrame(
-                {
-                    "Pessoa": a["nome"],
-                    "Login": a["login"],
-                    "Papel": a["papel"],
-                    "Filial": a["filial"],
-                    "Apps": a["apps"].cast(pl.String),
-                    "Páginas": a["paginas"].cast(pl.String),
-                }
-            ),
-            width="100%",
-            height="auto",
+    async def tabela():
+        pandas_df, estilos = await _tabela_pronta()
+        fatia, estilos_fatia = paginador.fatiar_com_estilos(pandas_df, estilos)
+        return render.DataTable(
+            fatia,
+            styles=estilos_fatia,
+            height="50vh",
             summary=False,
+            filters=False,
+            selection_mode="none",
         )
+
+    @render.ui
+    async def controles_tabela():
+        pandas_df, _ = await _tabela_pronta()
+        return paginador.controles(len(pandas_df))
+
+    @render.ui
+    async def css_largura_tabela():
+        larguras = [ColunaLargura(c, _LARGURA_POR_COLUNA[c]) for c in _ORDEM_COLUNAS_TABELA]
+        return ui.tags.style(gerar_css_larguras(f"#{session.ns('tabela')}", larguras))
+
+    @render.download_button(filename=lambda: f"ultimo-acesso-{date.today().isoformat()}.xlsx")
+    async def exportar():
+        pandas_df, _ = await _tabela_pronta()
+        buffer = io.BytesIO()
+        pandas_df.to_excel(buffer, index=False, engine="openpyxl")
+        yield buffer.getvalue()

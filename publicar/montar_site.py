@@ -45,7 +45,6 @@ def montar() -> None:
             stdout=subprocess.DEVNULL,
         )
     shutil.copytree(RAIZ / "vitrine", SITE, dirs_exist_ok=True)
-    shutil.copy(RAIZ / "Comercial" / "www" / "img" / "logo.svg", SITE / "img" / "logo.svg")
     # Sem isto o GitHub Pages passa o site pelo Jekyll, que esconde pastas com "_".
     (SITE / ".nojekyll").write_text("", encoding="utf-8")
     tamanho = sum(p.stat().st_size for p in SITE.rglob("*") if p.is_file()) / 1024**2

@@ -1,0 +1,18 @@
+{
+  "_o_que_e": "Parâmetros das telas do Financeiro (versão do portfólio, revendas fictícias).",
+  "fluxo_consolidado": {
+    "colunas": ["Natal", "Fortaleza", "PI + MA", "Teresina", "São Luís", "TOTAL"],
+    "grupos": {"PI + MA": ["Teresina", "São Luís"]},
+    "coluna_total": "TOTAL",
+    "coluna_a_parte": null
+  },
+  "codigos_emprestimo": [106, 107, 108, 109, 110],
+  "codigos_ledger_emprestimo": {"entrada": [157, 159], "saida": [158, 160]},
+  "saldos_iniciais_emprestimos": {
+    "Fortaleza": {"Natal": 180000.0},
+    "São Luís": {"HOLDING": 250000.0}
+  },
+  "revendas_sem_expediente_sabado": ["Teresina"],
+  "revendas_sem_extrato_fabrica": [],
+  "banco_caixa": 999
+}

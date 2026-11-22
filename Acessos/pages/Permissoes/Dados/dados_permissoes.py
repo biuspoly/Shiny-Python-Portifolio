@@ -1,35 +1,57 @@
 import polars as pl
 
-from core.dados import ler
+from core.db import consulta
 
-MARCA = "\u2713"  # "U+2713" (check): a pessoa vê a página
+_SQL_PAINEIS_ATIVOS = """
+    SELECT DISTINCT
+      d.id,
+      d.nome      AS Painel,
+      r.nomeExib  AS Revenda
+    FROM dashboard d
+    JOIN revenda   r ON r.licenca = d.licenca
+    WHERE d.inativo = '0'
+      AND d.nome IS NOT NULL
+      AND r.nomeExib <> 'Lixo'
+"""
+
+_SQL_USUARIOS_ATIVOS = """
+    SELECT
+      login          AS Login,
+      cargo          AS Cargo,
+      funcao         AS Funcao,
+      nomeCompleto,
+      nomeGrupo,
+      Revenda
+    FROM usuario
+    WHERE nomeGrupo <> 'Vazio'
+"""
+
+_SQL_ACESSOS_PAINEIS = """
+    SELECT
+      d.id,
+      d.nome          AS Painel,
+      u.login         AS Login,
+      u.nomeCompleto  AS Usuario,
+      r.nomeExib      AS Revenda,
+      g.nomeGrupo     AS Grupo
+    FROM usuario    u
+    JOIN dash_group g ON g.nomeGrupo = u.nomeGrupo
+    JOIN dashboard  d ON d.id        = g.id
+    JOIN revenda    r ON r.licenca   = d.licenca
+    WHERE d.inativo    = '0'
+      AND d.nome       IS NOT NULL
+      AND g.nomeGrupo <> 'Grupo Matriz'
+      AND r.nomeExib  <> 'Lixo'
+"""
 
 
-def paginas(app: str) -> list[str]:
-    return ler("paginas").filter(pl.col("app") == app).sort("ordem")["pagina"].to_list()
+def paineis_ativos() -> pl.DataFrame:
+    return consulta(_SQL_PAINEIS_ATIVOS)
 
 
-def matriz(app: str, permissoes: pl.DataFrame, areas: list[str], so_ativos: bool) -> pl.DataFrame:
-    """Uma linha por pessoa, uma coluna por página do app (True = vê)."""
-    u = ler("usuarios")
-    if areas:
-        u = u.filter(pl.col("area").is_in(areas))
-    if so_ativos:
-        u = u.filter(pl.col("ativo"))
-    colunas = paginas(app)
-    tem = permissoes.filter(pl.col("app") == app).with_columns(pl.lit(True).alias("ve"))
-    largo = (
-        tem.pivot(on="pagina", index="login", values="ve")
-        if tem.height
-        else pl.DataFrame({"login": []}, schema={"login": pl.String})
-    )
-    for c in colunas:
-        if c not in largo.columns:
-            largo = largo.with_columns(pl.lit(None, dtype=pl.Boolean).alias(c))
-    return (
-        u.select("login", "nome", "papel")
-        .join(largo, on="login", how="left")
-        .with_columns([pl.col(c).fill_null(False) for c in colunas])
-        .select("login", "nome", "papel", *colunas)
-        .sort("papel", "nome")
-    )
+def usuarios_ativos() -> pl.DataFrame:
+    return consulta(_SQL_USUARIOS_ATIVOS)
+
+
+def acessos_paineis() -> pl.DataFrame:
+    return consulta(_SQL_ACESSOS_PAINEIS)

@@ -1,35 +1,67 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 import polars as pl
 
-from core.dados import ler
+from core.db import consulta
+
+_SQL_KPIS = """
+    SELECT
+      (SELECT COUNT(DISTINCT login) FROM usuario WHERE nomeGrupo <> 'Vazio')
+        AS total_usuarios,
+      (SELECT COUNT(*) FROM dashboard WHERE inativo = '0' AND nome IS NOT NULL)
+        AS total_paineis,
+      (SELECT COUNT(*) FROM logacesso
+       WHERE STR_TO_DATE(dataAcesso,'%d/%m/%Y %H:%i:%s') >= NOW() - INTERVAL 7 DAY)
+        AS acessos_7_dias,
+      (SELECT COUNT(DISTINCT login) FROM logacesso
+       WHERE STR_TO_DATE(dataAcesso,'%d/%m/%Y %H:%i:%s') >= NOW() - INTERVAL 7 DAY)
+        AS usuarios_ativos_7_dias
+"""
+
+_SQL_TENDENCIA = """
+    SELECT
+      DATE(STR_TO_DATE(dataAcesso,'%d/%m/%Y %H:%i:%s'))  AS data,
+      COUNT(*)                                             AS total_acessos,
+      COUNT(DISTINCT login)                               AS usuarios_distintos
+    FROM logacesso
+    WHERE STR_TO_DATE(dataAcesso,'%d/%m/%Y %H:%i:%s') >= NOW() - INTERVAL 30 DAY
+    GROUP BY DATE(STR_TO_DATE(dataAcesso,'%d/%m/%Y %H:%i:%s'))
+    ORDER BY data
+"""
+
+_SQL_ULTIMO_ACESSO = """
+    SELECT
+      u.login,
+      u.nomeCompleto                                                  AS nome,
+      u.cargo,
+      u.Revenda                                                       AS revenda,
+      MAX(STR_TO_DATE(l.dataAcesso,'%d/%m/%Y %H:%i:%s'))             AS ultimo_acesso,
+      SUM(
+        CASE
+          WHEN STR_TO_DATE(l.dataAcesso,'%d/%m/%Y %H:%i:%s') >= NOW() - INTERVAL 30 DAY
+          THEN 1 ELSE 0
+        END
+      )                                                               AS acessos_30d
+    FROM usuario u
+    LEFT JOIN logacesso l ON l.login = u.login
+    WHERE u.nomeGrupo <> 'Vazio'
+    GROUP BY u.login, u.nomeCompleto, u.cargo, u.Revenda
+    ORDER BY ultimo_acesso DESC
+"""
 
 
-def usuarios_por_app() -> pl.DataFrame:
-    p = ler("permissoes").join(ler("usuarios").filter(pl.col("ativo")).select("login"), on="login", how="semi")
-    return p.group_by("app").agg(pl.col("login").n_unique().alias("usuarios")).sort("usuarios", descending=True)
+def kpis_acesso() -> dict:
+    df = consulta(_SQL_KPIS)
+    return df.row(0, named=True)
 
 
-def por_papel() -> pl.DataFrame:
-    u = ler("usuarios")
-    paginas = ler("permissoes").group_by("login").agg(pl.len().alias("paginas"))
-    return (
-        u.join(paginas, on="login", how="left")
-        .group_by("papel")
-        .agg(
-            pl.len().alias("pessoas"),
-            pl.col("ativo").sum().alias("ativas"),
-            pl.col("paginas").mean().alias("media_paginas"),
-        )
-        .sort("pessoas", descending=True)
-    )
+def tendencia_acessos() -> pl.DataFrame:
+    return consulta(_SQL_TENDENCIA)
 
 
-def acesso_amplo(limite: int = 12) -> pl.DataFrame:
-    """Quem vê mais páginas: o primeiro lugar para revisar acesso."""
-    paginas = ler("permissoes").group_by("login").agg(pl.len().alias("paginas"), pl.col("app").n_unique().alias("apps"))
-    return (
-        ler("usuarios")
-        .filter(pl.col("ativo"))
-        .join(paginas, on="login")
-        .filter(pl.col("paginas") >= limite)
-        .sort("paginas", descending=True)
-    )
+def ultimo_acesso_usuario() -> pl.DataFrame:
+    df = consulta(_SQL_ULTIMO_ACESSO)
+
+    agora = datetime.now(ZoneInfo("America/Sao_Paulo")).replace(tzinfo=None)
+    return df.with_columns((pl.lit(agora) - pl.col("ultimo_acesso")).dt.total_days().alias("dias_inativo"))

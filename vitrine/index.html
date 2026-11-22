@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atlântida | Painéis em Shiny for Python</title>
-<meta name="description" content="Seis painéis de gestão em Shiny for Python, rodando no navegador, com dados fictícios de uma distribuidora de bebidas e indicadores públicos do Banco Central e do IBGE.">
+<title>Portfólio Marlon Amaral | Painéis em Shiny for Python</title>
+<meta name="description" content="Portfólio de Marlon Amaral: telas reais de seis painéis de gestão em Shiny for Python, rodando no navegador com dados fictícios.">
 <link rel="icon" href="img/icone.svg" type="image/svg+xml">
 <style>
   :root {
@@ -30,7 +30,8 @@
   }
   .conteudo { max-width: 1180px; margin: 0 auto; }
   .marca { display: flex; align-items: center; gap: 0.9rem; }
-  .marca img { height: 46px; }
+  .marca img { height: 40px; }
+  .marca span { font-size: 1.1rem; font-weight: 700; }
   h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.15; margin: 2rem 0 0.8rem; max-width: 22ch; }
   .lead { font-size: 1.15rem; max-width: 62ch; opacity: 0.95; margin: 0; }
   .selos { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; }
@@ -97,17 +98,18 @@
 <body>
 <header class="topo">
   <div class="conteudo">
-    <div class="marca"><img src="img/logo.svg" alt="Atlântida Distribuidora"></div>
+    <div class="marca"><img src="img/icone.svg" alt=""><span>Portfólio Marlon Amaral</span></div>
     <h1>Painéis de gestão em Shiny for Python</h1>
-    <p class="lead">Seis aplicações de uma distribuidora de bebidas fictícia, a Atlântida, com quatro filiais no Nordeste:
-      vendas, logística, financeiro, fiscal e a administração dos próprios painéis. O desenho e a arquitetura vêm de um
-      sistema real em produção; os dados são inventados, com indicadores públicos de verdade.</p>
+    <p class="lead">Telas de um sistema que eu desenvolvi e mantenho em produção numa distribuidora de bebidas:
+      comercial, logística, financeiro, fiscal e a administração dos próprios painéis. O código das telas é o mesmo
+      de lá; os dados são fictícios, gerados no formato original, com alguns dados públicos de verdade (IBGE).</p>
     <div class="selos">
       <span class="selo">Shiny for Python</span>
       <span class="selo">Polars</span>
-      <span class="selo">ECharts</span>
+      <span class="selo">DuckDB</span>
+      <span class="selo">ECharts (pyecharts)</span>
+      <span class="selo">Folium / Leaflet</span>
       <span class="selo">Shinylive (WebAssembly)</span>
-      <span class="selo">Banco Central e IBGE</span>
       <span class="selo">GitHub Actions</span>
     </div>
   </div>
@@ -117,8 +119,9 @@
   <div class="aviso">
     <div>
       <strong>Tudo roda no seu navegador.</strong>
-      <p>Não existe servidor: o Python é carregado na própria página (Shinylive). A primeira abertura leva uns 15
-        segundos para baixar o ambiente; depois fica no cache e as outras abrem rápido.</p>
+      <p>Não existe servidor: o Python é carregado na própria página (Shinylive). A primeira abertura leva de 15 a 30
+        segundos para baixar o ambiente; depois fica no cache e as outras abrem mais rápido. O que se grava na tela
+        (uma justificativa, uma marcação, uma permissão) vale até a página fechar.</p>
     </div>
   </div>
 
@@ -127,86 +130,84 @@
       <img src="img/comercial.webp" alt="Diário de Vendas do app Comercial" loading="lazy">
       <div class="app-corpo">
         <h2>Comercial</h2>
-        <p>Acompanhamento diário de vendas contra a meta.</p>
+        <p>Vendas do mês contra a meta, por categoria, produto e cliente.</p>
         <ul>
-          <li>Diário de Vendas com tendência, meta e cobertura por categoria e marca</li>
-          <li>Carteira de clientes com situação e histórico de cada um</li>
-          <li>Mapa comercial sobre a malha municipal do IBGE</li>
-          <li>Markup por produto, com comparação ao mês anterior</li>
+          <li>Diário de Vendas: tendência, meta, cobertura e histórico de 24 meses no gráfico</li>
+          <li>Curva ABC de clientes com filtros em cascata</li>
+          <li>Mapa Comercial: potencial e cobertura por município, sobre a malha e a população do IBGE</li>
         </ul>
         <a class="botao" href="comercial/">Abrir o Comercial</a>
       </div>
     </article>
 
     <article class="app" style="--cor:#254d71">
-      <img src="img/logistico.webp" alt="Frotas do app Logístico" loading="lazy">
+      <img src="img/logistico.webp" alt="Frota do app Logístico" loading="lazy">
       <div class="app-corpo">
         <h2>Logístico</h2>
-        <p>Entregas, devoluções, frota e equipamentos em comodato.</p>
+        <p>Frota, entregas e devoluções de quatro revendas.</p>
         <ul>
-          <li>Romaneios do dia com o andamento de cada caminhão</li>
-          <li>Devoluções por motivo e índice diário</li>
-          <li>Frota com multas, IPVA, licenciamento e custo por km</li>
-          <li>Comodatos com contratos vencidos e recolhas pedidas</li>
+          <li>Frota: débitos, multas, restrições, combustível e mapa do último abastecimento</li>
+          <li>Entrada e saída de veículos, com transferência e motivo de saída</li>
+          <li>Planilha de Entregas, preenchida pelo próprio formulário</li>
+          <li>Devoluções: detalhes, caixas, valores e rankings</li>
         </ul>
         <a class="botao" href="logistico/">Abrir o Logístico</a>
       </div>
     </article>
 
     <article class="app" style="--cor:#5b3a78">
-      <img src="img/financeiro.webp" alt="Fluxo de caixa do app Financeiro" loading="lazy">
+      <img src="img/financeiro.webp" alt="Fluxo Financeiro do app Financeiro" loading="lazy">
       <div class="app-corpo">
         <h2>Financeiro</h2>
-        <p>Caixa realizado e projetado, com indicadores reais do Banco Central.</p>
+        <p>Posição com a fábrica, empréstimos e o extrato dos bancos.</p>
         <ul>
-          <li>Fluxo de caixa com projeção pelos títulos em aberto</li>
-          <li>Dólar, Selic e IPCA buscados no SGS do Banco Central</li>
-          <li>Contas a pagar por vencimento e centro de custo</li>
-          <li>Conciliação bancária automática e farol de fechamento de caixa</li>
+          <li>Fluxo Financeiro: crédito, débitos por vencimento e empréstimos entre revendas, com histórico diário</li>
+          <li>Empréstimos e financiamentos por contrato</li>
+          <li>Títulos com juros e a justificativa de cada um</li>
+          <li>Extratos: movimento bancário com a baixa linha a linha</li>
         </ul>
         <a class="botao" href="financeiro/">Abrir o Financeiro</a>
       </div>
     </article>
 
     <article class="app" style="--cor:#2e2b6b">
-      <img src="img/fiscal.webp" alt="Documentos do app Fiscal" loading="lazy">
+      <img src="img/fiscal.webp" alt="Apuração do app Fiscal" loading="lazy">
       <div class="app-corpo">
         <h2>Fiscal</h2>
-        <p>Documentos fiscais recebidos: NF-e, CT-e e NFS-e.</p>
+        <p>Apuração dos livros fiscais e relatórios.</p>
         <ul>
-          <li>Painel do mês por tipo de documento</li>
-          <li>Busca por emitente, chave, produto ou NCM, com os itens da nota</li>
-          <li>Manifestação do destinatário com prazo (simulada)</li>
-          <li>Escrituração pendente e o motivo de cada pendência</li>
+          <li>Apuração do ICMS por CFOP e por operação</li>
+          <li>Livro fiscal item a item, com filtros e exportação</li>
+          <li>Receita bruta e PIS/COFINS mês a mês</li>
+          <li>Demonstrativo de Faturamento em PDF</li>
         </ul>
         <a class="botao" href="fiscal/">Abrir o Fiscal</a>
       </div>
     </article>
 
     <article class="app" style="--cor:#7a2e1d">
-      <img src="img/monitoramento.webp" alt="Rotinas do app Monitoramento" loading="lazy">
+      <img src="img/monitoramento.webp" alt="Visão geral do app Monitoramento" loading="lazy">
       <div class="app-corpo">
         <h2>Monitoramento</h2>
-        <p>Quem usa os painéis e se os dados chegaram de madrugada.</p>
+        <p>Saúde dos apps, lida dos logs de telemetria de cada um.</p>
         <ul>
-          <li>Sessões por dia, app e horário</li>
-          <li>Atividade de cada pessoa</li>
-          <li>Mapa de calor das rotinas noturnas</li>
-          <li>Erros agrupados pela mensagem</li>
+          <li>Situação dos apps e sessões abertas por hora</li>
+          <li>Quem está conectado e em qual tela</li>
+          <li>Erros com o detalhe, tempo de resposta e rotinas da madrugada</li>
         </ul>
         <a class="botao" href="monitoramento/">Abrir o Monitoramento</a>
       </div>
     </article>
 
     <article class="app" style="--cor:#3e2352">
-      <img src="img/acessos.webp" alt="Permissões do app Acessos" loading="lazy">
+      <img src="img/acessos.webp" alt="Acesso por painel do app Acessos" loading="lazy">
       <div class="app-corpo">
         <h2>Acessos</h2>
-        <p>Quem pode ver cada página dos outros apps.</p>
+        <p>Quem pode ver cada painel e quem de fato entra.</p>
         <ul>
-          <li>Visão por papel e por app</li>
-          <li>Matriz pessoa × página com edição (simulada)</li>
-          <li>Histórico de concessões e retiradas</li>
+          <li>Acesso por painel, com conceder e retirar</li>
+          <li>Visão geral: tendência de acessos e dias sem acesso de cada pessoa</li>
+          <li>Histórico de acessos por hora</li>
         </ul>
         <a class="botao" href="acessos/">Abrir o Acessos</a>
       </div>
@@ -217,24 +218,24 @@
     <h2>Como foi feito</h2>
     <div class="colunas">
       <div class="bloco">
-        <h3>Uma arquitetura para os seis</h3>
-        <p>Cada app tem o mesmo esqueleto: menu lateral recolhível, filtros, indicadores, tabelas e gráficos. Só a
-          paleta muda. Cada página é um módulo independente, com a tela de um lado e os dados do outro.</p>
+        <h3>As telas de produção</h3>
+        <p>Cada tela é o módulo do sistema real (interface, regras e consultas), só com as integrações trocadas:
+          ERP, banco ao vivo e login saem, e o que a tela grava fica na memória da sessão.</p>
       </div>
       <div class="bloco">
-        <h3>Dados fictícios coerentes</h3>
-        <p>Um gerador com semente fixa cria a empresa inteira. O mesmo cliente compra no Comercial, recebe entrega no
-          Logístico, e a compra da fábrica vira título no Financeiro e NF-e no Fiscal.</p>
+        <h3>Dados fictícios no formato real</h3>
+        <p>Um gerador com semente fixa cria os caches Parquet com as mesmas colunas da produção. As telas leem com
+          Polars e DuckDB, sem saber que os dados são inventados. Toda semana um workflow refaz tudo.</p>
       </div>
       <div class="bloco">
-        <h3>Dados públicos de verdade</h3>
-        <p>Municípios e malhas do IBGE desenham o mapa; dólar, Selic e IPCA vêm do Banco Central. Toda semana um
-          workflow refaz os dados e publica o site de novo.</p>
+        <h3>Python no navegador</h3>
+        <p>O Shinylive roda o mesmo código no Pyodide (WebAssembly, 32 bits). Algumas operações do Polars não
+          aguentam esse ambiente e passam pelo pyarrow; as soluções ficam num módulo só, em cada app.</p>
       </div>
       <div class="bloco">
-        <h3>Leve o bastante para o navegador</h3>
-        <p>As telas leem arquivos Parquet já agregados com Polars, sem banco de dados. Os gráficos são ECharts
-          montados em Python.</p>
+        <h3>Um padrão para os seis</h3>
+        <p>Menu lateral, filtros, cartões, tabelas paginadas e gráficos seguem o mesmo desenho em todos os apps;
+          só a paleta muda.</p>
       </div>
     </div>
   </section>
@@ -242,7 +243,7 @@
 
 <footer>
   Marlon Amaral · código em <a href="https://github.com/biuspoly/Shiny-Python-Portifolio">github.com/biuspoly/Shiny-Python-Portifolio</a><br>
-  A Atlântida Distribuidora, suas filiais, marcas, clientes e pessoas são fictícios.
+  As revendas, marcas, clientes e pessoas que aparecem nos painéis são fictícios.
 </footer>
 </body>
 </html>

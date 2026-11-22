@@ -5,6 +5,7 @@ produtos. Só as datas andam junto com o dia em que o gerador roda, para os
 painéis sempre mostrarem o mês corrente.
 """
 
+import hashlib
 import os
 import random
 import unicodedata
@@ -22,7 +23,7 @@ SEMENTE = 2026
 
 # DATA_BASE=2026-11-20 no ambiente fixa o "hoje" (útil para comparar duas gerações).
 HOJE = date.fromisoformat(os.environ["DATA_BASE"]) if os.getenv("DATA_BASE") else date.today()
-EMPRESA = "Atlântida Distribuidora"
+EMPRESA = "Distribuidora fictícia"
 
 
 def rng(nome: str) -> random.Random:
@@ -30,9 +31,31 @@ def rng(nome: str) -> random.Random:
     return random.Random(f"{SEMENTE}-{nome}")
 
 
+# Palavras que o Faker não deve devolver (nome, sobrenome, bairro, rua) e municípios que ficam fora dos
+# territórios: guardados como hash, para não publicar quais são.
+NOMES_EVITADOS = {"6f790e9c9e0aea51", "475e0686eb742c10"}
+CIDADES_EVITADAS = {"f9cdfe68a7241fd4", "7c5706bc0bf52da5", "2ad4e6c2a578f844", "89381bec1ce4ba3b", "86faff74a84c3834"}
+
+
+def _hash(texto: str) -> str:
+    return hashlib.sha256(sem_acento(texto).upper().strip().encode()).hexdigest()[:16]
+
+
 def faker(nome: str) -> Faker:
     f = Faker("pt_BR")
     f.seed_instance(f"{SEMENTE}-{nome}")
+
+    def sem_evitados(gerar):
+        def gerado() -> str:
+            while True:
+                escolhido = gerar()
+                if not NOMES_EVITADOS & {_hash(p) for p in escolhido.split()}:
+                    return escolhido
+
+        return gerado
+
+    for campo in ("first_name", "last_name", "bairro", "street_name"):
+        setattr(f, campo, sem_evitados(getattr(f, campo)))
     return f
 
 
@@ -61,10 +84,10 @@ class Filial:
 
 
 FILIAIS = [
-    Filial("NAT", "Atlântida Natal", "RN", 2408102),
-    Filial("FOR", "Atlântida Fortaleza", "CE", 2304400),
-    Filial("THE", "Atlântida Teresina", "PI", 2211001),
-    Filial("SLZ", "Atlântida São Luís", "MA", 2111300),
+    Filial("NAT", "Natal", "RN", 2408102),
+    Filial("FOR", "Fortaleza", "CE", 2304400),
+    Filial("THE", "Teresina", "PI", 2211001),
+    Filial("SLZ", "São Luís", "MA", 2111300),
 ]
 
 # marca, categoria, cor (hex), embalagens (nome, litros por caixa, preço da caixa)
@@ -144,7 +167,7 @@ _PESO_CANAL = {"Bar": 0.42, "Restaurante": 0.14, "Mercado": 0.28, "Conveniência
 def cidades_da_filial(filial: Filial, vizinhas: int = 30, interior: int = 45) -> pl.DataFrame:
     """A sede e as vizinhas primeiro (é onde está a maior parte dos clientes), e
     mais um sorteio de cidades do interior: a filial atende o estado inteiro."""
-    todas = municipios()
+    todas = municipios().filter(~pl.col("nome").map_elements(_hash, return_dtype=pl.Utf8).is_in(list(CIDADES_EVITADAS)))
     sede = todas.filter(pl.col("codigo_ibge") == filial.cod_ibge_sede).row(0, named=True)
     do_estado = (
         todas.filter(pl.col("uf") == filial.uf)
@@ -333,11 +356,9 @@ def inicio_do_mes(d: date) -> date:
 
 
 def meses_atras(d: date, n: int) -> date:
-    ano, mes = d.year, d.month - n
-    while mes <= 0:
-        mes += 12
-        ano -= 1
-    return date(ano, mes, 1)
+    """1º dia do mês n meses antes de d (n negativo anda para a frente)."""
+    total = d.year * 12 + (d.month - 1) - n
+    return date(total // 12, total % 12 + 1, 1)
 
 
 def fim_do_mes(d: date) -> date:
