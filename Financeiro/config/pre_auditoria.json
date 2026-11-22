@@ -1,0 +1,100 @@
+{
+  "padrao": {
+    "dias_atras": null,
+    "dias_a_frente": 30,
+    "dias_das_notas": 180,
+    "dias_de_espera_da_nota": 3,
+    "dias_entre_a_nota_e_o_titulo": 10,
+    "especies_de_nota": [
+      "NFE",
+      "NF",
+      "NFF",
+      "NFS",
+      "CTE",
+      "CT",
+      "CTR"
+    ],
+    "regras_desligadas": [],
+    "tolerancia_valor": 0.05,
+    "tolerancia_dias_vencimento": 3,
+    "costume": {
+      "historico_minimo": 5,
+      "parcela_minima": 0.8
+    },
+    "valor": {
+      "historico_minimo": 5,
+      "valor_minimo": 1000.0,
+      "fator_sobre_a_mediana": 3.0,
+      "fator_por_despesa": {},
+      "parcela_anterior_paga": 0.95
+    },
+    "mes": {
+      "meses_minimos": 3,
+      "gasto_minimo": 1000.0,
+      "fator_sobre_a_media": 2.0,
+      "fator_por_despesa": {}
+    },
+    "despesas_vigiadas": [],
+    "ler_pdf_escaneado": true,
+    "sefaz": {
+      "ligada": false,
+      "maximo_por_rodada": 20,
+      "pausa_segundos": 1.0,
+      "revalidar_autorizada_depois_de_dias": 7,
+      "repetir_depois_de_dias": 1
+    },
+    "descricao": {
+      "minimo_de_letras": 10,
+      "frases_genericas": [
+        "servicos prestados",
+        "servico prestado",
+        "prestacao de servicos",
+        "prestacao de servico",
+        "conforme contrato",
+        "conforme proposta",
+        "conforme orcamento",
+        "servicos diversos",
+        "servicos gerais",
+        "referente",
+        "ref",
+        "mes de",
+        "competencia",
+        "nota fiscal",
+        "nfs-e",
+        "nfse"
+      ]
+    },
+    "assinatura": false,
+    "assinatura_dispensada": {
+      "fabrica_que_dispensa_a_auditoria": true,
+      "despesas": [
+        "61",
+        "96"
+      ]
+    },
+    "regras_a_ligar": {
+      "item_fora_da_natureza": false,
+      "despesa_fora_da_natureza": false,
+      "rps_pela_nfse": false,
+      "ja_pago_em_outro_vencimento": false
+    },
+    "natureza": {
+      "notas_minimas_da_despesa": 10,
+      "notas_minimas_da_natureza": 5,
+      "parcela_minima": 0.8,
+      "itens_no_detalhe": 3
+    },
+    "nota_gemea": {
+      "dias_entre_as_notas": 7,
+      "dias_do_costume": 180
+    },
+    "contratos": {
+      "especies": [
+        "CON"
+      ],
+      "dias_antes": 20,
+      "dias_depois": 10
+    }
+  },
+  "por_revenda": {}
+}

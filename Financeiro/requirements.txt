@@ -4,3 +4,11 @@ pyarrow
 pandas
 faicons
 loguru
+cachetools
+python-dotenv
+lxml
+qrcode
+holidays
+python-dateutil
+openpyxl
+et-xmlfile

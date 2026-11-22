@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 tmp/
 site/
+# O que a tela grava rodando local (no Shinylive fica na memória do navegador).
+Financeiro/data/manual/
+Financeiro/data/leituras/
+Financeiro/uploads/

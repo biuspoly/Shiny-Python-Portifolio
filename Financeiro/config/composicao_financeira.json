@@ -1,0 +1,265 @@
+{
+  "_o_que_e": "Catálogo da Composição Financeira do Diário (versão do portfólio).",
+  "itens": [
+    {
+      "chave": "credito_fabrica",
+      "rotulo": "Crédito fábrica",
+      "categoria": "SALDO CRÉDITO FÁBRICA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "estoque_do_dia",
+      "rotulo": "Estoque do dia",
+      "categoria": "ESTOQUE DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "bloqueio_judicial",
+      "rotulo": "Bloqueio judicial",
+      "categoria": "LIMITES",
+      "natureza": "limite"
+    },
+    {
+      "chave": "limite_especial",
+      "rotulo": "Limite especial",
+      "categoria": "LIMITES",
+      "natureza": "limite"
+    },
+    {
+      "chave": "saldo_liberado_conta",
+      "rotulo": "Saldo liberado na conta",
+      "categoria": "LIMITES",
+      "natureza": "limite"
+    },
+    {
+      "chave": "aplicacao_financeira",
+      "rotulo": "Aplicacao financeira",
+      "categoria": "LIMITES",
+      "natureza": "limite"
+    },
+    {
+      "chave": "saldo_liberado",
+      "rotulo": "Saldo liberado + Aplicação financeira",
+      "categoria": "LIMITES",
+      "natureza": "limite"
+    },
+    {
+      "chave": "modelo_iv",
+      "rotulo": "Modelo IV (dinheiro e pix)",
+      "categoria": "MOVIMENTAÇÃO DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "transf_outros_bancos_entra",
+      "rotulo": "Transferência de outros bancos",
+      "categoria": "MOVIMENTAÇÃO DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "transf_matriz_filial_entra",
+      "rotulo": "Transferência de Matriz/Filial",
+      "categoria": "MOVIMENTAÇÃO DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "brinks_antes_16",
+      "rotulo": "Pix diário",
+      "rotulo_anterior": "Depósito Brinks antes das 16:00h",
+      "categoria": "MOVIMENTAÇÃO DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "brinks_apos_16",
+      "rotulo": "Depósito Brinks após as 16:00h",
+      "categoria": "MOVIMENTAÇÃO DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "saque",
+      "rotulo": "Saque",
+      "categoria": "MOVIMENTAÇÃO DO DIA",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "saldo_caixa_dia_anterior",
+      "rotulo": "Saldo caixa dia anterior",
+      "categoria": "OUTRAS ENTRADAS",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "saldo_dinheiro_cobranca",
+      "rotulo": "Saldo dinheiro cobrança",
+      "categoria": "OUTRAS ENTRADAS",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "adiantamento_romaneios",
+      "rotulo": "Adiantamento de romaneios",
+      "categoria": "OUTRAS ENTRADAS",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "emprestimos_devolucoes",
+      "rotulo": "Empréstimos/Devoluções",
+      "categoria": "OUTRAS ENTRADAS",
+      "natureza": "entrada"
+    },
+    {
+      "chave": "devolucoes_emprestimos",
+      "rotulo": "Devoluções/Empréstimos",
+      "categoria": "OUTRAS SAÍDAS",
+      "natureza": "saida"
+    },
+    {
+      "chave": "transf_outros_bancos_sai",
+      "rotulo": "Transferência para outros bancos",
+      "categoria": "OUTRAS SAÍDAS",
+      "natureza": "saida"
+    },
+    {
+      "chave": "transf_matriz_filial_sai",
+      "rotulo": "Transferência para Matriz/Filial",
+      "categoria": "OUTRAS SAÍDAS",
+      "natureza": "saida"
+    },
+    {
+      "chave": "romaneio_pendente",
+      "rotulo": "Romaneio pendente encerrado",
+      "categoria": "OUTRAS SAÍDAS",
+      "natureza": "saida"
+    },
+    {
+      "chave": "credito_mar_utilizado",
+      "rotulo": "Crédito Maré utilizado",
+      "categoria": "CRÉDITO MARÉ",
+      "natureza": "saida"
+    },
+    {
+      "chave": "novo_saldo_liberado",
+      "rotulo": "Novo saldo liberado na conta",
+      "categoria": "SALDO PARCIAL",
+      "natureza": "parcial"
+    },
+    {
+      "chave": "novo_saldo_com_especial",
+      "rotulo": "Novo saldo com especial",
+      "categoria": "SALDO PARCIAL",
+      "natureza": "parcial"
+    },
+    {
+      "chave": "total_despesas_sugeridas",
+      "rotulo": "Total de despesas sugeridas",
+      "categoria": "DESPESAS",
+      "natureza": "saida"
+    },
+    {
+      "chave": "saldo_final_liberado",
+      "rotulo": "Saldo final liberado na conta",
+      "categoria": "SALDO FINAL",
+      "natureza": "total"
+    },
+    {
+      "chave": "saldo_uso_especial",
+      "rotulo": "Saldo para uso do especial liberado",
+      "categoria": "SALDO FINAL",
+      "natureza": "total"
+    }
+  ],
+  "bancos": [
+    {
+      "chave": "bradesco_1",
+      "rotulo": "Bradesco 1"
+    },
+    {
+      "chave": "bradesco_2",
+      "rotulo": "Bradesco 2"
+    },
+    {
+      "chave": "sicoob_1",
+      "rotulo": "Sicoob 1"
+    },
+    {
+      "chave": "itau",
+      "rotulo": "Itaú"
+    },
+    {
+      "chave": "daycoval_1",
+      "rotulo": "Daycoval 1"
+    },
+    {
+      "chave": "bb",
+      "rotulo": "BB"
+    },
+    {
+      "chave": "caixa_999",
+      "rotulo": "Caixa 999",
+      "sempre": true
+    }
+  ],
+  "destinos_extra_pagamento": [
+    "Fabrica"
+  ],
+  "destinos_extra_por_revenda": {
+    "Natal": [
+      "Cartão de Crédito"
+    ]
+  },
+  "icone_do_destino": {
+    "Cartão de Crédito": "img/ppf/cartao-icon.svg"
+  },
+  "bandeiras": {
+    "destinos": [
+      "Cartão de Crédito"
+    ],
+    "palavras": {
+      "amex": [
+        "AMEX",
+        "AMERICAN"
+      ],
+      "visa": [
+        "VISA"
+      ],
+      "mastercard": [
+        "MASTERCARD",
+        "MASTER"
+      ],
+      "elo": [
+        "ELO"
+      ],
+      "hipercard": [
+        "HIPERCARD",
+        "HIPER"
+      ]
+    },
+    "icones": {
+      "amex": "img/ppf/cartao-amex.svg",
+      "visa": "img/ppf/cartao-visa.svg",
+      "mastercard": "img/ppf/cartao-mastercard.svg",
+      "elo": "img/ppf/cartao-elo.svg",
+      "hipercard": "img/ppf/cartao-hipercard.svg"
+    }
+  },
+  "sufixo_conta_por_revenda": {
+    "Natal": {
+      "bradesco_1": "Matriz",
+      "bradesco_2": "Filial"
+    }
+  },
+  "banco_do_brinks_apos_16": {
+    "Natal": "bradesco_1",
+    "Fortaleza": "itau",
+    "Teresina": "bb",
+    "São Luís": "bradesco_1"
+  },
+  "idade_maxima_batida_dias": 10,
+  "documentos_caixa_999": {
+    "prefixos_fora": [
+      "AC0",
+      "CR0"
+    ],
+    "prefixo_com_excecao_pix": "AC0"
+  },
+  "revendas_saque_no_lugar_do_brinks": [],
+  "revendas_999_so_valor_positivo": [],
+  "revendas_extrato_caixa_invertido": []
+}

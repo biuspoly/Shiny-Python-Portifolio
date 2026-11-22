@@ -10,6 +10,7 @@ from datetime import date, datetime, timedelta
 import polars as pl
 
 from gerador import base as b
+from gerador import diario
 
 PASTA = b.RAIZ / "Financeiro" / "data" / "bd_financeiro"
 
@@ -165,7 +166,7 @@ def _titulo(nome, cnpj, licenca, seq, num, fo, venc, valor, juros, codigo, descr
         "conselho_user": None,
         "CNPJ_REV": cnpj,
         "LICENCA": licenca,
-        "valor_pago": None,
+        "valor_pago": round(valor + (juros or 0), 2),
         "juros": juros,
         "banco": None,
         "pagar": None,
@@ -456,6 +457,8 @@ def gerar() -> None:
         "extratos_fabricas_tabela": partidas,
         "emprestimos_revendas": _emprestimos_revendas(r),
     }
+    # O Diário Financeiro: saldos, caixa 999, Dados Manuais, pagamentos da tela e a Composição.
+    tabelas |= diario.tabelas(b.rng("financeiro-diario"), REVENDAS, cp, CODIGO_DESPESA, LIMITES)
     for nome, df in tabelas.items():
         df.write_parquet(PASTA / f"{nome}.parquet", compression="zstd")
         print(f"  bd_financeiro/{nome}.parquet: {df.height:,} linhas".replace(",", "."))

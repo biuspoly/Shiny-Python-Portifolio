@@ -1,18 +1,89 @@
 {
   "_o_que_e": "Parâmetros das telas do Financeiro (versão do portfólio, revendas fictícias).",
   "fluxo_consolidado": {
-    "colunas": ["Natal", "Fortaleza", "PI + MA", "Teresina", "São Luís", "TOTAL"],
-    "grupos": {"PI + MA": ["Teresina", "São Luís"]},
+    "colunas": [
+      "Natal",
+      "Fortaleza",
+      "PI + MA",
+      "Teresina",
+      "São Luís",
+      "TOTAL"
+    ],
+    "grupos": {
+      "PI + MA": [
+        "Teresina",
+        "São Luís"
+      ]
+    },
     "coluna_total": "TOTAL",
     "coluna_a_parte": null
   },
-  "codigos_emprestimo": [106, 107, 108, 109, 110],
-  "codigos_ledger_emprestimo": {"entrada": [157, 159], "saida": [158, 160]},
-  "saldos_iniciais_emprestimos": {
-    "Fortaleza": {"Natal": 180000.0},
-    "São Luís": {"HOLDING": 250000.0}
+  "codigos_emprestimo": [
+    106,
+    107,
+    108,
+    109,
+    110
+  ],
+  "codigos_ledger_emprestimo": {
+    "entrada": [
+      157,
+      159
+    ],
+    "saida": [
+      158,
+      160
+    ]
   },
-  "revendas_sem_expediente_sabado": ["Teresina"],
+  "saldos_iniciais_emprestimos": {
+    "Fortaleza": {
+      "Natal": 180000.0
+    },
+    "São Luís": {
+      "HOLDING": 250000.0
+    }
+  },
+  "revendas_sem_expediente_sabado": [
+    "Teresina"
+  ],
   "revendas_sem_extrato_fabrica": [],
-  "banco_caixa": 999
+  "banco_caixa": 999,
+  "banco_pagamento_por_revenda": {
+    "Natal": "Bradesco 1",
+    "Fortaleza": "Bradesco 1",
+    "Teresina": "BB",
+    "São Luís": "Bradesco 1"
+  },
+  "contrapartes_emprestimo_fora_das_revendas": [
+    "HOLDING"
+  ],
+  "desconto_padrao": null,
+  "despesas_no_logistico": {},
+  "espelhar_app_antigo": false,
+  "independente_do_antigo": true,
+  "grupos_transferencia_matriz_filial": {
+    "PI + MA": [
+      "Teresina",
+      "São Luís"
+    ]
+  },
+  "historico_data_minima": {},
+  "liberacao_manual": {
+    "boletos": false
+  },
+  "linhas_por_pagina_contas_pagar": {
+    "Natal": 50,
+    "Fortaleza": 50,
+    "Teresina": 50,
+    "São Luís": 50
+  },
+  "primeira_marcacao_segundos": 10,
+  "revendas_monitoradas_envio_extratos": [
+    "Natal",
+    "Fortaleza",
+    "Teresina",
+    "São Luís"
+  ],
+  "somente_leitura": {},
+  "entrada_manual_sem_vencimento_hoje": {}
 }

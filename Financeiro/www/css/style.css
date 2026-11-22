@@ -8129,9 +8129,9 @@ shiny-data-frame thead tr.filters .lixeira-todos { display: block; margin: 0 aut
 }
 
 #faixa_pagamentos .ppf-botao-fabrica.ativo img { box-shadow: 0 0 12px #6dba53; }
-#faixa_pagamentos .ppf-botao-fabrica.ppf-fabrica-froneri img { filter: drop-shadow(0 0 6px #93c5fd); }
-#faixa_pagamentos .ppf-botao-fabrica.ppf-fabrica-froneri:hover img { filter: drop-shadow(0 0 8px #1d4ed8); }
-#faixa_pagamentos .ppf-botao-fabrica.ppf-fabrica-froneri.ativo img {
+#faixa_pagamentos .ppf-botao-fabrica.ppf-fabrica-parceiro img { filter: drop-shadow(0 0 6px #93c5fd); }
+#faixa_pagamentos .ppf-botao-fabrica.ppf-fabrica-parceiro:hover img { filter: drop-shadow(0 0 8px #1d4ed8); }
+#faixa_pagamentos .ppf-botao-fabrica.ppf-fabrica-parceiro.ativo img {
   background: #dbeafe;
   box-shadow: 0 0 12px #1d4ed8;
 }
@@ -9971,4 +9971,22 @@ shiny-data-frame table thead tr.filters input {
   color: #fff;
   font-size: 1.05rem;
   white-space: nowrap;
+}
+
+/* Portfólio: a escolha da revenda no cabeçalho (no original, o ?REVENDA= da URL). */
+.cabecalho-revenda .shiny-input-container {
+  margin: 0;
+  width: auto;
+}
+.cabecalho-revenda select.form-select {
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 2rem 0.2rem 0.6rem;
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+.cabecalho-revenda select.form-select option {
+  color: #212529;
 }

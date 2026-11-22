@@ -1,0 +1,11 @@
+{
+  "assunto_do_upload": {
+    "bancos_extratos": "extratos_bancos",
+    "batida_diaria": "batida_diaria",
+    "fabricas_extratos": "extratos_fabricas",
+    "fabricas_planilhas": "planilhas_fabricas",
+    "modelo_iv": "modelo_iv"
+  },
+  "pastas_origem": {},
+  "renomear_na_chegada": false
+}

@@ -37,6 +37,9 @@ def _shinylive() -> str:
 def montar() -> None:
     if SITE.exists():
         shutil.rmtree(SITE)
+    # O que a tela grava rodando local não vai para o site: lá cada visitante começa do zero.
+    for sobra in ("Financeiro/data/manual", "Financeiro/data/leituras", "Financeiro/uploads"):
+        shutil.rmtree(RAIZ / sobra, ignore_errors=True)
     for pasta, caminho in APPS.items():
         print(f"exportando {pasta} -> site/{caminho}/")
         subprocess.run(

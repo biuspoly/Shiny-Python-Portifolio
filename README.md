@@ -22,13 +22,15 @@ A primeira abertura baixa o ambiente (de 15 a 30 segundos); depois fica no cache
 |---|---|
 | **Comercial** | Diário de Vendas (meta, tendência, cobertura e histórico por categoria e produto), Curva ABC de clientes, Mapa Comercial (potencial e cobertura por município sobre a malha e a população do IBGE) |
 | **Logístico** | Frota (Geral, Entrada e Saída: débitos, multas, restrições, combustível e mapa), Planilha de Entregas, Devoluções (Detalhes, Caixas, Devoluções e Gráficos) |
-| **Financeiro** | Fluxo Financeiro (posição com a fábrica e empréstimos entre revendas, com histórico diário), Empréstimos, Juros, Extratos bancários |
+| **Financeiro** | Diário Financeiro (saldos dos bancos, composição financeira do dia e Contas a Pagar com auditoria, marcação e envio), Pagamentos, Dados Manuais, Fluxo Financeiro (posição com a fábrica e empréstimos entre revendas, com histórico diário), Empréstimos, Juros, Extratos bancários |
 | **Fiscal** | Apuração (ICMS, livro fiscal item a item, PIS/COFINS), Demonstrativo de Faturamento em PDF |
 | **Monitoramento** | Visão geral, usuários conectados, erros, desempenho e rotinas, lidos dos logs de telemetria |
 | **Acessos** | Acesso por painel, visão geral de uso e histórico de acessos |
 
 O que no sistema real grava em banco ou no ERP (uma justificativa, uma transferência de veículo, a baixa de
-um extrato, um acesso) aqui grava na memória da sessão: vale até a página fechar.
+um extrato, um acesso) aqui grava na memória da sessão: vale até a página fechar. No Diário Financeiro isso
+nem precisou de adaptação: o código de produção já tem um caminho para quando o MySQL está fora do ar
+(a gravação vai para um arquivo e uma fila), e no portfólio o banco simplesmente nunca responde.
 
 ## Do sistema real para o portfólio
 

@@ -1,0 +1,119 @@
+{
+  "apelidos": {},
+  "contas": [
+    {
+      "revenda": "Natal",
+      "banco": "Bradesco",
+      "conta": "10000-0",
+      "banco_contabil": "Bradesco 1",
+      "conta_contabil": "1100",
+      "cod_banco": "237"
+    },
+    {
+      "revenda": "Natal",
+      "banco": "Bradesco",
+      "conta": "10001-1",
+      "banco_contabil": "Bradesco 2",
+      "conta_contabil": "1101",
+      "cod_banco": "237"
+    },
+    {
+      "revenda": "Natal",
+      "banco": "Itaú",
+      "conta": "10002-2",
+      "banco_contabil": "Itaú",
+      "conta_contabil": "1102",
+      "cod_banco": "341"
+    },
+    {
+      "revenda": "Natal",
+      "banco": "Caixa",
+      "conta": "10003-3",
+      "banco_contabil": "Caixa 999",
+      "conta_contabil": "1103",
+      "cod_banco": "999"
+    },
+    {
+      "revenda": "Fortaleza",
+      "banco": "Bradesco",
+      "conta": "10100-0",
+      "banco_contabil": "Bradesco 1",
+      "conta_contabil": "1110",
+      "cod_banco": "237"
+    },
+    {
+      "revenda": "Fortaleza",
+      "banco": "Itaú",
+      "conta": "10101-1",
+      "banco_contabil": "Itaú",
+      "conta_contabil": "1111",
+      "cod_banco": "341"
+    },
+    {
+      "revenda": "Fortaleza",
+      "banco": "Daycoval",
+      "conta": "10102-2",
+      "banco_contabil": "Daycoval 1",
+      "conta_contabil": "1112",
+      "cod_banco": "707"
+    },
+    {
+      "revenda": "Fortaleza",
+      "banco": "Caixa",
+      "conta": "10103-3",
+      "banco_contabil": "Caixa 999",
+      "conta_contabil": "1113",
+      "cod_banco": "999"
+    },
+    {
+      "revenda": "Teresina",
+      "banco": "BB",
+      "conta": "10200-0",
+      "banco_contabil": "BB",
+      "conta_contabil": "1120",
+      "cod_banco": "001"
+    },
+    {
+      "revenda": "Teresina",
+      "banco": "Bradesco",
+      "conta": "10201-1",
+      "banco_contabil": "Bradesco 1",
+      "conta_contabil": "1121",
+      "cod_banco": "237"
+    },
+    {
+      "revenda": "Teresina",
+      "banco": "Caixa",
+      "conta": "10202-2",
+      "banco_contabil": "Caixa 999",
+      "conta_contabil": "1122",
+      "cod_banco": "999"
+    },
+    {
+      "revenda": "São Luís",
+      "banco": "Bradesco",
+      "conta": "10300-0",
+      "banco_contabil": "Bradesco 1",
+      "conta_contabil": "1130",
+      "cod_banco": "237"
+    },
+    {
+      "revenda": "São Luís",
+      "banco": "Sicoob",
+      "conta": "10301-1",
+      "banco_contabil": "Sicoob 1",
+      "conta_contabil": "1131",
+      "cod_banco": "756"
+    },
+    {
+      "revenda": "São Luís",
+      "banco": "Caixa",
+      "conta": "10302-2",
+      "banco_contabil": "Caixa 999",
+      "conta_contabil": "1132",
+      "cod_banco": "999"
+    }
+  ],
+  "colunas_sem_conta": [],
+  "por_codigo_compensacao": {}
+}

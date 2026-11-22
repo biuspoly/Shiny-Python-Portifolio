@@ -4,8 +4,19 @@ from faicons import icon_svg
 from shiny import ui
 
 ICONE_EXTRATO = "file-invoice-dollar"
-ICONE_FLUXO_FABRICA = "money-bill-transfer"
-ICONE_EMPRESTIMOS = "hand-holding-dollar"
+ICONE_DIARIO = "img/ppf/composicao_black.svg"
+ICONE_CONTAS_PAGAR = "img/ppf/contas_pagar.svg"
+ICONE_PAGAMENTOS = "img/ppf/pagamentos.svg"
+ICONE_DADOS_MANUAIS = "img/ppf/dados_manuais.svg"
+ICONE_CREDITO_FABRICA = "img/ppf/credito_fabrica.svg"
+ICONE_FLUXO_FABRICA = "img/ppf/fluxohnk.svg"
+ICONE_CONTAS_RECEBER = "img/ppf/contas_receber.svg"
+ICONE_LANCAMENTOS = "img/ppf/pagar.svg"
+ICONE_FAROL = "img/ppf/farol-auditoria.svg"
+ICONE_ENVIO_EXTRATOS = "img/ppf/farol.svg"
+ICONE_EMPRESTIMOS = "img/ppf/receber.svg"
+ICONE_MARÉ = "img/ppf/mare-icon.svg"
+ICONE_FABRICA = "img/ppf/fabrica-icon.svg"
 
 
 def titulo_secao(
