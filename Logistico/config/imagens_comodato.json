@@ -1,0 +1,5 @@
+{
+  "sinonimos": {"REF": "REFRIGERADOR", "REFR": "REFRIGERADOR", "FREEZER": "REFRIGERADOR", "HOR": "HORIZONTAL", "VERT": "VERTICAL",
+                "CX": "CAIXA", "PLAST": "PLASTICO", "PLASTICA": "PLASTICO", "MAD": "MADEIRA", "GELA PLACA": "GELOPLACA"},
+  "marcas": ["MARE"]
+}

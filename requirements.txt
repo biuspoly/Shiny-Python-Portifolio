@@ -21,3 +21,7 @@ python-dotenv
 lxml
 qrcode
 holidays
+sqlalchemy
+xlsxwriter
+rapidfuzz
+python-dateutil

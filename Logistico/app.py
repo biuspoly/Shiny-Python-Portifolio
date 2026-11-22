@@ -12,8 +12,12 @@ except AttributeError:  # no Shinylive a saída é a do navegador, sem reconfigu
 
 from core.atualizacao import cartao_atualizacao, obter_atualizacao  # noqa: E402
 from core.carregamento import com_carregamento  # noqa: E402
-from core.config import NOME_APP, NOME_PORTFOLIO  # noqa: E402
+from core.config import NOME_APP, NOME_PORTFOLIO, REVENDAS_CNPJ  # noqa: E402
 from core.cores import (  # noqa: E402
+    COMODATO_BTN_CANCELAR,
+    COMODATO_BTN_CANCELAR_HOVER,
+    COMODATO_BTN_CONFIRMAR,
+    COMODATO_BTN_CONFIRMAR_HOVER,
     DESTAQUE,
     FROTA_CABECALHO_BG,
     FROTA_CABECALHO_TEXTO,
@@ -25,6 +29,15 @@ from core.cores import (  # noqa: E402
     TEXTO_INPUTS,
 )
 from core.forca_style import forca_style  # noqa: E402
+from pages.Comodatos import (  # noqa: E402
+    pag_comodatos_saldo_server,
+    pag_comodatos_saldo_ui,
+    pag_comodatos_server,
+    pag_comodatos_ui,
+    pag_solicitacao_server,
+    pag_solicitacao_ui,
+)
+from pages.Comodatos.Dados.dados_comodato import PASTA_PARQUET as PASTA_COMODATO  # noqa: E402
 from pages.Devolucoes import (  # noqa: E402
     pag_dev_caixas_server,
     pag_dev_caixas_ui,
@@ -54,7 +67,15 @@ CSS_ESTILO = (PASTA_APP / "www" / "css" / "style.css").read_text(encoding="utf-8
 CSS_INICIAL = (PASTA_APP / "www" / "css" / "inicial.css").read_text(encoding="utf-8")
 
 # Página -> (pasta, tabelas) do cartão "Atualizado em" (Devoluções monta o próprio).
-MAPA_ATUALIZACAO = {"pde": (PASTA_PDE, ("tb_pde",))}
+MAPA_ATUALIZACAO = {
+    "pde": (PASTA_PDE, ("tb_pde",)),
+    "comod_solic": (PASTA_COMODATO, ("clientes_inadimplentes_titulos_bruto", "comod_solicitado_bruto")),
+    "comod_comod": (PASTA_COMODATO, ("comod_geral_bruto",)),
+    "comod_vas": (PASTA_COMODATO, ("saldo_comodatos_geral_bruto", "saldo_livro_bruto")),
+}
+# Telas que escolhem a revenda no cabeçalho (no original, pelo ?REVENDA= da URL).
+TABS_COMODATO = {"comod_solic", "comod_comod", "comod_vas"}
+REVENDA_PADRAO_COMODATO = "Natal"
 
 TABS_DEVOLUCOES = {"dev_det", "dev_cx", "dev_dev", "dev_graf"}
 TABS_FROTAS = {"fro", "fro_ent", "fro_sai"}
@@ -71,6 +92,9 @@ MENU = {
     "link_pag_dev_cx": "dev_cx",
     "link_pag_dev_dev": "dev_dev",
     "link_pag_dev_graf": "dev_graf",
+    "link_pag_comod_solic": "comod_solic",
+    "link_pag_comod_comod": "comod_comod",
+    "link_pag_comod_vas": "comod_vas",
 }
 
 
@@ -98,6 +122,16 @@ def _menu() -> list:
             ),
             open=False,
         ),
+        ui.accordion(
+            ui.accordion_panel(
+                "Comodatos",
+                ui.input_action_button("link_pag_comod_solic", "Solicitação", icon=icon_svg("file-signature")),
+                ui.input_action_button("link_pag_comod_comod", "Comodatos", icon=icon_svg("handshake")),
+                ui.input_action_button("link_pag_comod_vas", "Vasilhames", icon=icon_svg("boxes-stacked")),
+                icon=icon_svg("snowflake"),
+            ),
+            open=False,
+        ),
     ]
 
 
@@ -118,6 +152,9 @@ app_ui = ui.page_sidebar(
         ui.nav_panel(None, com_carregamento(pag_dev_caixas_ui()), value="dev_cx"),
         ui.nav_panel(None, com_carregamento(pag_dev_devolucoes_ui()), value="dev_dev"),
         ui.nav_panel(None, com_carregamento(pag_dev_graficos_ui()), value="dev_graf"),
+        ui.nav_panel(None, com_carregamento(pag_solicitacao_ui()), value="comod_solic"),
+        ui.nav_panel(None, com_carregamento(pag_comodatos_ui()), value="comod_comod"),
+        ui.nav_panel(None, com_carregamento(pag_comodatos_saldo_ui()), value="comod_vas"),
         id="conteudo_tabs",
         selected="fro",
     ),
@@ -135,6 +172,10 @@ app_ui = ui.page_sidebar(
             --frota-texto-escuro: {FROTA_TEXTO_ESCURO};
             --frota-cabecalho-bg: {FROTA_CABECALHO_BG};
             --frota-cabecalho-texto: {FROTA_CABECALHO_TEXTO};
+            --comod-confirmar: {COMODATO_BTN_CONFIRMAR};
+            --comod-confirmar-escuro: {COMODATO_BTN_CONFIRMAR_HOVER};
+            --comod-cancelar: {COMODATO_BTN_CANCELAR};
+            --comod-cancelar-escuro: {COMODATO_BTN_CANCELAR_HOVER};
         }}
     """),
     ui.tags.style(CSS_ESTILO),
@@ -145,6 +186,8 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/pde.js")),
     ui.tags.script(src=forca_style("js/devolucoes.js")),
     ui.tags.script(src=forca_style("js/tabela_resize.js")),
+    ui.tags.script(src=forca_style("js/comodatos.js")),
+    ui.tags.script(src=forca_style("js/marcar_todos.js")),
     ui.tags.script(src=forca_style("js/custom.js")),
     title=ui.div(
         ui.div(
@@ -171,6 +214,10 @@ def server(input, output, session):
     pag_dev_caixas_server(resumo_cabecalho_dev)
     pag_dev_devolucoes_server(resumo_cabecalho_dev)
     pag_dev_graficos_server(resumo_cabecalho_dev)
+    versao_cache_comod = reactive.value(0, name="versao_cache_comod")
+    pag_solicitacao_server(versao_cache_comod)
+    pag_comodatos_server(versao_cache_comod)
+    pag_comodatos_saldo_server(versao_cache_comod)
 
     @render.ui
     def valuebox_atualizacao():
@@ -190,7 +237,22 @@ def server(input, output, session):
         if alvo is None:
             return None
         pasta, nomes = alvo
-        return cartao_atualizacao(obter_atualizacao(pasta, *nomes), DESTAQUE)
+        cartao = cartao_atualizacao(obter_atualizacao(pasta, *nomes), DESTAQUE)
+        if aba_atual not in TABS_COMODATO:
+            return cartao
+        with reactive.isolate():
+            escolhida = input.revenda_escolhida() if "revenda_escolhida" in input else REVENDA_PADRAO_COMODATO
+        revenda = ui.div(
+            ui.input_select(
+                "revenda_escolhida",
+                None,
+                {"": "Todas as revendas", **{n.title(): n.title() for n in REVENDAS_CNPJ}},
+                selected=escolhida,
+            ),
+            class_="cabecalho-revenda",
+            title="Revenda",
+        )
+        return ui.div(revenda, cartao, class_="cabecalho-comodato")
 
     def _ligar_botao(botao: str, painel: str) -> None:
         @reactive.effect
@@ -202,4 +264,5 @@ def server(input, output, session):
         _ligar_botao(botao, painel)
 
 
-app = App(app_ui, server, static_assets=PASTA_APP / "www")
+# Os anexos do Comodato ficam em uploads/, servidos por URL como no original.
+app = App(app_ui, server, static_assets={"/": PASTA_APP / "www", "/uploads": PASTA_APP / "uploads"})

@@ -40,6 +40,9 @@ def montar() -> None:
     # O que a tela grava rodando local não vai para o site: lá cada visitante começa do zero.
     for sobra in ("Financeiro/data/manual", "Financeiro/data/leituras", "Financeiro/uploads"):
         shutil.rmtree(RAIZ / sobra, ignore_errors=True)
+    for anexo in (RAIZ / "Logistico" / "uploads").rglob("*"):
+        if anexo.is_file() and anexo.name not in ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf"):
+            anexo.unlink()
     for pasta, caminho in APPS.items():
         print(f"exportando {pasta} -> site/{caminho}/")
         subprocess.run(

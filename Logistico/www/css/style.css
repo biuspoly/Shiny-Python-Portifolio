@@ -4318,3 +4318,26 @@ a.chat-flutuante-enviar:hover {
   font-size: 1.05rem;
   white-space: nowrap;
 }
+
+/* Portfólio: a escolha da revenda no cabeçalho (no original, o ?REVENDA= da URL). */
+.cabecalho-revenda .shiny-input-container {
+  margin: 0;
+  width: auto;
+}
+.cabecalho-revenda select.form-select {
+  background-color: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.2rem 2rem 0.2rem 0.6rem;
+  --bs-form-select-bg-img: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+}
+.cabecalho-revenda select.form-select option {
+  color: #212529;
+}
+.cabecalho-comodato {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+}

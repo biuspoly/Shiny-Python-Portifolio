@@ -17,3 +17,11 @@ certifi
 urllib3
 charset-normalizer
 idna
+cachetools
+sqlalchemy
+python-dateutil
+xlsxwriter
+fpdf2
+Pillow
+fonttools
+defusedxml

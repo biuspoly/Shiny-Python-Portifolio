@@ -21,7 +21,7 @@ A primeira abertura baixa o ambiente (de 15 a 30 segundos); depois fica no cache
 | App | Telas |
 |---|---|
 | **Comercial** | Diário de Vendas (meta, tendência, cobertura e histórico por categoria e produto), Curva ABC de clientes, Mapa Comercial (potencial e cobertura por município sobre a malha e a população do IBGE) |
-| **Logístico** | Frota (Geral, Entrada e Saída: débitos, multas, restrições, combustível e mapa), Planilha de Entregas, Devoluções (Detalhes, Caixas, Devoluções e Gráficos) |
+| **Logístico** | Frota (Geral, Entrada e Saída: débitos, multas, restrições, combustível e mapa), Comodatos (Solicitação, Comodatos e Vasilhames: travas do cliente, pedido ao ERP, documentos do CEV, recolha e distrato), Planilha de Entregas, Devoluções (Detalhes, Caixas, Devoluções e Gráficos) |
 | **Financeiro** | Diário Financeiro (saldos dos bancos, composição financeira do dia e Contas a Pagar com auditoria, marcação e envio), Pagamentos, Dados Manuais, Fluxo Financeiro (posição com a fábrica e empréstimos entre revendas, com histórico diário), Empréstimos, Juros, Extratos bancários |
 | **Fiscal** | Apuração (ICMS, livro fiscal item a item, PIS/COFINS), Demonstrativo de Faturamento em PDF |
 | **Monitoramento** | Visão geral, usuários conectados, erros, desempenho e rotinas, lidos dos logs de telemetria |

@@ -7,3 +7,10 @@ site/
 Financeiro/data/manual/
 Financeiro/data/leituras/
 Financeiro/uploads/
+.rlib/
+# Cópia dos .parquet para os apps em R (gerador/r_dados.py).
+R/*/data/
+Logistico/uploads/comodatos/*/*
+!Logistico/uploads/comodatos/pdv/PDV_exemplo.pdf
+!Logistico/uploads/comodatos/comodato/CEV_exemplo.pdf
+!Logistico/uploads/comodatos/canhoto/CANHOTO_exemplo.pdf
