@@ -32,6 +32,29 @@ um extrato, um acesso) aqui grava na memória da sessão: vale até a página fe
 nem precisou de adaptação: o código de produção já tem um caminho para quando o MySQL está fora do ar
 (a gravação vai para um arquivo e uma fila), e no portfólio o banco simplesmente nunca responde.
 
+## A versão original em R
+
+Antes do Python, o sistema existiu em R Shiny (bs4Dash, reactable, DuckDB). Em `R/` estão três desses apps
+com o código original: **Comercial** (Diário de Venda e Mapa Comercial), **Logístico** (Frota, Planilha de
+Entregas, Devoluções e Comodato) e **Acessos**. Eles rodam no navegador pelo
+[Shinylive para R](https://posit-dev.github.io/r-shinylive/) (webR) e ficam em `site/r/`.
+
+A ideia foi mexer o mínimo: as telas são as originais e mudam só as conexões.
+
+- **MySQL → DuckDB em memória.** As tabelas são montadas dos mesmos Parquet fictícios, com os nomes e as
+  colunas do MySQL, e as consultas originais (inclusive INSERT e UPDATE) rodam como estão. Um invólucro
+  pequeno cuida das diferenças de dialeto: crase vira aspas, `LIKE` vira `ILIKE` e texto compara sem
+  diferenciar maiúscula, como no MySQL.
+- **ERP (ODBC) → um DuckDB por revenda**, com as tabelas de pedido, CEV, romaneio e nota que os scripts de
+  pedido e recolha do comodato leem e gravam.
+- **PDF**: o contrato e o distrato eram R Markdown com LaTeX, que o webR não tem; um `render()` substituto
+  desenha o documento com o `pdf()` do próprio R.
+- **Parquet no navegador**: o `read_parquet` do DuckDB é extensão, indisponível no webR; os arquivos são lidos
+  pelo `nanoparquet` e registrados no DuckDB.
+
+Para rodar localmente: `shiny::runApp("R/Logistico")` (com os pacotes instalados e os dados copiados por
+`python -m gerador.gerar_tudo`).
+
 ## Do sistema real para o portfólio
 
 Cada app é independente, com a sua cópia de `core/` e `www/`, e cada tela é um módulo autossuficiente

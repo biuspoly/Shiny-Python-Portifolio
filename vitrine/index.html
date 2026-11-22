@@ -88,6 +88,7 @@
   .botao:hover { filter: brightness(1.12); }
   section.tecnica { max-width: 1180px; margin: 3rem auto 0; }
   section.tecnica h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  section.tecnica .intro { color: var(--suave); margin: 0 0 1.25rem; max-width: 80ch; }
   .colunas { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
   .bloco { background: #fff; border-radius: 12px; border: 1px solid var(--linha); padding: 1rem 1.15rem; }
   .bloco h3 { margin: 0 0 0.4rem; font-size: 1.05rem; }
@@ -211,6 +212,55 @@
           <li>Histórico de acessos por hora</li>
         </ul>
         <a class="botao" href="acessos/">Abrir o Acessos</a>
+      </div>
+    </article>
+  </div>
+
+  <section class="tecnica">
+    <h2>Versão original em R</h2>
+    <p class="intro">Antes do Python, o mesmo sistema existiu em R Shiny (bs4Dash, reactable, DuckDB), escrito e
+      mantido sozinho. Estes três apps são o código original, com as mesmas telas: só a leitura do MySQL foi
+      trocada pelos mesmos dados fictícios em Parquet, e o R roda no navegador pelo webR. A primeira abertura é
+      mais demorada (de 30 segundos a 1 minuto) porque baixa o R e os pacotes.</p>
+  </section>
+  <div class="conteudo grade">
+    <article class="app" style="--cor:#06825d">
+      <img src="img/r_comercial.webp" alt="Diário de Venda do Comercial em R" loading="lazy">
+      <div class="app-corpo">
+        <h2>Comercial (R)</h2>
+        <p>O Diário de Venda e o Mapa Comercial originais.</p>
+        <ul>
+          <li>Diário de Venda com metas, tendência, cobertura, indicadores e os gráficos de histórico</li>
+          <li>Mapa Comercial: potencial e cobertura por município com Leaflet e sf</li>
+        </ul>
+        <a class="botao" href="r/comercial/">Abrir o Comercial em R</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#254d71">
+      <img src="img/r_logistico.webp" alt="Comodatos do Logístico em R" loading="lazy">
+      <div class="app-corpo">
+        <h2>Logístico (R)</h2>
+        <p>Frota, entregas, devoluções e comodato, como eram em R.</p>
+        <ul>
+          <li>Frota: geral, entrada e saída de veículos</li>
+          <li>Planilha de Entregas e Devoluções (detalhes, caixas, valores e gráficos)</li>
+          <li>Comodato: solicitação, pedido, documentos, recolha com distrato em PDF e saldo de vasilhames</li>
+        </ul>
+        <a class="botao" href="r/logistico/">Abrir o Logístico em R</a>
+      </div>
+    </article>
+
+    <article class="app" style="--cor:#3e2352">
+      <img src="img/r_acessos.webp" alt="Visão geral do Acessos em R" loading="lazy">
+      <div class="app-corpo">
+        <h2>Acessos (R)</h2>
+        <p>O painel de logs e permissões original.</p>
+        <ul>
+          <li>Visão geral com a tendência de acessos e os dias sem acesso</li>
+          <li>Acessos, usuários e permissões por painel</li>
+        </ul>
+        <a class="botao" href="r/acessos/">Abrir o Acessos em R</a>
       </div>
     </article>
   </div>

@@ -1,0 +1,26 @@
+#chat_id_geral_frota_user_input {
+  border-radius: 15px;
+  overflow-y: hidden
+}
+
+.bi.bi-robot path {
+  display: none !important;  /* remove o SVG original */
+}
+
+.bi.bi-robot {
+  max-width: 100% !important;
+  max-height: 100% !important;
+  width: 24px;
+  height: 24px;
+  background-image: url("img/robot.svg"); /* caminho do arquivo */
+}
+
+shiny-user-message{
+  background-color: #3874AB;
+  color: #fff;
+}
+
+shiny-chat-message{
+  background-color: #bebebe;
+  border-radius: 15px;
+}

@@ -14,3 +14,8 @@ Logistico/uploads/comodatos/*/*
 !Logistico/uploads/comodatos/pdv/PDV_exemplo.pdf
 !Logistico/uploads/comodatos/comodato/CEV_exemplo.pdf
 !Logistico/uploads/comodatos/canhoto/CANHOTO_exemplo.pdf
+# O que as telas em R gravam rodando local (contrato, distrato, anexos enviados).
+R/Logistico/pages/Comodatos/Dados/*.pdf
+R/Logistico/pages/Comodatos/Dados/*.PDF
+R/Logistico/Anexos_Comodato/*
+!R/Logistico/Anexos_Comodato/*_exemplo.pdf

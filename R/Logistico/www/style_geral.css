@@ -1,0 +1,966 @@
+
+/* Centraliza o container da logo */
+/*.main-sidebar .logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 50px;
+  text-align: center;
+}
+*/
+
+#controlbarId {
+  width: 50px;
+}
+
+.brand-link {
+  pointer-events: none;
+  cursor: default;
+  height: 57px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.main-header,
+.brand-link.bg-secondary {
+  border-bottom: none !important;
+}
+
+.brand-link.bg-secondary {
+  background-color: transparent !important;
+}
+
+/* Logo full sempre visivel independente do estado do sidebar */
+.logo-full {
+  display: block;
+}
+.sidebar-collapse .logo-full {
+  display: block;
+}
+
+.logo-mini {
+  display: none;
+}
+.sidebar-collapse .logo-mini {
+  display: none;
+}
+
+/* Ajustes para as imagens */
+.logo-full,
+.logo-mini {
+  width: auto;
+  max-height: 45px;
+  max-width: 180px;
+}
+
+/* Brand sempre descompactada, independente do estado do sidebar */
+.sidebar-mini.sidebar-collapse .main-sidebar {
+  overflow: visible !important;
+}
+
+.sidebar-mini.sidebar-collapse .brand-link {
+  width: 220px !important;
+  overflow: visible !important;
+  position: relative;
+  z-index: 900;
+}
+
+.sidebar-mini.sidebar-collapse .brand-text {
+  display: inline-block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.sidebar-toggle-left  { display: inline-block; }
+.sidebar-toggle-right { display: none; }
+
+body.sidebar-collapse .sidebar-toggle-left  { display: none; }
+body.sidebar-collapse .sidebar-toggle-right { display: inline-block; }
+
+.navbar-white {
+  background-color: #254D71;
+}
+
+.nav-sidebar .nav-treeview > li > a:hover,
+.nav-sidebar .nav-treeview > li.active > a {
+  color: #FFFFFF !important;
+}
+
+.custom-switch {
+  display: none !important;
+}
+
+
+.content-wrapper {
+  border-top-left-radius: 15px !important;
+}
+
+[id^="bt_guia"].btn-secondary:hover,
+[id^="bt_guia"].btn-secondary:focus,
+[id^="bt_guia"].btn-secondary:active {
+  background-color: #254D71 !important; /* mesma cor do normal */
+  border-color: #254D71 !important;
+  box-shadow: none !important;
+}
+
+
+/*
+.skin-blue .main-header .logo,
+.skin-blue .main-header .navbar,
+.skin-blue .main-header .logo:hover {
+  background-color: #254D71;
+}
+
+.skin-blue .main-header .navbar .sidebar-toggle:hover {
+    background-color: #367fa9;
+}
+
+.skin-blue .left-side, .skin-blue .main-sidebar, .skin-blue .wrapper {
+    background-color: #254D71;
+}
+*/
+/* Estilo comum para todos os ícones */
+.custom-icon-car,
+.custom-icon-custo,
+.custom-icon-indicadores,
+.custom-icon-calendario,
+.custom-icon-devolucoes,
+.custom-icon-romaneios,
+.custom-icon-rom-aberto,
+.custom-icon-rom-altera,
+.custom-icon-puxada,
+.custom-icon-vasilhame,
+.custom-icon-solic,
+.custom-icon-comodatos,
+.custom-icon-comodato,
+.custom-icon-freezer,
+.custom-icon-geladeira {
+  position: relative;
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  color: transparent !important; /* Oculta o ícone font-awesome original */
+  margin-right: 10px;            /* Espaço entre ícone e texto */
+  vertical-align: middle; /* 🟢 Alinha com o texto */
+}
+
+/* Aplica a imagem como ::before */
+.custom-icon-car::before,
+.custom-icon-custo::before,
+.custom-icon-indicadores::before,
+.custom-icon-calendario::before,
+.custom-icon-devolucoes::before,
+.custom-icon-romaneios::before,
+.custom-icon-rom-aberto::before,
+.custom-icon-rom-altera::before,
+.custom-icon-puxada::before,
+.custom-icon-vasilhame::before,
+.custom-icon-solic::before,
+.custom-icon-comodatos::before,
+.custom-icon-comodato::before,
+.custom-icon-freezer::before,
+.custom-icon-geladeira::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* Centraliza a imagem */
+  width: 24px;
+  height: 24px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Imagens específicas */
+.custom-icon-car::before {
+  background-image: url("acomp_log_www/img/car-light.svg");
+}
+
+.custom-icon-custo::before {
+  background-image: url("acomp_log_www/img/custos-light.svg");
+}
+
+.custom-icon-indicadores::before {
+  background-image: url("acomp_log_www/img/indicadores-light.svg");
+}
+
+.custom-icon-calendario::before {
+  background-image: url("acomp_log_www/img/table-light.svg");
+}
+
+.custom-icon-devolucoes::before {
+  background-image: url("acomp_log_www/img/dev-light.svg");
+}
+
+.custom-icon-romaneios::before {
+  background-image: url("acomp_log_www/img/rom-light.svg");
+}
+
+.custom-icon-rom-aberto::before {
+  background-image: url("acomp_log_www/img/rom-aberto-light.svg");
+}
+
+.custom-icon-rom-altera::before {
+  background-image: url("acomp_log_www/img/rom-altera-light.svg");
+}
+
+.custom-icon-puxada::before {
+  background-image: url("acomp_log_www/img/puxada-light.svg");
+}
+
+.custom-icon-vasilhame::before {
+  background-image: url("acomp_log_www/img/vasilhame-light.svg");
+}
+
+.custom-icon-solic::before {
+  background-image: url("acomp_log_www/img/solicitacao_light.svg");
+}
+.custom-icon-comodato::before {
+  background-image: url("acomp_log_www/img/comodato.svg");
+}
+.custom-icon-freezer::before {
+  background-image: url("acomp_log_www/img/freezer_light.svg");
+}
+.custom-icon-comodatos::before {
+  background-image: url("acomp_log_www/img/comodatos_light.svg");
+}
+.custom-icon-geladeira::before {
+  background-image: url("acomp_log_www/img/geladeira_light.svg");
+}
+
+/* Imagens customizadas */
+
+.custom-icon-gelapl,
+.custom-icon-horiz,
+.custom-icon-quiosque,
+.custom-icon-carrinho,
+.custom-icon-verti,
+.custom-icon-cerv1l,
+.custom-icon-cerv300ml,
+.custom-icon-cerv600mlhnk,
+.custom-icon-cerv600ml {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  margin-right: 10px;
+  vertical-align: middle;
+  color: transparent !important; /* Oculta o ícone font-awesome */
+}
+
+.custom-icon-gelapl::before,
+.custom-icon-horiz::before,
+.custom-icon-quiosque::before,
+.custom-icon-carrinho::before,
+.custom-icon-verti::before,
+.custom-icon-cerv1l::before,
+.custom-icon-cerv300ml::before,
+.custom-icon-cerv600mlhnk::before,
+.custom-icon-cerv600ml::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.custom-icon-cerv1l::before {
+  background-image: url("acomp_log_www/img/produtos/107522.svg");
+}
+
+.custom-icon-cerv300ml::before {
+  background-image: url("acomp_log_www/img/produtos/152597.svg");
+}
+
+.custom-icon-cerv600mlhnk::before {
+  background-image: url("acomp_log_www/img/produtos/215209.svg");
+}
+
+.custom-icon-cerv600ml::before {
+  background-image: url("acomp_log_www/img/produtos/107522.svg");
+}
+
+.custom-icon-gelapl::before {
+  background-image: url("acomp_log_www/img/produtos/gelaplaca.svg");
+}
+
+.custom-icon-carrinho::before {
+  background-image: url("acomp_log_www/img/produtos/carrinho.svg");
+}
+
+.custom-icon-horiz::before {
+  background-image: url("acomp_log_www/img/produtos/horizontal.svg");
+}
+
+.custom-icon-verti::before {
+  background-image: url("acomp_log_www/img/produtos/vertical.svg");
+}
+
+.custom-icon-quiosque::before {
+  background-image: url("acomp_log_www/img/produtos/quiosque.svg");
+}
+
+/* Imagens para submenu */
+
+.custom-icon-detalhe-dev,
+.custom-icon-grafico-dev,
+.custom-icon-dev-dev,
+.custom-icon-caixa-dev,
+.custom-icon-car-geral,
+.custom-icon-car-entrada,
+.custom-icon-car-saida {
+  position: relative;
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  color: transparent !important; /* Oculta o ícone font-awesome original */
+  margin-right: 10px;            /* Espaço entre ícone e texto */
+  vertical-align: middle; /* 🟢 Alinha com o texto */
+}
+
+.custom-icon-detalhe-dev::before,
+.custom-icon-grafico-dev::before,
+.custom-icon-dev-dev::before,
+.custom-icon-caixa-dev::before,
+.custom-icon-car-geral::before,
+.custom-icon-car-entrada::before,
+.custom-icon-car-saida::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* Centraliza a imagem */
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.custom-icon-car-geral::before {
+  background-image: url("acomp_log_www/img/car-geral.svg");
+}
+
+.custom-icon-car-entrada::before {
+  background-image: url("acomp_log_www/img/car-entrada.svg");
+}
+
+.custom-icon-car-saida::before {
+  background-image: url("acomp_log_www/img/car-saida.svg");
+}
+
+.custom-icon-detalhe-dev::before {
+  background-image: url("acomp_log_www/img/detalhe_pedido.svg");
+}
+
+.custom-icon-grafico-dev::before {
+  background-image: url("acomp_log_www/img/graph-light.svg");
+}
+
+.custom-icon-dev-dev::before {
+  background-image: url("acomp_log_www/img/money-light.svg");
+}
+
+.custom-icon-caixa-dev::before {
+  background-image: url("acomp_log_www/img/box-light.svg");
+}
+
+
+
+/* Estilo comum para todos os ícones de combustivel */
+
+.custom-icon-custo_ticket,
+.custom-icon-gas_ticket,
+.custom-icon-veloc_ticket,
+.custom-icon-custo_veloc_ticket,
+.custom-icon-custo_gas_ticket,
+.custom-icon-veloc_gas_ticket {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  margin-right: 10px;
+  vertical-align: middle;
+  color: transparent !important; /* Oculta o ícone font-awesome */
+}
+
+/* Aplica a imagem como ::before */
+.custom-icon-custo_ticket::before,
+.custom-icon-gas_ticket::before,
+.custom-icon-veloc_ticket::before,
+.custom-icon-custo_veloc_ticket::before,
+.custom-icon-custo_gas_ticket::before,
+.custom-icon-veloc_gas_ticket::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.custom-icon-custo_ticket::before {
+  background-image: url("acomp_log_www/img/custo_ticket.svg");
+}
+.custom-icon-gas_ticket::before {
+  background-image: url("acomp_log_www/img/gas_ticket.svg");
+}
+.custom-icon-veloc_ticket::before {
+  background-image: url("acomp_log_www/img/veloc_ticket.svg");
+}
+.custom-icon-custo_veloc_ticket::before {
+  background-image: url("acomp_log_www/img/custo_veloc_ticket.svg");
+}
+.custom-icon-custo_gas_ticket::before {
+  background-image: url("acomp_log_www/img/custo_gas_ticket.svg");
+}
+.custom-icon-veloc_gas_ticket::before {
+  background-image: url("acomp_log_www/img/veloc_gas_ticket.svg");
+}
+
+/* Estilo comum para todos os ícones de frotas */
+.custom-icon-caminhao,
+.custom-icon-carro,
+.custom-icon-moto,
+.custom-icon-cavalo {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  margin-right: 10px;
+  vertical-align: middle;
+  color: transparent !important; /* Oculta o ícone font-awesome */
+}
+
+/* Aplica a imagem como ::before */
+.custom-icon-caminhao::before,
+.custom-icon-carro::before,
+.custom-icon-moto::before,
+.custom-icon-cavalo::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.custom-icon-caminhao::before {
+  background-image: url("acomp_log_www/img/caminhao-light.svg");
+}
+.custom-icon-carro::before {
+  background-image: url("acomp_log_www/img/carro-light.svg");
+}
+.custom-icon-moto::before {
+  background-image: url("acomp_log_www/img/moto-light.svg");
+}
+.custom-icon-cavalo::before {
+  background-image: url("acomp_log_www/img/cavalo-light.svg");
+}
+
+/*
+.skin-blue .sidebar-menu>li>a {
+    position: relative;
+    top: 2px;
+}
+*/
+
+table.dataTable {
+  font-size: 11px !important;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15) !important;
+}
+
+div.dataTables_wrapper {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 10px;
+}
+
+table.dataTable thead th {
+  background-color: #3874AB !important;
+  color: white !important;
+  font-family: Verdana, sans-serif !important;
+  font-weight: bold !important;
+  text-align: center !important;
+}
+
+table.dataTable thead tr:first-child th:first-child {
+  border-top-left-radius: 8px !important;
+}
+table.dataTable thead tr:first-child th:last-child {
+  border-top-right-radius: 8px !important;
+}
+
+table.dataTable thead tr:first-child th {
+  border-top: 4px solid transparent !important; /* substitua pela cor desejada */
+}
+
+/* Estiliza os inputs do filtro */
+table.dataTable thead input {
+  max-width: 110px;
+  max-height: 20px;
+  font-size: 11px;
+  padding: 2px 4px;
+  text-align: center !important;
+}
+
+/* 🟢 Centraliza o conteúdo das células (corpo da tabela) */
+table.dataTable tbody td {
+  white-space: nowrap;       /* impede quebra de linha */
+  overflow: hidden;          /* esconde o excesso de texto */
+  text-overflow: ellipsis;   /* adiciona "..." quando ultrapassa o tamanho */
+  max-width: 120px;          /* define largura máxima da célula */
+  background: white;
+}
+
+table.dataTable thead input[type='search'] {
+  background-color: white !important;
+  color: black;
+  /*width: 100px !important;*/
+  display: block !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+.glyphicon {
+  display: none !important;
+}
+
+.dataTables_wrapper .selectize-dropdown-content {
+  font-size: 10px !important;
+}
+
+
+#shiny-tab-id_indicadores table.dataTable tbody td {
+  max-width: 80px !important;          /* define largura máxima da célula */
+}
+#shiny-tab-id_indicadores table.dataTable thead input {
+  max-width: 80px !important;          /* define largura máxima da célula */
+}
+#shiny-tab-id_indicadores table.dataTable thead input[type='search'] {
+  width: 80px !important;          /* define largura máxima da célula */
+}
+
+
+
+.reactable {
+  font-size: 16px !important;
+  /*font-family: Verdana, sans-serif !important;*/
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.rt-tbody {
+  background-color: transparent !important;
+}
+
+.rt-table {
+  border-top-left-radius: 8px !important;
+}
+
+/*
+.rt-th-inner {
+  background-color: #254D71 !important;
+  color: white !important;
+  font-weight: bold !important;
+  text-align: center !important;
+}
+.rt-td-filter {
+  background-color: #254D71 !important;
+  text-align: center !important;
+}
+
+.rt-filter,
+.reactable td {
+  text-align: center !important;
+}
+*/
+
+
+
+.box {
+  /*border-top: none !important;
+  box-shadow: none !important;*/
+  box-shadow: 0 0 10px gray;
+}
+
+.card-header.border-0 {
+  display: none;
+}
+
+/*
+.btn.checkbtn.btn-primary.active,
+.btn.checkbtn.btn-primary.focus,
+.btn.checkbtn.btn-primary.focus.active,
+#bt_34.btn-primary:active, 
+#bt_34.btn-primary:focus,
+#bt_carro.btn-primary:active, 
+#bt_carro.btn-primary:focus,
+#bt_toco.btn-primary:active, 
+#bt_toco.btn-primary:focus,
+#bt_moto.btn-primary:active, 
+#bt_moto.btn-primary:focus {
+  background-color: #81A1C1 !important;
+}
+
+#bt_auto1 .btn,
+#bt_auto2 .btn {
+  margin-right: 5px !important;
+}
+
+#bt_auto1 .btn:last-child,
+#bt_auto2 .btn:last-child {
+  margin-right: 0 !important;
+}
+
+
+
+.control-sidebar {
+  width: 50px !important;
+}
+*/
+.checkbtn.btn:focus:not(.active),
+.checkbtn.btn:focus-visible:not(.active) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.vscomp-wrapper,
+.vscomp-toggle-button {
+  z-index: 9999;
+  height: 36px !important;
+  max-width: 100%;
+  white-space: nowrap;
+}
+
+.vscomp-toggle-button .vscomp-value {
+  display: inline-block;
+  max-width: 100%;
+  height: 36px !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vscomp-toggle-button .vscomp-value-tag {
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#consumo {
+  font-size: 12px;
+  font-style: italic;
+}
+
+#shiny-tab-id_frotas.active {
+  overflow: hidden !important; /* tira scroll só no painel ativo */
+}
+
+#id_hrsaida_pde {
+  position: relative !important;
+}
+.shiny-feedback-message {
+  right: 10px !important;
+}
+
+.selectize-input {
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.btn.dropdown-toggle.btn-color {
+  border: 1px solid gray !important;
+}
+
+#pla_alt_input-label,
+#mot_alt_input-label,
+#rom_alt_input-label,
+#data_rom_input-label,
+#pro_rom_input-label,
+#cli_rom_input-label,
+#mot_rom_input-label,
+#cob_rom_input-label,
+#ven_rom_input-label,
+#nfe_rom_input-label,
+#ped_rom_input-label,
+#rom_rom_input-label,
+#motivo_dev_input-label,
+#data_dev_graf_input-label,
+#datapeddev_graf_input-label,
+#revendadev_graf_input-label,
+#codclidev_graf_input-label,
+#codpeddev_graf_input-label,
+#codvendev_graf_input-label,
+#codmotdev_graf_input-label,
+#codproddev_graf_input-label,
+#ultcompdev_graf_input-label,
+#devpeddev_graf_input-label,
+#datapeddev_cx_input-label,
+#revendadev_cx_input-label,
+#codpeddev_cx_input-label,
+#codvendev_cx_input-label,
+#codmotdev_cx_input-label,
+#codclidev_cx_input-label,
+#codproddev_cx_input-label,
+#ultcompdev_cx_input-label,
+#devpeddev_cx_input-label,
+#data_dev_cx_input-label,
+#datapeddev_dev_input-label,
+#revendadev_dev_input-label,
+#codpeddev_dev_input-label,
+#codvendev_dev_input-label,
+#codmotdev_dev_input-label,
+#codclidev_dev_input-label,
+#codproddev_dev_input-label,
+#ultcompdev_dev_input-label,
+#devpeddev_dev_input-label,
+#data_dev_dev_input-label,
+#dataped_dev_input-label,
+#revenda_dev_input-label,
+#codped_dev_input-label,
+#codven_dev_input-label,
+#codmot_dev_input-label,
+#codcli_dev_input-label,
+#codprod_dev_input-label,
+#ultcomp_dev_input-label,
+#devped_dev_input-label,
+#data_dev_input-label,
+#propfrotas_input-label,
+#unidfrotas_input-label,
+#uffrotas_input-label,
+#placafrotas_input-label,
+#tipofrotas_input-label,
+#modelfrotas_input-label,
+#carrocfrotas_input-label,
+#transffrotas_input-label,
+#restadmfrotas_input-label,
+#renajudfrotas_input-label,
+#detranfrotas_input-label,
+#gravamefrotas_input-label,
+#gravamepenfrotas_input-label,
+#propfrotas_input_saida-label,
+#unidfrotas_input_saida-label,
+#uffrotas_input_saida-label,
+#placafrotas_input_saida-label,
+#tipofrotas_input_saida-label,
+#modelfrotas_input_saida-label,
+#carrocfrotas_input_saida-label,
+#restadmfrotas_input_saida-label,
+#renajudfrotas_input_saida-label,
+#detranfrotas_input_saida-label,
+#gravamefrotas_input_saida-label,
+#gravamepenfrotas_input_saida-label,
+#transffrotas_input_saida-label,
+#propfrotas_input_entrada-label,
+#unidfrotas_input_entrada-label,
+#uffrotas_input_entrada-label,
+#placafrotas_input_entrada-label,
+#tipofrotas_input_entrada-label,
+#modelfrotas_input_entrada-label,
+#carrocfrotas_input_entrada-label,
+#restadmfrotas_input_entrada-label,
+#renajudfrotas_input_entrada-label,
+#detranfrotas_input_entrada-label,
+#gravamefrotas_input_entrada-label,
+#gravamepenfrotas_input_entrada-label,
+#transffrotas_input_entrada-label,
+#cli_input_comod_refrig-label,
+#tip_solic_comod_input-label,
+#cid_solic_comod_input-label,
+#cla_solic_comod_input-label,
+#canal_solic_comod_input-label,
+#ven_solic_comod_input-label,
+#stdoc_solic_comod_input-label,
+#ga_solic_comod_input-label,
+#ina_solic_comod_input-label,
+#cli_solic_comod_input-label,
+#data_input_comod_saldo-label,
+#produt_input_comod_saldo-label,
+#interv_input_comod-label,
+#produt_input_comod-label,
+#inadim_input_comod-label,
+#prazoi_input_comod-label,
+#usuari_input_comod-label,
+#status_input_comod-label,
+#ceva_solic_comod_input-label {
+  justify-content: center;        /* centraliza o texto */
+  display: flex;            /* ocupa a largura da coluna */
+  font-size: 12px !important;/* diminui a fonte */
+}
+
+#cevcli_input_comod-label{
+  display: flex;            /* ocupa a largura da coluna */
+  font-size: 12px !important;/* diminui a fonte */
+}
+/*
+.dropdown-menu.show {
+  width: 170px !important;
+  font-size: 14px !important;
+}
+*/
+
+#box_ped_aberto,
+#box_rom_aberto,
+#box_taxa_retorno_det,
+#box_taxa_retorno_cx,
+#box_devol_cx,
+#box_vendas_cx,
+#box_taxa_retorno_dev,
+#box_devol_dev,
+#box_vendas_dev{
+  width: 12vh;
+}
+
+#box_rom_altera_filtro .card-body,
+#box_rom_aberto_filtro .card-body,
+#box_graf_dev_filtro .card-body,
+#box_cx_dev_filtro .card-body,
+#box_dev_dev_filtro .card-body,
+#box_det_dev_filtro .card-body,
+#box_frota_filtro .card-body,
+#box_frota_filtro_entrada .card-body,
+#box_frota_filtro_saida .card-body,
+#box_comodatos_refrig_filtro .card-body,
+#box_comodatos_solic_filtro .card-body,
+#box_comodatos_saldo_filtro .card-body,
+#box_comodatos_filtro .card-body {
+  display: none;
+}
+
+#box_ped_aberto .card-header,
+#box_rom_aberto .card-header,
+#box_vendas_cx .card-header,
+#box_devol_cx .card-header,
+#box_taxa_retorno_cx .card-header,
+#box_vendas_dev .card-header,
+#box_devol_dev .card-header,
+#box_taxa_retorno_det .card-header,
+#box_taxa_retorno_dev .card-header{
+  display: none;
+}
+
+#box_ped_aberto .card-body,
+#box_rom_aberto .card-body,
+#box_vendas_cx .card-body,
+#box_devol_cx .card-body,
+#box_taxa_retorno_cx .card-body,
+#box_vendas_dev .card-body,
+#box_devol_dev .card-body,
+#box_taxa_retorno_det .card-body,
+#box_taxa_retorno_dev .card-body{
+  padding: 4px;
+}
+
+.card#box_ped_aberto,
+.card#box_rom_aberto,
+.card#box_vendas_cx,
+.card#box_devol_cx,
+.card#box_taxa_retorno_cx,
+.card#box_vendas_dev,
+.card#box_devol_dev,
+.card#box_taxa_retorno_det,
+.card#box_taxa_retorno_dev{
+  margin-bottom: 0 !important;
+}
+
+/* Altura dos valueBox */
+#card_rom_pen .small-box,
+#card_ped_pen .small-box {
+    height: 15vh !important;
+}
+
+/* Ajustar o conteúdo interno */
+#card_rom_pen .inner,
+#card_ped_pen .inner {
+    padding-top: 2vh !important;
+}
+
+
+
+/* Retirar footer dos valuebox */
+.small-box-footer {
+  display: none !important;
+}
+
+#bt_check_frota .btn-group:not(:last-child),
+#bt_check_frota_saida .btn-group:not(:last-child),
+#bt_check_frota_entrada .btn-group:not(:last-child){
+    margin-right: 10px;
+}
+
+.btn-primary:not(:disabled):not(.disabled).active {
+  background-color: #fff;
+  color: #254D71;
+}
+
+.pretty.p-switch.p-fill input:checked~.state label:after {
+  border-color: black;
+}
+
+.bt_altera_rom:active,
+.bt_altera_rom,
+.bt_rev_transf_frota:active,
+.bt_rev_transf_frota,
+.bt_extra_dev:active,
+.bt_extra_dev,
+.button_anexo_saida:active,
+.button_anexo_saida,
+.button_motivo_saida:active,
+.button_motivo_saida,
+.button_com_env:active,
+.button_com_env,
+.bt_canc_solic_comod:active,
+.bt_canc_solic_comod,
+.button_com_sol:active,
+.button_com_sol,
+.button_group_solic_contrato:active,
+.button_group_solic_contrato,
+.button_group_solic_cev:active,
+.button_group_solic_cev,
+.button_com_act:active,
+.button_com_act,
+.button_com_doc:active,
+.button_com_doc,
+.button_com_cev:active,
+.button_com_cev,
+.button_com_can:active,
+.button_com_can {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  color: #272c30 !important;
+}
+
+#anexo_motivo_saida_progress .progress-bar::after {
+    content: "Upload completo";
+}
+
+@media (min-width: 576px) {
+  .modal-content:has(.modal_dev_ped) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+#anexo_motivo_saida_progress .progress-bar::after {
+    content: "Upload completo";
+}
+
+@media (min-width: 576px) {
+  .modal-content:has(.modal_cli_inad_ped) {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+}

@@ -31,9 +31,26 @@ def _acessos() -> None:
     print(f"  R/Acessos: {len(list(destino.glob('*.parquet')))} tabelas")
 
 
+def _copiar_pasta(app_py: str, app_r: str, *pastas: str) -> None:
+    """Copia os .parquet (e o que mais houver) das pastas de dados do app em Python para o app em R."""
+    for pasta in pastas:
+        origem = b.RAIZ / app_py / "data" / pasta
+        destino = R / app_r / "data" / pasta
+        if destino.exists():
+            shutil.rmtree(destino)
+        shutil.copytree(origem, destino)
+    print(f"  R/{app_r}: {', '.join(pastas)}")
+
+
 def gerar() -> None:
     print("Apps em R")
     _acessos()
+    _copiar_pasta("Logistico", "Logistico", "bd_senatran", "bd_pde", "bd_shiny_bruto", "bd_comodato")
+    _copiar_pasta("Comercial", "Comercial", "bd_comercial")
+    # Meta da fábrica: no original, só existe depois que alguém a envia pela tela. Vazia, como no começo.
+    pl.DataFrame(
+        schema={"REVENDA": pl.Utf8, "MES": pl.Utf8, "CODRED": pl.Utf8, "VALOR": pl.Float64, "VALOR_UMB": pl.Float64}
+    ).write_parquet(R / "Comercial" / "data" / "bd_comercial" / "tb_meta_fabrica.parquet")
 
 
 if __name__ == "__main__":
