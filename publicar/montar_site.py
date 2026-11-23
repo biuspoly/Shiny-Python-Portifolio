@@ -1,10 +1,11 @@
-"""Monta o site estático em site/: a vitrine na raiz e cada app exportado pelo
-Shinylive na sua subpasta (o ambiente Python fica uma vez só, compartilhado).
+"""Monta o site estático em site/: a vitrine (app Shiny) na raiz e, na sua subpasta, cada app que
+ainda não tem endereço no Posit Connect Cloud (Vitrine/enderecos.json). Tudo pelo Shinylive.
 
 Uso (da raiz do repositório): python -m publicar.montar_site
 Para ver: python -m http.server --directory site 8008
 """
 
+import json
 import shutil
 import subprocess
 import sys
@@ -27,6 +28,12 @@ APPS = {
 # nome em shinylive/, de versões diferentes.
 APPS_R = {"Acessos": "acessos", "Logistico": "logistico", "Comercial": "comercial"}
 ANEXOS_EXEMPLO = ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf")
+ENDERECOS = json.loads((RAIZ / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
+
+
+def _sem_posit(apps: dict[str, str], linguagem: str) -> dict[str, str]:
+    """Só os apps sem endereço no Posit: esses continuam no Shinylive."""
+    return {pasta: caminho for pasta, caminho in apps.items() if not ENDERECOS[linguagem].get(pasta)}
 
 
 def _shinylive() -> str:
@@ -42,7 +49,7 @@ def _exportar_r() -> None:
     rscript = shutil.which("Rscript") or "C:/Program Files/R/R-4.6.1/bin/Rscript.exe"
     biblioteca = RAIZ / ".rlib"  # a biblioteca local de R do portfólio, quando existe (no CI não)
     prefixo = f'.libPaths(c("{biblioteca.as_posix()}", .libPaths())); ' if biblioteca.exists() else ""
-    for pasta, caminho in APPS_R.items():
+    for pasta, caminho in _sem_posit(APPS_R, "r").items():
         print(f"exportando R/{pasta} -> site/r/{caminho}/")
         origem, destino = (RAIZ / "R" / pasta).as_posix(), (SITE / "r").as_posix()
         subprocess.run(
@@ -66,7 +73,9 @@ def montar() -> None:
             anexo.unlink()
     for pdf in (RAIZ / "R" / "Logistico" / "pages" / "Comodatos" / "Dados").glob("*.[pP][dD][fF]"):
         pdf.unlink()
-    for pasta, caminho in APPS.items():
+    print("exportando Vitrine -> site/")
+    subprocess.run([_shinylive(), "export", str(RAIZ / "Vitrine"), str(SITE)], check=True, stdout=subprocess.DEVNULL)
+    for pasta, caminho in _sem_posit(APPS, "python").items():
         print(f"exportando {pasta} -> site/{caminho}/")
         subprocess.run(
             [_shinylive(), "export", str(RAIZ / pasta), str(SITE), "--subdir", caminho],
@@ -74,7 +83,6 @@ def montar() -> None:
             stdout=subprocess.DEVNULL,
         )
     _exportar_r()
-    shutil.copytree(RAIZ / "vitrine", SITE, dirs_exist_ok=True)
     # Sem isto o GitHub Pages passa o site pelo Jekyll, que esconde pastas com "_".
     (SITE / ".nojekyll").write_text("", encoding="utf-8")
     tamanho = sum(p.stat().st_size for p in SITE.rglob("*") if p.is_file()) / 1024**2

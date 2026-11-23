@@ -1,7 +1,7 @@
 shiny==1.9.0
 polars==1.18.0
-pyarrow
-pandas
+pyarrow==18.1.0
+pandas==2.2.3
 faicons
 loguru
 cachetools
@@ -12,3 +12,5 @@ holidays
 python-dateutil
 openpyxl
 et-xmlfile
+Pillow
+pypdf

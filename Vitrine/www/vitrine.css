@@ -1,0 +1,89 @@
+:root {
+  --fundo: #f3f5f4;
+  --texto: #1a1a1a;
+  --suave: #5b6470;
+  --linha: rgba(0, 0, 0, 0.08);
+}
+body {
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.5;
+  margin: 0;
+}
+.conteudo { margin: 0 auto; max-width: 1180px; }
+
+.topo {
+  background: linear-gradient(135deg, #06825d 0%, #254d71 35%, #5b3a78 65%, #7a2e1d 100%);
+  color: #fff;
+  padding: 2.5rem 1.25rem 4.5rem;
+}
+.marca { align-items: center; display: flex; gap: 0.9rem; }
+.marca img { height: 40px; }
+.marca span { font-size: 1.1rem; font-weight: 700; }
+.topo h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; line-height: 1.15; margin: 2rem 0 0.8rem; max-width: 22ch; }
+.topo .lead { font-size: 1.15rem; margin: 0; max-width: 62ch; opacity: 0.95; }
+.selos { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.4rem; }
+.selo {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  font-weight: 400;
+  padding: 0.35rem 0.75rem;
+}
+
+main { padding: 0 1.25rem 3rem; }
+.aviso.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+  margin: -2.6rem auto 2.2rem;
+}
+.aviso strong { display: block; }
+.aviso p { color: var(--suave); margin: 0.2rem 0 0; }
+
+.app.card {
+  border: 1px solid var(--linha);
+  border-radius: 12px;
+  border-top: 5px solid var(--cor);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.app.card:hover { box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14); transform: translateY(-3px); }
+.app-foto {
+  aspect-ratio: 16 / 10;
+  border-bottom: 1px solid var(--linha);
+  display: block;
+  object-fit: cover;
+  object-position: top left;
+  width: 100%;
+}
+.app h2 { color: var(--cor); font-size: 1.35rem; margin: 0; }
+.app-resumo { color: var(--suave); margin: 0.35rem 0 0.7rem; }
+.app ul { margin: 0; padding-left: 1.1rem; }
+.app li { margin: 0.15rem 0; }
+.app .card-footer {
+  align-items: center;
+  background: transparent;
+  border-top: none;
+  display: flex;
+  gap: 0.75rem;
+  padding: 0 1rem 1.15rem;
+}
+.app-botao, .app-botao:hover, .app-botao:focus {
+  background: var(--cor);
+  border-radius: 8px;
+  color: #fff;
+  font-weight: 700;
+}
+.app-botao:hover { filter: brightness(1.12); }
+.app-onde { color: var(--suave); font-size: 0.85rem; }
+
+.tecnica { margin: 3rem 0 1.25rem; }
+.tecnica h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.tecnica .intro { color: var(--suave); margin: 0; max-width: 80ch; }
+.bloco.card { border: 1px solid var(--linha); border-radius: 12px; box-shadow: none; }
+.bloco h3 { font-size: 1.05rem; margin: 0 0 0.4rem; }
+.bloco p { color: var(--suave); margin: 0; }
+
+footer { color: var(--suave); font-size: 0.9rem; padding: 2rem 1.25rem 3rem; text-align: center; }

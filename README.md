@@ -7,14 +7,33 @@ públicos de verdade (IBGE).
 
 **Ver funcionando:** https://biuspoly.github.io/Shiny-Python-Portifolio/
 
-Tudo roda no navegador, sem servidor: os apps são exportados com o
-[Shinylive](https://shiny.posit.co/py/docs/shinylive.html), que leva o Python para a página via WebAssembly.
-A primeira abertura baixa o ambiente (de 15 a 30 segundos); depois fica no cache.
+A página de entrada (`Vitrine/`) é um app Shiny exportado com o
+[Shinylive](https://shiny.posit.co/py/docs/shinylive.html), no GitHub Pages. Cada app é publicado no
+[Posit Connect Cloud](https://connect.posit.cloud/) e roda num servidor; o que ainda não tem endereço lá
+(`Vitrine/enderecos.json`) roda no próprio navegador pelo Shinylive, e a primeira abertura baixa o ambiente
+(de 15 a 60 segundos).
 
 | | |
 |---|---|
-| ![Comercial](vitrine/img/comercial.webp) | ![Financeiro](vitrine/img/financeiro.webp) |
-| ![Logístico](vitrine/img/logistico.webp) | ![Fiscal](vitrine/img/fiscal.webp) |
+| ![Comercial](Vitrine/www/img/comercial.webp) | ![Financeiro](Vitrine/www/img/financeiro.webp) |
+| ![Logístico](Vitrine/www/img/logistico.webp) | ![Fiscal](Vitrine/www/img/fiscal.webp) |
+
+## Publicação
+
+O workflow `.github/workflows/publicar.yml` roda a cada push na `main` e toda segunda de manhã:
+
+1. gera os dados fictícios da semana (`python -m gerador.gerar_tudo`);
+2. monta o ramo **`posit`** (`python -m publicar.ramo_posit`): o repositório com os dados gerados e o
+   `manifest.json` de cada app em R, num commit único, regravado a cada execução. É desse ramo que o Posit
+   Connect Cloud publica, com a republicação automática a cada push ligada;
+3. monta o site (`python -m publicar.montar_site`): a vitrine na raiz e, pelo Shinylive, os apps sem endereço
+   no Posit.
+
+No Posit Connect Cloud, cada app é um conteúdo publicado do GitHub: repositório
+`biuspoly/Shiny-Python-Portifolio`, ramo `posit`, arquivo principal `Comercial/app.py` (ou
+`R/Logistico/app.R`). Para os apps em Python o Posit instala o `requirements.txt` da pasta do app, com as
+mesmas versões do Shinylive (Shiny 1.9, Polars 1.18, pyarrow 18.1, pandas 2.2.3, DuckDB 1.1.2). Depois de
+publicar, o endereço do app entra em `Vitrine/enderecos.json`, e a vitrine passa a apontar para ele.
 
 ## Os apps
 
@@ -36,8 +55,9 @@ nem precisou de adaptação: o código de produção já tem um caminho para qua
 
 Antes do Python, o sistema existiu em R Shiny (bs4Dash, reactable, DuckDB). Em `R/` estão três desses apps
 com o código original: **Comercial** (Diário de Venda e Mapa Comercial), **Logístico** (Frota, Planilha de
-Entregas, Devoluções e Comodato) e **Acessos**. Eles rodam no navegador pelo
-[Shinylive para R](https://posit-dev.github.io/r-shinylive/) (webR) e ficam em `site/r/`.
+Entregas, Devoluções e Comodato) e **Acessos**. Eles são publicados no Posit Connect Cloud (o mesmo ramo
+`posit`) e, enquanto não estão lá, rodam no navegador pelo
+[Shinylive para R](https://posit-dev.github.io/r-shinylive/) (webR), em `site/r/`.
 
 A ideia foi mexer o mínimo: as telas são as originais e mudam só as conexões.
 
@@ -63,7 +83,7 @@ Cada app é independente, com a sua cópia de `core/` e `www/`, e cada tela é u
 ```
 <App>/
 ├── app.py                 menu e páginas
-├── requirements.txt       o que o app usa (lido pelo Shinylive)
+├── requirements.txt       o que o app usa (lido pelo Posit e pelo Shinylive)
 ├── config/                parâmetros de negócio em JSON
 ├── core/                  peças comuns do app (cores, cartões, tabela paginada, compat do navegador...)
 ├── pages/<Tela>/
@@ -93,7 +113,7 @@ Dados públicos, com cópia em `gerador/cache/` para rodar sem internet:
 - **Coordenadas dos municípios**: [kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros) (MIT).
 
 As datas acompanham o dia em que o gerador roda; toda segunda o GitHub Actions gera tudo de novo e republica
-o site.
+o site e o ramo `posit`.
 
 ## Rodar localmente
 
@@ -103,7 +123,7 @@ python -m venv .venv
 pip install -r requirements.txt
 
 python -m gerador.gerar_tudo    # refaz os dados (opcional: eles já vêm no repositório)
-cd Comercial && shiny run app.py
+shiny run Comercial/app.py       # ou Vitrine/app.py, a página de entrada
 ```
 
 Para montar o site do Shinylive: `python -m publicar.montar_site` e

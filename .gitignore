@@ -19,3 +19,5 @@ R/Logistico/pages/Comodatos/Dados/*.pdf
 R/Logistico/pages/Comodatos/Dados/*.PDF
 R/Logistico/Anexos_Comodato/*
 !R/Logistico/Anexos_Comodato/*_exemplo.pdf
+# Gerado no workflow para o ramo posit (publicar/ramo_posit.py).
+R/*/manifest.json

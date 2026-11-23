@@ -12,6 +12,7 @@ pyecharts
 folium
 shapely
 fpdf2
+pypdf
 openpyxl
 tzdata
 shinylive==0.8.13

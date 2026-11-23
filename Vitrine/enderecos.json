@@ -1,0 +1,17 @@
+{
+  "_como_usar": "Endereço de cada app publicado no Posit Connect Cloud. Vazio (null) = o app segue no Shinylive, exportado pelo publicar/montar_site.py para a subpasta dele.",
+  "site": "https://biuspoly.github.io/Shiny-Python-Portifolio/",
+  "python": {
+    "Comercial": null,
+    "Logistico": null,
+    "Financeiro": null,
+    "Fiscal": null,
+    "Monitoramento": null,
+    "Acessos": null
+  },
+  "r": {
+    "Comercial": null,
+    "Logistico": null,
+    "Acessos": null
+  }
+}
