@@ -1104,7 +1104,7 @@ def comodatos_server(input, output, session, valor_navset: str, versao_cache):
                     if pode_enviar
                     else None,
                 ),
-                ui.column(4, ui.img(src="img/comodato_capa.svg", class_="comod-modal-capa")),
+                ui.column(4, ui.img(src="img/comodato_capa.jpg", class_="comod-modal-capa")),
                 style="align-items: flex-start;",
             ),
             title=ui.div("Comodato", style=f"color: {SIDEBAR_BG}"),

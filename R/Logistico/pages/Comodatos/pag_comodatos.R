@@ -536,7 +536,7 @@ pag_comodatos = function(){
     req(session$userData$usuario)
     # output$comodato_capa <- renderImage( 
     #   { 
-    #     list(src = "{diretorio}www/acomp_log_www/img/comodato_capa.svg") 
+    #     list(src = "{diretorio}www/acomp_log_www/img/comodato_capa.jpg") 
     #   }, 
     #   deleteFile = FALSE 
     # ) 
@@ -592,7 +592,7 @@ pag_comodatos = function(){
                      )
               ),
               column(4,
-                     tags$img(src = "acomp_log_www/img/comodato_capa.svg", width = "100%"))
+                     tags$img(src = "acomp_log_www/img/comodato_capa.jpg", width = "100%"))
             ),
             easyClose = TRUE,
             footer = NULL
@@ -649,7 +649,7 @@ pag_comodatos = function(){
                      )
               ),
               column(5,
-                     tags$img(src = "acomp_log_www/img/comodato_capa.svg", width = "100%"))
+                     tags$img(src = "acomp_log_www/img/comodato_capa.jpg", width = "100%"))
             ),
             easyClose = TRUE,
             footer = NULL
@@ -704,7 +704,7 @@ pag_comodatos = function(){
                        )
                 ),
                 column(4,
-                       tags$img(src = "acomp_log_www/img/comodato_capa.svg", width = "100%"))
+                       tags$img(src = "acomp_log_www/img/comodato_capa.jpg", width = "100%"))
               ),
               easyClose = TRUE,
               footer = NULL

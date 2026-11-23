@@ -452,7 +452,7 @@ pag_comodatos_inadimplentes = function(){
                    )
             ),
             column(3,
-                   tags$img(src = "acomp_log_www/img/comodato_capa.svg", width = "100%"))
+                   tags$img(src = "acomp_log_www/img/comodato_capa.jpg", width = "100%"))
           ),
           easyClose = FALSE,
           footer = NULL

@@ -1105,7 +1105,7 @@ def solicitacao_server(input, output, session, valor_navset: str, versao_cache):
                             ),
                         ),
                     ),
-                    ui.column(3, ui.img(src="img/comodato_capa.svg", class_="comod-solic-capa")),
+                    ui.column(3, ui.img(src="img/comodato_capa.jpg", class_="comod-solic-capa")),
                     style="align-items: flex-start;",
                 ),
                 ui.output_ui("aviso_documento_ui"),
