@@ -104,10 +104,10 @@ def _gravar_excel(tabelao: pl.DataFrame, buffer) -> None:
 
 
 CLASSES_VEICULO = [
-    ("Cavalo", "cavalo-light.svg", "Cavalo e Reboque"),
-    ("Caminhão", "caminhao-light.svg", "Caminhão"),
-    ("Carro", "carro-light.svg", "Automóvel"),
-    ("Moto", "moto-light.svg", "Motocicleta"),
+    ("Cavalo", "cavalo-light.png", "Cavalo e Reboque"),
+    ("Caminhão", "caminhao-light.png", "Caminhão"),
+    ("Carro", "carro-light.png", "Automóvel"),
+    ("Moto", "moto-light.png", "Motocicleta"),
 ]
 
 _LARGURA_FROTA = {
@@ -514,7 +514,7 @@ def frota_geral_server(input, output, session):
         cartoes.append(
             ui.div(
                 ui.img(
-                    src="img/frota-total-light.svg",
+                    src="img/frota-total-light.png",
                     class_="icone-classe-veiculo",
                     title="Frota total",
                 ),

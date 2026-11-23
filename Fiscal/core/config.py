@@ -3,7 +3,6 @@
 from core.config_arquivo import carregar_json
 
 NOME_APP = "Acompanhamento Fiscal"
-NOME_PORTFOLIO = "Portfólio Marlon Amaral"
 USUARIO_PORTFOLIO = "visitante"
 ERP_PADRAO = "ERP"
 

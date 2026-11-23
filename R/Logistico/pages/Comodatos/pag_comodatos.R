@@ -1061,7 +1061,7 @@ pag_comodatos = function(){
 
               // Se for PDF, mostra o ícone pra gerar o distrato; senão, mostra o próprio emoji de recolha
               var conteudo = uniqueVal === 'PDF'
-                ? '<img src=\"acomp_log_www/img/bt_pdf.svg\" width=\"20\" height=\"20\" style=\"vertical-align:middle;\">'
+                ? '<img src=\"acomp_log_www/img/bt_pdf.png\" width=\"20\" height=\"20\" style=\"vertical-align:middle;\">'
                 : uniqueVal;
 
               // Cria o botão como HTML

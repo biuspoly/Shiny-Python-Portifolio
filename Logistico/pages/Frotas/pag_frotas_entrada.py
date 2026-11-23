@@ -46,10 +46,10 @@ CHAVE_ABA_COMBUSTIVEL = "aba_combustivel"
 ABAS = ["Geral", "Rest Adm", "Renajud", "Detran", ABA_COMBUSTIVEL, "Custos"]
 
 CLASSES_VEICULO = [
-    ("Cavalo", "cavalo-light.svg", "Cavalo e Reboque"),
-    ("Caminhão", "caminhao-light.svg", "Caminhão"),
-    ("Carro", "carro-light.svg", "Automóvel"),
-    ("Moto", "moto-light.svg", "Motocicleta"),
+    ("Cavalo", "cavalo-light.png", "Cavalo e Reboque"),
+    ("Caminhão", "caminhao-light.png", "Caminhão"),
+    ("Carro", "carro-light.png", "Automóvel"),
+    ("Moto", "moto-light.png", "Motocicleta"),
 ]
 
 _LARGURA_FROTA = {

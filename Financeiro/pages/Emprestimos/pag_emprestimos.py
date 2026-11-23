@@ -326,7 +326,7 @@ def emprestimos_server(input, output, session, revenda_atual=None):
                         ui.span(
                             ui.input_action_button(
                                 f"pdf_{n}",
-                                ui.tags.img(src="img/ppf/file-upload-2.svg", alt="Enviar PDF", class_="pdf-upload-img"),
+                                ui.tags.img(src="img/ppf/file-upload-2.png", alt="Enviar PDF", class_="pdf-upload-img"),
                                 class_="upload-pdf-btn",
                                 title="Enviar/Substituir PDF",
                             )
@@ -439,7 +439,7 @@ def emprestimos_server(input, output, session, revenda_atual=None):
                         ),
                         ui.input_action_button(
                             "excluir_contrato",
-                            ui.tags.img(src="img/ppf/delete-icon.svg", alt="Excluir"),
+                            ui.tags.img(src="img/ppf/delete-icon.png", alt="Excluir"),
                             class_="ppf-modal-btn ppf-modal-btn-excluir",
                             title="Excluir contrato",
                         ),

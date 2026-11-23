@@ -495,8 +495,8 @@ shiny-data-frame table {
 }
 
 .abas-frota {
-  min-width: 660px;
-  max-width: 840px;
+  min-width: 560px;
+  max-width: 760px;
 }
 .abas-frota .shiny-options-group {
   display: flex;
@@ -4302,21 +4302,6 @@ a.chat-flutuante-enviar:hover {
   font-size: 0.72rem;
   font-weight: 600;
   padding: 0.35em 0.7em;
-}
-
-/* Marca fictícia do portfólio, no lugar do logo da revenda. */
-.cabecalho-marca {
-  align-items: center;
-  display: flex;
-  gap: 0.7rem;
-}
-.cabecalho-marca img {
-  height: 2.2rem;
-}
-.cabecalho-marca b {
-  color: #fff;
-  font-size: 1.05rem;
-  white-space: nowrap;
 }
 
 /* Portfólio: a escolha da revenda no cabeçalho (no original, o ?REVENDA= da URL). */

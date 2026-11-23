@@ -1766,7 +1766,7 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                         ),
                         ui.input_action_button(
                             f"excluir_sel_{u.campo}",
-                            ui.TagList(ui.tags.img(src="img/ppf/delete-icon.svg", alt=""), "Excluir selecionados"),
+                            ui.TagList(ui.tags.img(src="img/ppf/delete-icon.png", alt=""), "Excluir selecionados"),
                             class_="ppf-modal-btn-excluir-sel",
                         ),
                         class_="ppf-modal-lista-barra-botoes",
@@ -1800,7 +1800,7 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                                 ),
                                 ui.input_action_button(
                                     f"excluir_{u.campo}_{indice}",
-                                    ui.tags.img(src="img/ppf/delete-icon.svg", alt="Excluir"),
+                                    ui.tags.img(src="img/ppf/delete-icon.png", alt="Excluir"),
                                     class_="ppf-modal-btn ppf-modal-btn-excluir",
                                     title="Excluir",
                                 )
@@ -2686,7 +2686,7 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                 anexo = ui.div(
                     ui.input_action_button(
                         f"anexo999_{i}",
-                        ui.tags.img(src="img/ppf/file-upload-2.svg", alt="Anexar"),
+                        ui.tags.img(src="img/ppf/file-upload-2.png", alt="Anexar"),
                         class_="ppf-999-anexo-btn",
                         title="Anexar arquivo",
                     ),
@@ -3009,7 +3009,7 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                     session.ns("arq_999"),
                     None,
                     button_label=ui.TagList(
-                        ui.tags.img(src="img/ppf/file-upload-2.svg", class_="ppf-arquivo-icone", alt=""),
+                        ui.tags.img(src="img/ppf/file-upload-2.png", class_="ppf-arquivo-icone", alt=""),
                         "Selecionar arquivo PDF",
                     ),
                     placeholder="Nenhum arquivo selecionado",
@@ -3065,7 +3065,7 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                 ),
                 ui.input_action_button(
                     "excluir_999_" + str(indice),
-                    ui.tags.img(src="img/ppf/delete-icon.svg", alt="Excluir"),
+                    ui.tags.img(src="img/ppf/delete-icon.png", alt="Excluir"),
                     class_="ppf-modal-btn ppf-modal-btn-excluir",
                     title="Excluir anexo",
                 ),
@@ -5308,7 +5308,7 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                         ),
                         ui.input_action_button(
                             "excluir_anexo_" + str(indice),
-                            ui.tags.img(src="img/ppf/delete-icon.svg", alt="Excluir"),
+                            ui.tags.img(src="img/ppf/delete-icon.png", alt="Excluir"),
                             class_="ppf-modal-btn ppf-modal-btn-excluir",
                             title="Excluir anexo" if pode_excluir_anexo else "Sem permissão",
                             disabled=not pode_excluir_anexo,
@@ -6455,14 +6455,14 @@ def diario_server(input, output, session, revenda_atual=None, pedir_atualizacao=
                     ui.span(
                         ui.input_action_button(
                             f"lin_anexo_{posicao}",
-                            ui.tags.img(src="img/ppf/file-upload-2.svg", class_="ppf-cel-anexo", alt=""),
+                            ui.tags.img(src="img/ppf/file-upload-2.png", class_="ppf-cel-anexo", alt=""),
                             class_="ppf-btn-linha ppf-btn-anexo",
                             title="Enviar/Substituir PDF" if ctx["pode_anexar"] else "Sem permissão",
                             disabled=not (ligado and ctx["pode_anexar"]),
                         )
                         if ligado or not ident
                         else ui.tags.button(
-                            ui.tags.img(src="img/ppf/file-upload-2.svg", class_="ppf-cel-anexo", alt=""),
+                            ui.tags.img(src="img/ppf/file-upload-2.png", class_="ppf-cel-anexo", alt=""),
                             type="button",
                             class_="btn ppf-btn-linha ppf-btn-anexo ppf-btn-anexo-fora",
                             title="Enviar/Substituir PDF" if ctx["pode_anexar"] else "Sem permissão",

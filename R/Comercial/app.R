@@ -266,7 +266,7 @@ comercial_server <- function(input, output, session) {
   # Renderizar Logo e titulo ------------------------------------------------
 
   output$revenda <- renderUI({
-    dashboardBrand(title = tags$b("Comercial (R)"), image = "acomp_com_www/img/marca_mini.svg", color = "secondary")
+    dashboardBrand(title = tags$b("Fictícia"), image = "acomp_com_www/img/marca_mini.svg", color = "secondary")
   })
 
   # Renderizar abas do menu ------------------------------------------------

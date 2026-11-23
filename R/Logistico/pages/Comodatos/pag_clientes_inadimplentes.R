@@ -1422,7 +1422,7 @@ pag_comodatos_inadimplentes = function(){
                           'data: \\'' + DATA + '\\',' +
                           'nonce: Math.random()' +
                         '})\">' +
-                        '<img src=\\\"acomp_log_www/img/bt_envio_ped.svg\\\" width=\\\"20\\\" height=\\\"20\\\" style=\\\"vertical-align:middle;\\\">' +
+                        '<img src=\\\"acomp_log_www/img/bt_envio_ped.png\\\" width=\\\"20\\\" height=\\\"20\\\" style=\\\"vertical-align:middle;\\\">' +
                         '</button>';
           
               return btn;
@@ -1466,7 +1466,7 @@ pag_comodatos_inadimplentes = function(){
                           'data: \\'' + DATA + '\\',' +
                           'nonce: Math.random()' +
                         '})\">' +
-                        '<img src=\\\"acomp_log_www/img/bt_pdf.svg\\\" width=\\\"20\\\" height=\\\"20\\\" style=\\\"vertical-align:middle;\\\">' +
+                        '<img src=\\\"acomp_log_www/img/bt_pdf.png\\\" width=\\\"20\\\" height=\\\"20\\\" style=\\\"vertical-align:middle;\\\">' +
                         '</button>';
           
               return btn;

@@ -13,7 +13,7 @@ except AttributeError:  # no Shinylive a saída é a do navegador, sem reconfigu
 
 from core.atualizacao import cartao_atualizacao, obter_atualizacao  # noqa: E402
 from core.carregamento import com_carregamento  # noqa: E402
-from core.config import NOME_APP, NOME_PORTFOLIO, REVENDAS_CNPJ  # noqa: E402
+from core.config import NOME_APP, REVENDAS_CNPJ  # noqa: E402
 from core.cores import (  # noqa: E402
     BTN_CANCELAR,
     BTN_CANCELAR_HOVER,
@@ -55,10 +55,11 @@ MENU = [
     ("ppf", "Diário Financeiro", "img/ppf/composicao_black.svg", "Diário Financeiro"),
     ("ppf_pag", "Pagamentos", "img/ppf/pagamentos.svg", "Diário Financeiro"),
     ("ppf_man", "Dados Manuais", "img/ppf/dados_manuais.svg", "Diário Financeiro"),
-    ("flx", "Fluxo Financeiro", "money-bill-transfer", None),
-    ("emp", "Empréstimos", "hand-holding-dollar", None),
-    ("jur", "Juros", "percent", None),
     ("ppf_xtr", "Extratos", "file-invoice-dollar", None),
+    # Fluxo Financeiro divide o ícone com o Fluxo da fábrica, como no original.
+    ("flx", "Fluxo Financeiro", "img/ppf/fluxo_fabrica.svg", None),
+    ("emp", "Empréstimos", "img/ppf/receber.svg", None),
+    ("jur", "Juros", "percent", None),
 ]
 ICONE_DO_GRUPO = {"Diário Financeiro": "img/ppf/composicao_black.svg"}
 # O grupo cujo cabeçalho é a própria página: o clique nele abre o Diário.
@@ -178,11 +179,7 @@ app_ui = ui.page_sidebar(
     # O Fluxo Financeiro: Ctrl/Shift+clique marca a célula, dois cliques abrem o balão.
     ui.tags.script(src=forca_style("js/fluxo.js")),
     title=ui.div(
-        ui.div(
-            ui.tags.img(src="img/marca.svg", alt=""),
-            ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}"),
-            class_="cabecalho-marca",
-        ),
+        ui.tags.img(src="img/logo_ficticia.svg", height="40vh"),
         # O nome da tela ao lado do título, num navset que troca junto com o conteúdo.
         ui.navset_hidden(
             *[

@@ -62,7 +62,7 @@ funcao_guia_frota <- function(aba_frota) {
       description = HTML(
         "<p>Para visualizar se os veículos possuem processos judiciais ativos.</p>
         <p><b>Detalhamento de processos:</b> Para ir no detalhamento de processos, basta ativar a opção ao lado de 'Detalhamento'.</p>
-        <img src='acomp_log_www/img/detal_ativo.svg' alt='Imagem de detalhamento'>"
+        <img src='acomp_log_www/img/detal_ativo.png' alt='Imagem de detalhamento'>"
       ),
       is_id = FALSE
     )$
@@ -72,7 +72,7 @@ funcao_guia_frota <- function(aba_frota) {
       description = HTML("
         <p>Para visualizar os débitos ativos, como IPVA, Licenciamento e Multas.</p>
         <p><b>Detalhamento de multas:</b> Para ir no detalhamento de multas, basta ativar a opção ao lado de 'Detalhamento'.</p>
-        <img src='acomp_log_www/img/detal_ativo.svg' alt='Imagem de detalhamento'>
+        <img src='acomp_log_www/img/detal_ativo.png' alt='Imagem de detalhamento'>
       "),
       is_id = FALSE
     )$
@@ -164,7 +164,7 @@ funcao_guia_frota <- function(aba_frota) {
   #       description = HTML(
   #         "<p>Para visualizar se os veículos possuem processos judiciais ativos.</p>
   #       <p><b>Detalhamento de processos:</b> Para ir no detalhamento de processos, basta ativar a opção ao lado de 'Detalhamento'.</p>
-  #       <img src='acomp_log_www/img/detal_ativo.svg' alt='Imagem de detalhamento'>"
+  #       <img src='acomp_log_www/img/detal_ativo.png' alt='Imagem de detalhamento'>"
   #       ),
   #       is_id = FALSE
   #     )$
@@ -174,7 +174,7 @@ funcao_guia_frota <- function(aba_frota) {
   #       description = HTML("
   #       <p>Para visualizar os débitos ativos, como IPVA, Licenciamento e Multas.</p>
   #       <p><b>Detalhamento de multas:</b> Para ir no detalhamento de multas, basta ativar a opção ao lado de 'Detalhamento'.</p>
-  #       <img src='acomp_log_www/img/detal_ativo.svg' alt='Imagem de detalhamento'>
+  #       <img src='acomp_log_www/img/detal_ativo.png' alt='Imagem de detalhamento'>
   #     "),
   #       is_id = FALSE
   #     )$
@@ -273,7 +273,7 @@ funcao_guia_frota <- function(aba_frota) {
   #       description = HTML(
   #         "<p>Para visualizar se os veículos possuem processos judiciais ativos.</p>
   #       <p><b>Detalhamento de processos:</b> Para ir no detalhamento de processos, basta ativar a opção ao lado de 'Detalhamento'.</p>
-  #       <img src='acomp_log_www/img/detal_ativo.svg' alt='Imagem de detalhamento'>"
+  #       <img src='acomp_log_www/img/detal_ativo.png' alt='Imagem de detalhamento'>"
   #       ),
   #       is_id = FALSE
   #     )$
@@ -283,7 +283,7 @@ funcao_guia_frota <- function(aba_frota) {
   #       description = HTML("
   #       <p>Para visualizar os débitos ativos, como IPVA, Licenciamento e Multas.</p>
   #       <p><b>Detalhamento de multas:</b> Para ir no detalhamento de multas, basta ativar a opção ao lado de 'Detalhamento'.</p>
-  #       <img src='acomp_log_www/img/detal_ativo.svg' alt='Imagem de detalhamento'>
+  #       <img src='acomp_log_www/img/detal_ativo.png' alt='Imagem de detalhamento'>
   #     "),
   #       is_id = FALSE
   #     )$

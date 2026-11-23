@@ -16,7 +16,7 @@ from pages.Historico_Acessos.pag_hist_acessos import pag_hist_acessos_server, pa
 from pages.Permissoes.pag_permissoes import pag_permissoes_server, pag_permissoes_ui  # noqa: E402
 from pages.Visao_Geral.pag_visao_geral import pag_visao_geral_server, pag_visao_geral_ui  # noqa: E402
 
-TITULO_APP = "Acompanhamento de Acessos - Portfólio Marlon Amaral"
+TITULO_APP = "Acompanhamento de Acessos"
 PASTA_APP = Path(__file__).parent
 
 # CSS embutido na página (não por <link>): mesmo desenho do app original.
@@ -72,7 +72,7 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/acessos.js")),
     ui.tags.script(src=forca_style("js/custom.js")),
     ui.tags.script(src=forca_style("js/tabela_resize.js")),
-    title=ui.div(ui.tags.img(src="img/marca.svg", alt=""), ui.tags.b(TITULO_APP), class_="cabecalho-marca"),
+    title=TITULO_APP,
     # Flatly já compilado: o Shinylive não tem o libsass que o tema usaria na hora.
     theme=PASTA_APP / "www" / "css" / "flatly.min.css",
     window_title=TITULO_APP,

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-TITULO_APP = "Acompanhamento de Monitoramento - Portfólio Marlon Amaral"
+TITULO_APP = "Acompanhamento de Monitoramento"
 
 # No original, cada app grava o próprio logs/app.log na pasta dele, e o Monitoramento lê as
 # pastas vizinhas. No portfólio cada app é um pacote à parte no navegador: os logs (fictícios)

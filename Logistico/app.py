@@ -1,7 +1,6 @@
 import sys
 from pathlib import Path
 
-from faicons import icon_svg
 from shiny import App, reactive, render, ui
 
 try:
@@ -12,7 +11,7 @@ except AttributeError:  # no Shinylive a saída é a do navegador, sem reconfigu
 
 from core.atualizacao import cartao_atualizacao, obter_atualizacao  # noqa: E402
 from core.carregamento import com_carregamento  # noqa: E402
-from core.config import NOME_APP, NOME_PORTFOLIO, REVENDAS_CNPJ  # noqa: E402
+from core.config import NOME_APP, REVENDAS_CNPJ  # noqa: E402
 from core.cores import (  # noqa: E402
     COMODATO_BTN_CANCELAR,
     COMODATO_BTN_CANCELAR_HOVER,
@@ -98,37 +97,42 @@ MENU = {
 }
 
 
+def _icone(arquivo: str):
+    # Mesmo markup do app original: imagem branca de www/img, não faicons.
+    return ui.tags.img(src=f"img/{arquivo}", height="18em")
+
+
 def _menu() -> list:
     return [
         ui.accordion(
             ui.accordion_panel(
                 "Frota",
-                ui.input_action_button("link_pag_frota", "Geral", icon=icon_svg("car"), class_="selecionado"),
-                ui.input_action_button("link_pag_fro_ent", "Entrada de veículos", icon=icon_svg("right-to-bracket")),
-                ui.input_action_button("link_pag_fro_sai", "Saída de veículos", icon=icon_svg("right-from-bracket")),
-                icon=icon_svg("truck"),
+                ui.input_action_button("link_pag_frota", "Geral", icon=_icone("car-geral.png"), class_="selecionado"),
+                ui.input_action_button("link_pag_fro_ent", "Entrada de veículos", icon=_icone("car-entrada.png")),
+                ui.input_action_button("link_pag_fro_sai", "Saída de veículos", icon=_icone("car-saida.png")),
+                icon=_icone("car-light.png"),
             ),
             open=True,
         ),
-        ui.input_action_button("link_pag_pde", "PDE", icon=icon_svg("table")),
+        ui.input_action_button("link_pag_pde", "PDE", icon=_icone("table-light.png")),
         ui.accordion(
             ui.accordion_panel(
                 "Devoluções",
-                ui.input_action_button("link_pag_dev_det", "Detalhes", icon=icon_svg("file-lines")),
-                ui.input_action_button("link_pag_dev_cx", "Caixas", icon=icon_svg("box")),
-                ui.input_action_button("link_pag_dev_dev", "Devoluções", icon=icon_svg("money-bill")),
-                ui.input_action_button("link_pag_dev_graf", "Gráficos", icon=icon_svg("chart-column")),
-                icon=icon_svg("rotate-left"),
+                ui.input_action_button("link_pag_dev_det", "Detalhes", icon=_icone("detalhe_pedido.png")),
+                ui.input_action_button("link_pag_dev_cx", "Caixas", icon=_icone("box-light.png")),
+                ui.input_action_button("link_pag_dev_dev", "Devoluções", icon=_icone("money-light.png")),
+                ui.input_action_button("link_pag_dev_graf", "Gráficos", icon=_icone("graph-light.png")),
+                icon=_icone("dev-light.png"),
             ),
             open=False,
         ),
         ui.accordion(
             ui.accordion_panel(
                 "Comodatos",
-                ui.input_action_button("link_pag_comod_solic", "Solicitação", icon=icon_svg("file-signature")),
-                ui.input_action_button("link_pag_comod_comod", "Comodatos", icon=icon_svg("handshake")),
-                ui.input_action_button("link_pag_comod_vas", "Vasilhames", icon=icon_svg("boxes-stacked")),
-                icon=icon_svg("snowflake"),
+                ui.input_action_button("link_pag_comod_solic", "Solicitação", icon=_icone("solicitacao_light.png")),
+                ui.input_action_button("link_pag_comod_comod", "Comodatos", icon=_icone("comodatos_light.png")),
+                ui.input_action_button("link_pag_comod_vas", "Vasilhames", icon=_icone("vasilhame-light.png")),
+                icon=_icone("comodato.png"),
             ),
             open=False,
         ),
@@ -140,7 +144,7 @@ app_ui = ui.page_sidebar(
         _menu(),
         gap="10px",
         padding="50px 0 0 0",
-        width="220px",
+        width="200px",
         open={"desktop": "open", "mobile": "closed"},
     ),
     ui.navset_hidden(
@@ -190,11 +194,7 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/marcar_todos.js")),
     ui.tags.script(src=forca_style("js/custom.js")),
     title=ui.div(
-        ui.div(
-            ui.tags.img(src="img/marca.svg", alt=""),
-            ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}"),
-            class_="cabecalho-marca",
-        ),
+        ui.tags.img(src="img/logo_ficticia.svg", height="40vh"),
         ui.output_ui("valuebox_atualizacao"),
         class_="cabecalho-app",
     ),

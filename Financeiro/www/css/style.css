@@ -9958,21 +9958,6 @@ shiny-data-frame table thead tr.filters input {
 .cabecalho-app .btn-liberar-caixa { margin-right: 16px; }
 .btn-liberar-caixa-confirmar { background: #f27474; border-color: #f27474; color: #fff; }
 
-/* Marca fictícia do portfólio, no lugar do logo da revenda. */
-.cabecalho-marca {
-  align-items: center;
-  display: flex;
-  gap: 0.7rem;
-}
-.cabecalho-marca img {
-  height: 2.2rem;
-}
-.cabecalho-marca b {
-  color: #fff;
-  font-size: 1.05rem;
-  white-space: nowrap;
-}
-
 /* Portfólio: a escolha da revenda no cabeçalho (no original, o ?REVENDA= da URL). */
 .cabecalho-revenda .shiny-input-container {
   margin: 0;

@@ -703,7 +703,8 @@ body.tabela-redimensionando-coluna {
 .acessos-form-parte > .bslib-grid {
   margin-bottom: 0;
 }
-.acessos-form-parte + .acessos-form-parte {
+.acessos-form-parte + .acessos-form-parte,
+.acessos-form-acoes .acessos-form-parte {
   margin-top: 1.2rem;
 }
 .acessos-grupo {
@@ -841,17 +842,3 @@ body.tabela-redimensionando-coluna {
   color: #1a1a1a !important;
 }
 
-/* Marca fictícia do portfólio, no lugar do logo da revenda. */
-.cabecalho-marca {
-  align-items: center;
-  display: flex;
-  gap: 0.7rem;
-}
-.cabecalho-marca img {
-  height: 2.2rem;
-}
-.cabecalho-marca b {
-  color: #fff;
-  font-size: 1.05rem;
-  white-space: nowrap;
-}

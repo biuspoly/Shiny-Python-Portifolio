@@ -5,7 +5,6 @@ import unicodedata
 from core.config_arquivo import carregar_json
 
 NOME_APP = "Acompanhamento Financeiro"
-NOME_PORTFOLIO = "Portfólio Marlon Amaral"
 USUARIO_PORTFOLIO = "visitante"
 
 # Nome da revenda -> CNPJ fictício (os mesmos do Logístico).

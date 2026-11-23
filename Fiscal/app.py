@@ -14,7 +14,7 @@ except AttributeError:  # no Shinylive a saída é a do navegador, sem reconfigu
 from core.atualizacao import cartao_atualizacao, obter_atualizacao  # noqa: E402
 from core.cache import PASTA as PASTA_CACHE  # noqa: E402
 from core.carregamento import com_carregamento  # noqa: E402
-from core.config import NOME_APP, NOME_PORTFOLIO, USUARIO_PORTFOLIO  # noqa: E402
+from core.config import NOME_APP, USUARIO_PORTFOLIO  # noqa: E402
 from core.cores import (  # noqa: E402
     BTN_CANCELAR,
     BTN_CANCELAR_HOVER,
@@ -125,11 +125,7 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/acao_linha.js")),
     ui.tags.script(src=forca_style("js/echarts.min.js")),
     title=ui.div(
-        ui.div(
-            ui.tags.img(src="img/marca.svg", alt=""),
-            ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}"),
-            class_="cabecalho-marca",
-        ),
+        ui.tags.img(src="img/logo_ficticia.svg", height="40vh"),
         ui.div(ui.output_ui("valuebox_atualizacao"), class_="cabecalho-app-direita"),
         class_="cabecalho-app",
     ),

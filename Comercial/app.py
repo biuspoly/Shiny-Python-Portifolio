@@ -11,7 +11,7 @@ except AttributeError:  # no Shinylive a saída é a do navegador, sem reconfigu
     pass
 
 from core.atualizacao import cartao_atualizacao, obter_atualizacao  # noqa: E402
-from core.config import CNPJ_PADRAO, NOME_APP, NOME_PORTFOLIO  # noqa: E402
+from core.config import CNPJ_PADRAO, NOME_APP  # noqa: E402
 from core.cores import (  # noqa: E402
     CARD_CABECALHO_BG,
     CARD_CABECALHO_TEXTO,
@@ -43,11 +43,14 @@ TABELA_DA_PAGINA = {
 }
 
 
+# Mesmos ícones e mesma ordem do menu do app original (Mapa antes da Curva ABC).
 def _menu() -> list:
     return [
         ui.input_action_button("bt_diario_venda", "Diário de Vendas", icon=icon_svg("house"), class_="selecionado"),
+        ui.input_action_button(
+            "bt_mapa_comercial", "Mapa Comercial", icon=ui.tags.img(src="img/mapa-light.png", height="18em")
+        ),
         ui.input_action_button("bt_curva_abc", "Curva ABC", icon=icon_svg("chart-line")),
-        ui.input_action_button("bt_mapa_comercial", "Mapa Comercial", icon=icon_svg("map-location-dot")),
     ]
 
 
@@ -91,11 +94,7 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/echarts.min.js")),
     ui.tags.script(src=forca_style("js/diario_venda.js")),
     title=ui.div(
-        ui.div(
-            ui.tags.img(src="img/marca.svg", alt=""),
-            ui.tags.b(f"{NOME_APP} - {NOME_PORTFOLIO}"),
-            class_="cabecalho-marca",
-        ),
+        ui.tags.img(src="img/logo_ficticia.svg", height="40vh"),
         ui.div(
             ui.output_ui("cabecalho_dias"),
             ui.output_ui("valuebox_atualizacao"),

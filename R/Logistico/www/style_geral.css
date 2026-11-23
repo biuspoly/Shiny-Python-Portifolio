@@ -17,12 +17,6 @@
 .brand-link {
   pointer-events: none;
   cursor: default;
-  height: 57px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding-top: 0 !important;
-  padding-bottom: 0 !important;
 }
 
 .main-header,
@@ -30,49 +24,27 @@
   border-bottom: none !important;
 }
 
-.brand-link.bg-secondary {
-  background-color: transparent !important;
-}
-
-/* Logo full sempre visivel independente do estado do sidebar */
+/* Mostra a logo cheia apenas quando o sidebar está expandido */
 .logo-full {
   display: block;
 }
 .sidebar-collapse .logo-full {
-  display: block;
+  display: none;
 }
 
+/* Mostra a logo mini apenas quando o sidebar está colapsado */
 .logo-mini {
   display: none;
 }
 .sidebar-collapse .logo-mini {
-  display: none;
+  display: block;
 }
 
 /* Ajustes para as imagens */
 .logo-full,
 .logo-mini {
   width: auto;
-  max-height: 45px;
-  max-width: 180px;
-}
-
-/* Brand sempre descompactada, independente do estado do sidebar */
-.sidebar-mini.sidebar-collapse .main-sidebar {
-  overflow: visible !important;
-}
-
-.sidebar-mini.sidebar-collapse .brand-link {
-  width: 220px !important;
-  overflow: visible !important;
-  position: relative;
-  z-index: 900;
-}
-
-.sidebar-mini.sidebar-collapse .brand-text {
-  display: inline-block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
+  max-height: 50px;
 }
 
 .sidebar-toggle-left  { display: inline-block; }
@@ -178,59 +150,59 @@ body.sidebar-collapse .sidebar-toggle-right { display: inline-block; }
 
 /* Imagens específicas */
 .custom-icon-car::before {
-  background-image: url("acomp_log_www/img/car-light.svg");
+  background-image: url("acomp_log_www/img/car-light.png");
 }
 
 .custom-icon-custo::before {
-  background-image: url("acomp_log_www/img/custos-light.svg");
+  background-image: url("acomp_log_www/img/custos-light.png");
 }
 
 .custom-icon-indicadores::before {
-  background-image: url("acomp_log_www/img/indicadores-light.svg");
+  background-image: url("acomp_log_www/img/indicadores-light.png");
 }
 
 .custom-icon-calendario::before {
-  background-image: url("acomp_log_www/img/table-light.svg");
+  background-image: url("acomp_log_www/img/table-light.png");
 }
 
 .custom-icon-devolucoes::before {
-  background-image: url("acomp_log_www/img/dev-light.svg");
+  background-image: url("acomp_log_www/img/dev-light.png");
 }
 
 .custom-icon-romaneios::before {
-  background-image: url("acomp_log_www/img/rom-light.svg");
+  background-image: url("acomp_log_www/img/rom-light.png");
 }
 
 .custom-icon-rom-aberto::before {
-  background-image: url("acomp_log_www/img/rom-aberto-light.svg");
+  background-image: url("acomp_log_www/img/rom-aberto-light.png");
 }
 
 .custom-icon-rom-altera::before {
-  background-image: url("acomp_log_www/img/rom-altera-light.svg");
+  background-image: url("acomp_log_www/img/rom-altera-light.png");
 }
 
 .custom-icon-puxada::before {
-  background-image: url("acomp_log_www/img/puxada-light.svg");
+  background-image: url("acomp_log_www/img/puxada-light.png");
 }
 
 .custom-icon-vasilhame::before {
-  background-image: url("acomp_log_www/img/vasilhame-light.svg");
+  background-image: url("acomp_log_www/img/vasilhame-light.png");
 }
 
 .custom-icon-solic::before {
-  background-image: url("acomp_log_www/img/solicitacao_light.svg");
+  background-image: url("acomp_log_www/img/solicitacao_light.png");
 }
 .custom-icon-comodato::before {
-  background-image: url("acomp_log_www/img/comodato.svg");
+  background-image: url("acomp_log_www/img/comodato.png");
 }
 .custom-icon-freezer::before {
-  background-image: url("acomp_log_www/img/freezer_light.svg");
+  background-image: url("acomp_log_www/img/freezer_light.png");
 }
 .custom-icon-comodatos::before {
-  background-image: url("acomp_log_www/img/comodatos_light.svg");
+  background-image: url("acomp_log_www/img/comodatos_light.png");
 }
 .custom-icon-geladeira::before {
-  background-image: url("acomp_log_www/img/geladeira_light.svg");
+  background-image: url("acomp_log_www/img/geladeira_light.png");
 }
 
 /* Imagens customizadas */
@@ -345,31 +317,31 @@ body.sidebar-collapse .sidebar-toggle-right { display: inline-block; }
 }
 
 .custom-icon-car-geral::before {
-  background-image: url("acomp_log_www/img/car-geral.svg");
+  background-image: url("acomp_log_www/img/car-geral.png");
 }
 
 .custom-icon-car-entrada::before {
-  background-image: url("acomp_log_www/img/car-entrada.svg");
+  background-image: url("acomp_log_www/img/car-entrada.png");
 }
 
 .custom-icon-car-saida::before {
-  background-image: url("acomp_log_www/img/car-saida.svg");
+  background-image: url("acomp_log_www/img/car-saida.png");
 }
 
 .custom-icon-detalhe-dev::before {
-  background-image: url("acomp_log_www/img/detalhe_pedido.svg");
+  background-image: url("acomp_log_www/img/detalhe_pedido.png");
 }
 
 .custom-icon-grafico-dev::before {
-  background-image: url("acomp_log_www/img/graph-light.svg");
+  background-image: url("acomp_log_www/img/graph-light.png");
 }
 
 .custom-icon-dev-dev::before {
-  background-image: url("acomp_log_www/img/money-light.svg");
+  background-image: url("acomp_log_www/img/money-light.png");
 }
 
 .custom-icon-caixa-dev::before {
-  background-image: url("acomp_log_www/img/box-light.svg");
+  background-image: url("acomp_log_www/img/box-light.png");
 }
 
 
@@ -408,22 +380,22 @@ body.sidebar-collapse .sidebar-toggle-right { display: inline-block; }
 }
 
 .custom-icon-custo_ticket::before {
-  background-image: url("acomp_log_www/img/custo_ticket.svg");
+  background-image: url("acomp_log_www/img/custo_ticket.png");
 }
 .custom-icon-gas_ticket::before {
-  background-image: url("acomp_log_www/img/gas_ticket.svg");
+  background-image: url("acomp_log_www/img/gas_ticket.png");
 }
 .custom-icon-veloc_ticket::before {
-  background-image: url("acomp_log_www/img/veloc_ticket.svg");
+  background-image: url("acomp_log_www/img/veloc_ticket.png");
 }
 .custom-icon-custo_veloc_ticket::before {
-  background-image: url("acomp_log_www/img/custo_veloc_ticket.svg");
+  background-image: url("acomp_log_www/img/custo_veloc_ticket.png");
 }
 .custom-icon-custo_gas_ticket::before {
-  background-image: url("acomp_log_www/img/custo_gas_ticket.svg");
+  background-image: url("acomp_log_www/img/custo_gas_ticket.png");
 }
 .custom-icon-veloc_gas_ticket::before {
-  background-image: url("acomp_log_www/img/veloc_gas_ticket.svg");
+  background-image: url("acomp_log_www/img/veloc_gas_ticket.png");
 }
 
 /* Estilo comum para todos os ícones de frotas */
@@ -455,16 +427,16 @@ body.sidebar-collapse .sidebar-toggle-right { display: inline-block; }
 }
 
 .custom-icon-caminhao::before {
-  background-image: url("acomp_log_www/img/caminhao-light.svg");
+  background-image: url("acomp_log_www/img/caminhao-light.png");
 }
 .custom-icon-carro::before {
-  background-image: url("acomp_log_www/img/carro-light.svg");
+  background-image: url("acomp_log_www/img/carro-light.png");
 }
 .custom-icon-moto::before {
-  background-image: url("acomp_log_www/img/moto-light.svg");
+  background-image: url("acomp_log_www/img/moto-light.png");
 }
 .custom-icon-cavalo::before {
-  background-image: url("acomp_log_www/img/cavalo-light.svg");
+  background-image: url("acomp_log_www/img/cavalo-light.png");
 }
 
 /*

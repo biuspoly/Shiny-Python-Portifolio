@@ -275,7 +275,7 @@ logistica_server <- function(input, output, session) {
   # Renderizar Logo e titulo ------------------------------------------------
 
   output$revenda <- renderUI({
-    dashboardBrand(title = tags$b("Logístico (R)"), image = "acomp_log_www/img/marca_mini.svg", color = "secondary")
+    dashboardBrand(title = tags$b("Fictícia"), image = "acomp_log_www/img/marca_mini.svg", color = "secondary")
   })
 
   # Renderizar abas do menu ------------------------------------------------

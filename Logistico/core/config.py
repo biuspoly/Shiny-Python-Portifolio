@@ -1,7 +1,6 @@
 """Configuração do portfólio: revendas fictícias, sem login nem permissão."""
 
 NOME_APP = "Acompanhamento Logístico"
-NOME_PORTFOLIO = "Portfólio Marlon Amaral"
 
 # Nome da revenda (maiúsculo, como no cache) -> CNPJ fictício.
 REVENDAS_CNPJ = {
