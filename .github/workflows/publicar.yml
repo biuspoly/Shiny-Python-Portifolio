@@ -46,7 +46,7 @@ jobs:
             any::DT, any::reactable, any::reactable.extras, any::shinyWidgets, any::shinyFeedback,
             any::shinycssloaders, any::shinyalert, any::shinyjs, any::cicerone, any::writexl, any::plotly,
             any::ggplot2, any::echarts4r, any::leaflet, any::sf, any::bsicons, any::future, any::promises,
-            any::rsconnect
+            any::rsconnect, any::cpp11
       # O Posit Connect Cloud publica cada app de uma pasta deste ramo, com os dados da semana (que a main
       # não guarda) e o manifest.json de cada app em R. Um commit só, regravado a cada execução: o histórico
       # não acumula os .parquet de toda semana. Push feito pelo GITHUB_TOKEN não dispara outro workflow.

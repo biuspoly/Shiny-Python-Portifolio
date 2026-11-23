@@ -31,12 +31,16 @@ def _git(*args: str, env: dict | None = None) -> str:
 
 def _manifestos() -> None:
     rscript = shutil.which("Rscript") or "C:/Program Files/R/R-4.6.1/bin/Rscript.exe"
+    # Sem a pré-checagem do renv: ela recusa pacote usado só para compilar (LinkingTo, como o cpp11), que o
+    # workflow não instala por usar binários; o Posit resolve essas dependências ao instalar.
+    env = {**os.environ, "RENV_CONFIG_SNAPSHOT_VALIDATE": "FALSE"}
     for app in APPS_R:
         pasta = (RAIZ / "R" / app).as_posix()
         print(f"manifest.json de R/{app}")
         subprocess.run(
             [rscript, "-e", f'rsconnect::writeManifest(appDir = "{pasta}", appPrimaryDoc = "app.R")'],
             check=True,
+            env=env,
         )
 
 
