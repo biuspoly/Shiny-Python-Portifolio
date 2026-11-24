@@ -21,3 +21,6 @@ R/Logistico/Anexos_Comodato/*
 !R/Logistico/Anexos_Comodato/*_exemplo.pdf
 # Gerado no workflow para o ramo posit (publicar/ramo_posit.py).
 R/*/manifest.json
+
+# Gerado pelo R/Vitrine/core/gerar_tema.R (no CI, antes de publicar)
+R/Vitrine/www/tema.css

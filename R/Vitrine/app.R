@@ -4,9 +4,16 @@ library(htmltools)
 library(fresh)
 
 # Tema (cores) -------------------------------------------------------------
-# carregado aqui em cima porque a UI usa o tema
+# carregado aqui em cima porque a UI usa o tema.
+# Com o www/tema.css pronto (o CI gera com core/gerar_tema.R antes de publicar), o app só aponta para
+# ele: compilar o tema a cada abertura deixava o Shinylive mais lento. Sem o arquivo (rodando local),
+# o tema é compilado na hora, a partir do core/tema.R.
 
-source("core/tema.R", local = TRUE, encoding = "UTF-8")
+if (file.exists("www/tema.css")) {
+  tema = "tema.css"
+} else {
+  source("core/tema.R", local = TRUE, encoding = "UTF-8")
+}
 
 # Links do canto superior direito ------------------------------------------
 
@@ -97,6 +104,16 @@ ui = dashboardPage(
   ),
   body = dashboardBody(
     tags$head(tags$link(rel = "stylesheet", href = "estilo.css?v=14")),
+
+    # No celular o menu lateral abre POR CIMA da página e não fecha sozinho: depois de tocar num item,
+    # a página trocava atrás do menu e parecia que só a Visão Geral existia. Fecha o menu após o toque.
+    tags$script(HTML("
+      $(document).on('click', '.main-sidebar a.nav-link[data-toggle=\\'tab\\']', function () {
+        if (window.innerWidth < 992) {
+          $('[data-widget=\\'pushmenu\\']').PushMenu('collapse');
+        }
+      });
+    ")),
 
     tabItems(
       tabItem(

@@ -2,6 +2,8 @@
 # (o visual do shinydashboard): barra superior azul, menu lateral escuro e
 # fundo cinza bem claro. Para mudar a cara do app, troque as cores aqui.
 #
+# Depois de mudar as cores, rode core/gerar_tema.R (o CI roda sozinho antes de publicar).
+#
 # Atenção: a faixa em degradê dos cards e a cor do título (www/estilo.css)
 # usam as mesmas cores escritas à mão. Se trocar alguma delas aqui, troque
 # também lá.

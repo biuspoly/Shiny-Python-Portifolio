@@ -52,6 +52,9 @@ jobs:
       # não acumula os .parquet de toda semana. Push feito pelo GITHUB_TOKEN não dispara outro workflow.
       - name: Ramo posit
         run: python -m publicar.ramo_posit
+      - name: Tema da Vitrine em R
+        working-directory: R/Vitrine
+        run: Rscript core/gerar_tema.R
       - name: Montar o site
         run: python -m publicar.montar_site
       - uses: actions/upload-pages-artifact@v3

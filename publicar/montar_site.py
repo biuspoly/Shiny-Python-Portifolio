@@ -24,8 +24,10 @@ APPS = {
     "Monitoramento": "monitoramento",
     "Acessos": "acessos",
 }
-# Os originais em R (webR), numa raiz própria: o Shinylive de R e o de Python têm arquivos com o mesmo
-# nome em shinylive/, de versões diferentes.
+# Os originais em R (webR), cada um na sua própria raiz (site/r/<app>/): o Shinylive de R e o de Python
+# têm arquivos com o mesmo nome em shinylive/, de versões diferentes. E apps de R exportados para a mesma
+# raiz dividem a pasta de pacotes, e o navegador baixa os pacotes de todos ao abrir qualquer um deles
+# (a Vitrine chegou a baixar 164 MB, com sf, terra, duckdb e plotly, que ela não usa).
 APPS_R = {"Acessos": "acessos", "Logistico": "logistico", "Comercial": "comercial", "Vitrine": "vitrine"}
 ANEXOS_EXEMPLO = ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf")
 ENDERECOS = json.loads((RAIZ / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
@@ -51,9 +53,9 @@ def _exportar_r() -> None:
     prefixo = f'.libPaths(c("{biblioteca.as_posix()}", .libPaths())); ' if biblioteca.exists() else ""
     for pasta, caminho in _sem_posit(APPS_R, "r").items():
         print(f"exportando R/{pasta} -> site/r/{caminho}/")
-        origem, destino = (RAIZ / "R" / pasta).as_posix(), (SITE / "r").as_posix()
+        origem, destino = (RAIZ / "R" / pasta).as_posix(), (SITE / "r" / caminho).as_posix()
         subprocess.run(
-            [rscript, "-e", f'{prefixo}shinylive::export("{origem}", "{destino}", subdir = "{caminho}")'],
+            [rscript, "-e", f'{prefixo}shinylive::export("{origem}", "{destino}")'],
             check=True,
             stdout=subprocess.DEVNULL,
         )
