@@ -1,4 +1,4 @@
-"""Diagnóstico da Vitrine em R: abre o app, mede o tempo e clica em cada página."""
+"""Diagnóstico da Vitrine em R: abre o app, mede o tempo e clica em cada página como um usuário."""
 
 import sys
 import time
@@ -6,68 +6,62 @@ import time
 from playwright.sync_api import sync_playwright
 
 URL = sys.argv[1]
-SHINYLIVE = sys.argv[2] == "shinylive"
-ABAS = [
-    "id_visao_geral", "id_analise_dados_powerbi", "id_analise_dados_r", "id_analise_dados_python",
-    "id_ciencia_dados", "id_engenharia_dados_r", "id_automacoes_python", "id_apps_mobile_shiny_r",
-    "id_dev_open_source_r", "id_sobre_mim",
+# (menu pai ou None, item clicado, aba esperada)
+CLIQUES = [
+    ("Análise de Dados", "Power BI", "analise_dados_powerbi"),
+    (None, "R", "analise_dados_r"),
+    ("Ciência de Dados", None, "ciencia_dados"),
+    ("Apps e Mobile", "Shiny R", "apps_mobile_shiny_r"),
+    ("Sobre Mim", None, "sobre_mim"),
+    ("Visão Geral", None, "visao_geral"),
 ]
 
 with sync_playwright() as p:
     nav = p.chromium.launch()
-    pagina = nav.new_page()
+    pagina = nav.new_page(viewport={"width": 1400, "height": 900})
     pagina.on("console", lambda m: print(f"[console {m.type}] {m.text[:300]}"))
     pagina.on("pageerror", lambda e: print(f"[ERRO JS] {e}"))
     inicio = time.time()
     pagina.goto(URL)
 
-    def quadro():
-        if not SHINYLIVE:
-            return pagina.main_frame
-        for f in pagina.frames:
-            if "app_" in f.url or f.url.rstrip("/").endswith("app"):
-                return f
-        return None
-
     alvo = None
     for _ in range(300):
-        alvo = quadro()
-        if alvo is not None:
+        for f in pagina.frames:
             try:
-                if alvo.evaluate("() => !!document.querySelector('#conteudo_visao_geral .card')"):
+                if f.evaluate("() => !!document.querySelector('#conteudo_visao_geral .card')"):
+                    alvo = f
                     break
             except Exception:
                 pass
+        if alvo:
+            break
         time.sleep(1)
     print(f"[TEMPO] visao geral apareceu em {time.time() - inicio:.1f}s")
     print("[QUADROS]", [f.url for f in pagina.frames])
     if alvo is None:
         sys.exit(0)
+    print("[LINKS]", alvo.evaluate("() => [...document.querySelectorAll('.main-sidebar a.nav-link')].slice(0,4).map(a => a.outerHTML.slice(0,250))"))
 
-    for aba in ABAS:
-        saida = "conteudo_" + aba[3:]
-        alvo.evaluate(
-            "(a) => { const el = document.querySelector('a[href=\"#shiny-tab-' + a + '\"]'); if (el) el.click(); }",
-            aba,
-        )
+    for pai, item, aba in CLIQUES:
+        sb = alvo.locator(".main-sidebar")
+        if pai:
+            sb.get_by_text(pai, exact=True).first.click()
+            time.sleep(0.8)
+        if item:
+            sb.locator("a.nav-link:visible").filter(has_text=item).first.click()
         t0 = time.time()
         tamanho = 0
         for _ in range(40):
-            tamanho = alvo.evaluate(
-                "(s) => { const el = document.getElementById(s); return el ? el.innerHTML.length : -1; }", saida
-            )
+            tamanho = alvo.evaluate("(s) => (document.getElementById(s) || {innerHTML: ''}).innerHTML.length", "conteudo_" + aba)
             if tamanho > 50:
                 break
             time.sleep(0.5)
         estado = alvo.evaluate(
-            """(a) => {
-                const pane = document.getElementById('shiny-tab-' + a);
-                const link = document.querySelector('a[href="#shiny-tab-' + a + '"]');
-                return {pane_existe: !!pane, pane_ativo: pane ? pane.className : null,
-                        link_existe: !!link, link_attrs: link ? link.outerHTML.slice(0, 200) : null,
-                        input_tabs: (window.Shiny && Shiny.shinyapp) ? Shiny.shinyapp.$inputValues['tabs'] : null};
-            }""",
+            """(a) => ({ativo: (document.querySelector('.tab-pane.active') || {}).id,
+                        input_tabs: (window.Shiny && Shiny.shinyapp) ? Shiny.shinyapp.$inputValues['tabs'] : null,
+                        recalc: document.getElementById('conteudo_' + a) ? document.getElementById('conteudo_' + a).className : null})""",
             aba,
         )
         print(f"[ABA] {aba}: html={tamanho} em {time.time() - t0:.1f}s | {estado}")
+    pagina.screenshot(path="/tmp/fim.png")
     nav.close()
