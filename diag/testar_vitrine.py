@@ -35,7 +35,14 @@ with sync_playwright() as p:
             print(f"[HTTP {r.status}] {r.url}")
 
     pagina.on("response", _resposta)
+    if len(sys.argv) > 3:
+        # visita antes outra página do site (a vitrine em Python, na raiz), como um visitante real
+        pagina.goto(sys.argv[3])
+        time.sleep(40)
+        print("[ANTES] visitou", sys.argv[3])
     inicio = time.time()
+    baixado["total"] = 0
+    baixado["maiores"].clear()
     pagina.goto(URL)
 
     alvo = None

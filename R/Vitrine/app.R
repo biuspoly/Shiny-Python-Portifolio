@@ -4,9 +4,16 @@ library(htmltools)
 library(fresh)
 
 # Tema (cores) -------------------------------------------------------------
-# carregado aqui em cima porque a UI usa o tema
+# carregado aqui em cima porque a UI usa o tema.
+# Com o www/tema.css pronto (o CI gera com core/gerar_tema.R antes de publicar), o app só aponta para
+# ele: compilar o tema a cada abertura deixava o Shinylive mais lento. Sem o arquivo (rodando local),
+# o tema é compilado na hora, a partir do core/tema.R.
 
-source("core/tema.R", local = TRUE, encoding = "UTF-8")
+if (file.exists("www/tema.css")) {
+  tema = "tema.css"
+} else {
+  source("core/tema.R", local = TRUE, encoding = "UTF-8")
+}
 
 # Links do canto superior direito ------------------------------------------
 

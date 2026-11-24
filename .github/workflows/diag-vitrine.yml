@@ -22,7 +22,7 @@ jobs:
           packages: any::shinylive, any::shiny, any::bs4Dash, any::fresh, any::htmltools
       - name: Versoes
         run: Rscript -e 'for (p in c("shiny","bs4Dash","fresh","shinylive","htmltools")) cat(p, as.character(packageVersion(p)), "\n")'
-      - name: Tempo do create_theme no R normal
+      - name: Tempo do create_theme no R normal (antigo)
         run: Rscript -e 'library(fresh); library(bs4Dash); setwd("R/Vitrine"); print(system.time(source("core/tema.R")))'
       - name: App normal (R no servidor)
         run: |
@@ -32,13 +32,14 @@ jobs:
           echo "----- log do R -----"; cat /tmp/app.log
       - name: Shinylive
         run: |
-          Rscript -e 'shinylive::export("R/Vitrine", "site_diag")'
-          du -sh site_diag; du -sh site_diag/shinylive/webr/packages/* | sort -h | tail -15
+          (cd R/Vitrine && Rscript core/gerar_tema.R)
+          Rscript -e 'shinylive::export("R/Vitrine", "site_diag/r/vitrine")'
+          du -sh site_diag; du -sh site_diag/r/vitrine/shinylive/webr/packages/* | sort -h | tail -15
           (python -m http.server 8000 -d site_diag > /dev/null 2>&1 &)
           sleep 3
-          timeout 600 python diag/testar_vitrine.py http://127.0.0.1:8000/ shinylive || true
+          timeout 600 python diag/testar_vitrine.py http://127.0.0.1:8000/r/vitrine/ shinylive || true
       - name: Site publicado
         run: |
-          timeout 600 python diag/testar_vitrine.py https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/ publicado || true
+          timeout 600 python diag/testar_vitrine.py https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/ publicado https://biuspoly.github.io/Shiny-Python-Portifolio/ || true
           curl -sI https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/app.json | head -20
           curl -s https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/index.html | head -40
