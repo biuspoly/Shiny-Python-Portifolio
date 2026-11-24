@@ -37,3 +37,8 @@ jobs:
           (python -m http.server 8000 -d site_diag > /dev/null 2>&1 &)
           sleep 3
           timeout 600 python diag/testar_vitrine.py http://127.0.0.1:8000/ shinylive || true
+      - name: Site publicado
+        run: |
+          timeout 600 python diag/testar_vitrine.py https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/ publicado || true
+          curl -sI https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/app.json | head -20
+          curl -s https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/index.html | head -40

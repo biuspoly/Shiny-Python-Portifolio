@@ -1,5 +1,6 @@
 """Diagnóstico da Vitrine em R: abre o app, mede o tempo e clica em cada página como um usuário."""
 
+import re
 import sys
 import time
 
@@ -21,6 +22,19 @@ with sync_playwright() as p:
     pagina = nav.new_page(viewport={"width": 1400, "height": 900})
     pagina.on("console", lambda m: print(f"[console {m.type}] {m.text[:300]}"))
     pagina.on("pageerror", lambda e: print(f"[ERRO JS] {e}"))
+    baixado = {"total": 0, "maiores": []}
+
+    def _resposta(r):
+        try:
+            tam = int(r.headers.get("content-length") or 0)
+        except Exception:
+            tam = 0
+        baixado["total"] += tam
+        baixado["maiores"].append((tam, r.status, r.url[-90:]))
+        if r.status >= 400:
+            print(f"[HTTP {r.status}] {r.url}")
+
+    pagina.on("response", _resposta)
     inicio = time.time()
     pagina.goto(URL)
 
@@ -37,6 +51,9 @@ with sync_playwright() as p:
             break
         time.sleep(1)
     print(f"[TEMPO] visao geral apareceu em {time.time() - inicio:.1f}s")
+    print(f"[BAIXADO] {baixado['total'] / 1e6:.1f} MB (pelo content-length)")
+    for tam, st, u in sorted(baixado["maiores"], reverse=True)[:25]:
+        print(f"[ARQ] {tam / 1e6:6.2f} MB {st} {u}")
     print("[QUADROS]", [f.url for f in pagina.frames])
     if alvo is None:
         sys.exit(0)
@@ -48,7 +65,7 @@ with sync_playwright() as p:
             sb.get_by_text(pai, exact=True).first.click()
             time.sleep(0.8)
         if item:
-            sb.locator("a.nav-link:visible").filter(has_text=item).first.click()
+            sb.locator("a.nav-link:visible").filter(has_text=re.compile(r"^\s*" + re.escape(item) + r"\s*$")).first.click()
         t0 = time.time()
         tamanho = 0
         for _ in range(40):
