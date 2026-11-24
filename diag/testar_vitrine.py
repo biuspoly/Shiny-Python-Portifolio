@@ -7,6 +7,9 @@ import time
 from playwright.sync_api import sync_playwright
 
 URL = sys.argv[1]
+import os
+LARGURA = int(os.environ.get("LARGURA", "1400"))
+os.makedirs("prints_diag", exist_ok=True)
 # (menu pai ou None, item clicado, aba esperada)
 CLIQUES = [
     ("Análise de Dados", "Power BI", "analise_dados_powerbi"),
@@ -19,7 +22,7 @@ CLIQUES = [
 
 with sync_playwright() as p:
     nav = p.chromium.launch()
-    pagina = nav.new_page(viewport={"width": 1400, "height": 900})
+    pagina = nav.new_page(viewport={"width": LARGURA, "height": 900})
     pagina.on("console", lambda m: print(f"[console {m.type}] {m.text[:300]}"))
     pagina.on("pageerror", lambda e: print(f"[ERRO JS] {e}"))
     baixado = {"total": 0, "maiores": []}
@@ -68,6 +71,9 @@ with sync_playwright() as p:
 
     for pai, item, aba in CLIQUES:
         sb = alvo.locator(".main-sidebar")
+        if LARGURA < 900:
+            alvo.locator("[data-widget=pushmenu]").first.click()
+            time.sleep(0.8)
         if pai:
             sb.get_by_text(pai, exact=True).first.click()
             time.sleep(0.8)
@@ -87,5 +93,7 @@ with sync_playwright() as p:
             aba,
         )
         print(f"[ABA] {aba}: html={tamanho} em {time.time() - t0:.1f}s | {estado}")
+        time.sleep(2)
+        pagina.screenshot(path=f"prints_diag/{sys.argv[2]}_{LARGURA}_{aba}.png")
     pagina.screenshot(path="/tmp/fim.png")
     nav.close()

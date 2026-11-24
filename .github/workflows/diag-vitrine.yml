@@ -5,6 +5,9 @@ on:
   push:
     branches: [diag-vitrine]
 
+permissions:
+  contents: write
+
 jobs:
   diag:
     runs-on: ubuntu-latest
@@ -14,32 +17,14 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install playwright && python -m playwright install --with-deps chromium
-      - uses: r-lib/actions/setup-r@v2
-        with:
-          use-public-rspm: true
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: any::shinylive, any::shiny, any::bs4Dash, any::fresh, any::htmltools
-      - name: Versoes
-        run: Rscript -e 'for (p in c("shiny","bs4Dash","fresh","shinylive","htmltools")) cat(p, as.character(packageVersion(p)), "\n")'
-      - name: Tempo do create_theme no R normal (antigo)
-        run: Rscript -e 'library(fresh); library(bs4Dash); setwd("R/Vitrine"); print(system.time(source("core/tema.R")))'
-      - name: App normal (R no servidor)
+      - name: Site publicado, computador e celular
         run: |
-          (cd R/Vitrine && Rscript -e 'shiny::runApp(".", port = 3838)' > /tmp/app.log 2>&1 &)
-          sleep 25
-          python diag/testar_vitrine.py http://127.0.0.1:3838/ normal || true
-          echo "----- log do R -----"; cat /tmp/app.log
-      - name: Shinylive
+          U=https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/
+          timeout 400 python diag/testar_vitrine.py $U publicado || true
+          LARGURA=400 timeout 400 python diag/testar_vitrine.py $U publicado || true
+      - name: Guardar as capturas num ramo
         run: |
-          (cd R/Vitrine && Rscript core/gerar_tema.R)
-          Rscript -e 'shinylive::export("R/Vitrine", "site_diag/r/vitrine")'
-          du -sh site_diag; du -sh site_diag/r/vitrine/shinylive/webr/packages/* | sort -h | tail -15
-          (python -m http.server 8000 -d site_diag > /dev/null 2>&1 &)
-          sleep 3
-          timeout 600 python diag/testar_vitrine.py http://127.0.0.1:8000/r/vitrine/ shinylive || true
-      - name: Site publicado
-        run: |
-          timeout 600 python diag/testar_vitrine.py https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/ publicado https://biuspoly.github.io/Shiny-Python-Portifolio/ || true
-          curl -sI https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/app.json | head -20
-          curl -s https://biuspoly.github.io/Shiny-Python-Portifolio/r/vitrine/index.html | head -40
+          git config user.name github-actions; git config user.email actions@github.com
+          git checkout --orphan diag-vitrine-prints
+          git rm -rq --cached . ; git add prints_diag; git commit -qm "capturas do diagnostico"
+          git push -f origin diag-vitrine-prints
