@@ -26,7 +26,7 @@ APPS = {
 }
 # Os originais em R (webR), numa raiz própria: o Shinylive de R e o de Python têm arquivos com o mesmo
 # nome em shinylive/, de versões diferentes.
-APPS_R = {"Acessos": "acessos", "Logistico": "logistico", "Comercial": "comercial"}
+APPS_R = {"Acessos": "acessos", "Logistico": "logistico", "Comercial": "comercial", "Vitrine": "vitrine"}
 ANEXOS_EXEMPLO = ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf")
 ENDERECOS = json.loads((RAIZ / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
 
