@@ -105,6 +105,16 @@ ui = dashboardPage(
   body = dashboardBody(
     tags$head(tags$link(rel = "stylesheet", href = "estilo.css?v=14")),
 
+    # No celular o menu lateral abre POR CIMA da página e não fecha sozinho: depois de tocar num item,
+    # a página trocava atrás do menu e parecia que só a Visão Geral existia. Fecha o menu após o toque.
+    tags$script(HTML("
+      $(document).on('click', '.main-sidebar a.nav-link[data-toggle=\\'tab\\']', function () {
+        if (window.innerWidth < 992) {
+          $('[data-widget=\\'pushmenu\\']').PushMenu('collapse');
+        }
+      });
+    ")),
+
     tabItems(
       tabItem(
         tabName = "id_visao_geral",
