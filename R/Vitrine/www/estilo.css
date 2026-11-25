@@ -2,7 +2,7 @@
    Uso: tags$i(class = "nav-icon logo-NOME")
    Arquivos em www/: NOME.svg (colorido), NOME_black.svg, NOME_white.svg */
 .logo-powerbi, .logo-excel, .logo-r, .logo-python,
-.logo-godot, .logo-cpp, .logo-claude, .logo-shiny, .logo-appsheet {
+.logo-godot, .logo-cpp, .logo-claude, .logo-shiny, .logo-appsheet, .logo-gamemaker {
   display: inline-block;
   width: 1.1rem;
   height: 1.1rem;
@@ -22,6 +22,7 @@
 .logo-claude   { background-image: url("claude.svg"); }
 .logo-shiny    { background-image: url("shiny.svg"); }
 .logo-appsheet { background-image: url("appsheet.svg"); }
+.logo-gamemaker { background-image: url("gamemaker.svg"); }
 
 /* ===== DESATIVADO: versões monocromáticas no menu =====
    Para reativar, apague a linha de abertura deste comentário e a linha "FIM DESATIVADO".
@@ -59,6 +60,7 @@ FIM DESATIVADO */
 .main-sidebar .logo-claude   { background-image: url("claude_white.svg"); }
 .main-sidebar .logo-shiny    { background-image: url("shiny_white.svg"); }
 .main-sidebar .logo-appsheet { background-image: url("appsheet_white.svg"); }
+.main-sidebar .logo-gamemaker { background-image: url("gamemaker_white.svg"); }
 .main-sidebar [class*="logo-"].nav-icon { opacity: 0.8; }
 
 
