@@ -4,7 +4,7 @@
 # Colunas esperadas no data.frame:
 #   id, titulo, descricao, cor, print, link
 #   selos -> um ou dois textos separados por ";" (ex.: "Shiny Python;Polars")
-#   modo  -> "app" (abre no modal) ou "repo" (abre o GitHub em nova aba)
+#   modo  -> "app" (abre no modal), "repo" (abre o GitHub em nova aba) ou "externo" (abre o site em nova aba)
 
 card_destaque = function(projetos, id_projeto){
 
@@ -34,6 +34,16 @@ card_destaque = function(projetos, id_projeto){
       icon = icon("up-right-from-square"),
       status = "primary",
       size = "sm"
+    )
+  } else if (projeto$modo == "externo") {
+    # sites que não deixam abrir dentro do shinylive (Power BI, RPubs): abre em nova aba
+    botao_ver = actionButton(
+      paste0("bt_destaque_", id_projeto),
+      label = "Ver projeto",
+      icon = icon("up-right-from-square"),
+      status = "primary",
+      size = "sm",
+      onclick = paste0("window.open('", projeto$link, "', '_blank')")
     )
   } else {
     botao_ver = actionButton(

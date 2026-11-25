@@ -45,6 +45,8 @@ ui = dashboardPage(
       name = HTML("Marlon Hesly <br> Analista de Dados/Estatístico"),
       image = ""
     ),
+    # Menu por área; subabas só onde há tipos diferentes de entrega.
+    # Um projeto com várias linguagens/versões é um card só, com um botão por versão.
     sidebarMenu(
       id = "tabs",
       sidebarHeader(
@@ -58,10 +60,9 @@ ui = dashboardPage(
       menuItem(
         "Análise de Dados",
         icon = icon("chart-column"),
-        menuSubItem("Power BI", tabName = "id_analise_dados_powerbi", icon = tags$i(class = "nav-icon logo-powerbi")),
-        menuSubItem("R",        tabName = "id_analise_dados_r",       icon = tags$i(class = "nav-icon logo-r")),
-        menuSubItem("Excel",    tabName = "id_analise_dados_excel",   icon = tags$i(class = "nav-icon logo-excel")),
-        menuSubItem("Python",   tabName = "id_analise_dados_python",  icon = tags$i(class = "nav-icon logo-python"))
+        menuSubItem("Painéis de gestão", tabName = "id_analise_dados_gestao",  icon = icon("gauge-high")),
+        menuSubItem("Power BI",          tabName = "id_analise_dados_powerbi", icon = tags$i(class = "nav-icon logo-powerbi")),
+        menuSubItem("Excel",             tabName = "id_analise_dados_excel",   icon = tags$i(class = "nav-icon logo-excel"))
       ),
       menuItem(
         "Ciência de Dados",
@@ -70,30 +71,24 @@ ui = dashboardPage(
       ),
       menuItem(
         "Engenharia de Dados",
-        icon = icon("project-diagram"),
-        menuSubItem("R",        tabName = "id_engenharia_dados_r",      icon = tags$i(class = "nav-icon logo-r")),
-        menuSubItem("Python",   tabName = "id_engenharia_dados_python", icon = tags$i(class = "nav-icon logo-python"))
+        tabName = "id_engenharia_dados",
+        icon = icon("project-diagram")
       ),
       menuItem(
         "Automações",
-        icon = icon("gears"),
-        menuSubItem("R",        tabName = "id_automacoes_r",        icon = tags$i(class = "nav-icon logo-r")),
-        menuSubItem("Python",   tabName = "id_automacoes_python",   icon = tags$i(class = "nav-icon logo-python")),
-        menuSubItem("AppSheet", tabName = "id_automacoes_appsheet", icon = tags$i(class = "nav-icon logo-appsheet"))
+        tabName = "id_automacoes",
+        icon = icon("gears")
       ),
       menuItem(
         "Apps e Mobile",
-        icon = icon("mobile-screen"),
-        menuSubItem("Shiny R",       tabName = "id_apps_mobile_shiny_r",      icon = tags$i(class = "nav-icon logo-shiny")),
-        menuSubItem("Shiny Python",   tabName = "id_apps_mobile_shiny_python", icon = tags$i(class = "nav-icon logo-shiny"))
+        tabName = "id_apps_mobile",
+        icon = icon("mobile-screen")
       ),
       menuItem(
         "Dev & Open Source",
         icon = icon("code"),
-        menuSubItem("R",        tabName = "id_dev_open_source_r",      icon = tags$i(class = "nav-icon logo-r")),
-        menuSubItem("Python",   tabName = "id_dev_open_source_python", icon = tags$i(class = "nav-icon logo-python")),
-        menuSubItem("Godot",    tabName = "id_dev_open_source_godot",  icon = tags$i(class = "nav-icon logo-godot")),
-        menuSubItem("C++",      tabName = "id_dev_open_source_cpp",    icon = tags$i(class = "nav-icon logo-cpp"))
+        menuSubItem("Pacotes", tabName = "id_dev_open_source_pacotes", icon = icon("box-open")),
+        menuSubItem("Jogos",   tabName = "id_dev_open_source_jogos",   icon = icon("gamepad"))
       ),
       menuItem(
         "Sobre Mim",
@@ -121,68 +116,40 @@ ui = dashboardPage(
         uiOutput("conteudo_visao_geral")
       ),
       tabItem(
-        tabName = "id_analise_dados_powerbi",
-        uiOutput("conteudo_analise_dados_powerbi")
+        tabName = "id_analise_dados_gestao",
+        uiOutput("conteudo_analise_dados_gestao")
       ),
       tabItem(
-        tabName = "id_analise_dados_r",
-        uiOutput("conteudo_analise_dados_r")
+        tabName = "id_analise_dados_powerbi",
+        uiOutput("conteudo_analise_dados_powerbi")
       ),
       tabItem(
         tabName = "id_analise_dados_excel",
         uiOutput("conteudo_analise_dados_excel")
       ),
       tabItem(
-        tabName = "id_analise_dados_python",
-        uiOutput("conteudo_analise_dados_python")
-      ),
-      tabItem(
         tabName = "id_ciencia_dados",
         uiOutput("conteudo_ciencia_dados")
       ),
       tabItem(
-        tabName = "id_engenharia_dados_r",
-        uiOutput("conteudo_engenharia_dados_r")
+        tabName = "id_engenharia_dados",
+        uiOutput("conteudo_engenharia_dados")
       ),
       tabItem(
-        tabName = "id_engenharia_dados_python",
-        uiOutput("conteudo_engenharia_dados_python")
+        tabName = "id_automacoes",
+        uiOutput("conteudo_automacoes")
       ),
       tabItem(
-        tabName = "id_automacoes_r",
-        uiOutput("conteudo_automacoes_r")
+        tabName = "id_apps_mobile",
+        uiOutput("conteudo_apps_mobile")
       ),
       tabItem(
-        tabName = "id_automacoes_python",
-        uiOutput("conteudo_automacoes_python")
+        tabName = "id_dev_open_source_pacotes",
+        uiOutput("conteudo_dev_open_source_pacotes")
       ),
       tabItem(
-        tabName = "id_automacoes_appsheet",
-        uiOutput("conteudo_automacoes_appsheet")
-      ),
-      tabItem(
-        tabName = "id_apps_mobile_shiny_r",
-        uiOutput("conteudo_apps_mobile_shiny_r")
-      ),
-      tabItem(
-        tabName = "id_apps_mobile_shiny_python",
-        uiOutput("conteudo_apps_mobile_shiny_python")
-      ),
-      tabItem(
-        tabName = "id_dev_open_source_r",
-        uiOutput("conteudo_dev_open_source_r")
-      ),
-      tabItem(
-        tabName = "id_dev_open_source_python",
-        uiOutput("conteudo_dev_open_source_python")
-      ),
-      tabItem(
-        tabName = "id_dev_open_source_godot",
-        uiOutput("conteudo_dev_open_source_godot")
-      ),
-      tabItem(
-        tabName = "id_dev_open_source_cpp",
-        uiOutput("conteudo_dev_open_source_cpp")
+        tabName = "id_dev_open_source_jogos",
+        uiOutput("conteudo_dev_open_source_jogos")
       ),
       tabItem(
         tabName = "id_sobre_mim",
@@ -215,68 +182,40 @@ server = function(input, output, session){
     visao_geral()
   })
 
-  output$conteudo_analise_dados_powerbi <- renderUI({
-    analise_dados("powerbi")
+  output$conteudo_analise_dados_gestao <- renderUI({
+    analise_dados("gestao")
   })
 
-  output$conteudo_analise_dados_r <- renderUI({
-    analise_dados("r")
+  output$conteudo_analise_dados_powerbi <- renderUI({
+    analise_dados("powerbi")
   })
 
   output$conteudo_analise_dados_excel <- renderUI({
     analise_dados("excel")
   })
 
-  output$conteudo_analise_dados_python <- renderUI({
-    analise_dados("python")
-  })
-
   output$conteudo_ciencia_dados <- renderUI({
     ciencia_dados()
   })
 
-  output$conteudo_engenharia_dados_r <- renderUI({
-    engenharia_dados("r")
+  output$conteudo_engenharia_dados <- renderUI({
+    engenharia_dados()
   })
 
-  output$conteudo_engenharia_dados_python <- renderUI({
-    engenharia_dados("python")
+  output$conteudo_automacoes <- renderUI({
+    automacoes()
   })
 
-  output$conteudo_automacoes_r <- renderUI({
-    automacoes("r")
+  output$conteudo_apps_mobile <- renderUI({
+    apps_mobile()
   })
 
-  output$conteudo_automacoes_python <- renderUI({
-    automacoes("python")
+  output$conteudo_dev_open_source_pacotes <- renderUI({
+    dev_open_source("pacotes")
   })
 
-  output$conteudo_automacoes_appsheet <- renderUI({
-    automacoes("appsheet")
-  })
-
-  output$conteudo_apps_mobile_shiny_r <- renderUI({
-    apps_mobile("shiny_r")
-  })
-
-  output$conteudo_apps_mobile_shiny_python <- renderUI({
-    apps_mobile("shiny_python")
-  })
-
-  output$conteudo_dev_open_source_r <- renderUI({
-    dev_open_source("r")
-  })
-
-  output$conteudo_dev_open_source_python <- renderUI({
-    dev_open_source("python")
-  })
-
-  output$conteudo_dev_open_source_godot <- renderUI({
-    dev_open_source("godot")
-  })
-
-  output$conteudo_dev_open_source_cpp <- renderUI({
-    dev_open_source("cpp")
+  output$conteudo_dev_open_source_jogos <- renderUI({
+    dev_open_source("jogos")
   })
 
   output$conteudo_sobre_mim <- renderUI({

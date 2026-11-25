@@ -1,4 +1,4 @@
-automacoes = function(item){
+automacoes = function(){
 
   # DADOS ------------------------------------------------------------------
 
@@ -12,88 +12,54 @@ automacoes = function(item){
 
   github = "https://github.com/biuspoly/"
 
+  # Valores de cada versão separados por ";"
   projetos = data.frame(
     id = c(
-      "r_comodato_cev",
-      "py_verificador_powerbi", "py_senatran",
-      "appsheet_comodato"
+      "comodato_cev", "verificador_powerbi", "senatran"
     ),
     titulo = c(
-      "Automação do contrato de comodato (CEV)",
-      "Verificador de painéis Power BI", "Automação de consulta de veículos (Senatran)",
-      "Comodato com AppSheet"
+      "Contrato de comodato (CEV)", "Verificador de painéis Power BI", "Consulta de veículos (Senatran)"
     ),
     descricao = c(
-      "Gera o contrato de comodato em PDF e envia por e-mail para assinatura digital.",
+      "Gera o contrato de comodato em PDF e envia para assinatura digital, com telas de reenvio.",
       "Confere a última atualização de cada painel Power BI e dispara uma nova quando precisa.",
-      "Robôs que consultam débitos, multas e restrições de veículos e o preço FIPE.",
-      "O primeiro processo de comodato: app AppSheet sobre planilha Google, com automação em R."
+      "Robôs que consultam débitos, multas e restrições de veículos e o preço FIPE."
     ),
     detalhes = c(
-      "Lê o comodato, monta o contrato em R Markdown, extrai dados dos documentos do cliente, consulta o CNPJ e envia para assinatura na Clicksign. Funciona junto com a tela de Comodatos do Acompanhamento Logístico.",
+      "A automação em R lê o comodato, monta o contrato em R Markdown, extrai dados dos documentos do cliente, consulta o CNPJ e envia para assinatura na Clicksign. Para reenviar um contrato há duas telas de desktop: uma em R (tcltk) e outra em Python (tkinter), feitas com ajuda do Claude. Funciona junto com a tela de Comodatos do Acompanhamento Logístico.",
       "Junta o que eram três scripts (token, verificação e atualização) num módulo com funções. Usa a API REST do Power BI com service principal e tem modo demonstração com respostas fictícias.",
-      "Conjunto de robôs em Python (BUMBLEBEE, IRONHIDE, MEGATRON, OPTIMUS PRIME) que consultam os sistemas do Senatran/Detran com certificado digital e atualizam a FIPE da frota. Repositório só com o código: não roda sem os certificados.",
-      "O app AppSheet roda sobre uma planilha Google; a automação em R lê os comodatos do banco e atualiza essa planilha em ciclos, mantendo o app em dia com o que está assinado e pendente. Foi a primeira versão do processo, antes da tela de Comodatos no Acompanhamento Logístico."
+      "Conjunto de robôs em Python (BUMBLEBEE, IRONHIDE, MEGATRON, OPTIMUS PRIME) que consultam os sistemas do Senatran/Detran com certificado digital e atualizam a FIPE da frota. Repositório só com o código: não roda sem os certificados."
     ),
     logo = c(
-      "r.svg",
-      "python.svg", "python.svg",
-      "appsheet.svg;r.svg"
+      "r.svg;python.svg", "python.svg", "python.svg"
     ),
     cor = c(
-      "info",
-      "primary", "primary",
-      "success"
+      "primary", "primary", "primary"
     ),
     print = c(
-      "prints/repo_comodato_cev.png",
-      "prints/repo_verificador_paineis_powerbi.png", "prints/repo_automacao_senatran.png",
-      "prints/repo_comodato_appsheet.png"
+      "prints/repo_comodato_cev.png", "prints/repo_verificador_paineis_powerbi.png", "prints/repo_automacao_senatran.png"
     ),
     link = c(
-      paste0(github, "comodato-cev"),
-      paste0(github, "verificador-paineis-powerbi"), paste0(github, "automacao-senatran"),
-      paste0(github, "comodato-appsheet")
+      paste0(github, "comodato-cev;", github, "comodato-cev/blob/main/reenvio_cev.R;", github, "comodato-cev/tree/main/app"),
+      paste0(github, "verificador-paineis-powerbi"),
+      paste0(github, "automacao-senatran")
     ),
     rotulo = c(
-      "",
-      "", "",
-      ""
+      "Automação (R);Tela tcltk (R);Tela tkinter (Python)", "", ""
     ),
     modo = c(
-      "repo",
-      "repo", "repo",
-      "repo"
+      "repo", "repo", "repo"
     )
   )
 
   # UI ----------------------------------------------------------------------
 
-  if (item == "r") {
-
-    fluidPage(
-      h2("Automações em R"),
-      faixa_etapas(etapas, "Estrutura de uma automação"),
-      fluidRow(card_projeto(projetos, "r_comodato_cev"))
-    )
-
-  } else if (item == "python") {
-
-    fluidPage(
-      h2("Automações em Python"),
-      faixa_etapas(etapas, "Estrutura de uma automação"),
-      fluidRow(card_projeto(projetos, "py_verificador_powerbi")),
-      fluidRow(card_projeto(projetos, "py_senatran"))
-    )
-
-  } else if (item == "appsheet") {
-
-    fluidPage(
-      h2("Automações com AppSheet"),
-      faixa_etapas(etapas, "Estrutura de uma automação"),
-      fluidRow(card_projeto(projetos, "appsheet_comodato"))
-    )
-
-  }
+  fluidPage(
+    h2("Automações"),
+    faixa_etapas(etapas, "Estrutura de uma automação"),
+    fluidRow(card_projeto(projetos, "comodato_cev")),
+    fluidRow(card_projeto(projetos, "verificador_powerbi")),
+    fluidRow(card_projeto(projetos, "senatran"))
+  )
 
 }

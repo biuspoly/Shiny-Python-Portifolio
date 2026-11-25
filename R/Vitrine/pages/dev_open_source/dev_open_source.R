@@ -12,113 +12,102 @@ dev_open_source = function(item){
 
   github = "https://github.com/biuspoly/"
 
-  projetos = data.frame(
+  # Pacotes (valores de cada versão separados por ";")
+  pacotes = data.frame(
     id = c(
-      "r_rnfe", "r_veiculosbr", "r_reenvio_cev",
-      "py_veiculosbr", "py_yume", "py_reenvio_cev",
-      "godot_rivals_avenue",
-      "cpp_pekka_kana"
+      "rnfe", "veiculosbr"
     ),
     titulo = c(
-      "RNFe", "veiculosbr", "Reenvio de CEV",
-      "veiculosbr", "Yume em PT-BR no Switch", "Reenvio de CEV",
-      "Rivals Avenue",
-      "Pekka Kana 2 para Nintendo Switch"
+      "RNFe", "veiculosbr"
     ),
     descricao = c(
       "Documentos fiscais eletrônicos brasileiros em R: XML, assinatura, SEFAZ e PDFs.",
-      "Placa (antiga e Mercosul), RENAVAM e preço FIPE de veículos brasileiros, em R.",
-      "Interface de desktop em R para reenviar o contrato de comodato para assinatura.",
-      "Placa (antiga e Mercosul), RENAVAM e preço FIPE de veículos brasileiros, em Python.",
-      "Tradução para português e guia para jogar Yume no Nintendo Switch.",
-      "Interface de desktop em Python para gerar e reenviar o contrato de comodato.",
-      "Jogo em desenvolvimento na Godot Engine.",
-      "Port nativo (homebrew) de Pekka Kana 2 para Nintendo Switch."
+      "Placa (antiga e Mercosul), RENAVAM e preço FIPE de veículos brasileiros, em R e Python."
     ),
     detalhes = c(
-      "NF-e, NFC-e, CT-e, GTV-e, MDF-e e NFS-e: montar o XML pelo schema, assinar, comunicar com a SEFAZ, ler os documentos em tabelas e gerar os PDFs (DANFE, DACTE, DAMDFE, DANFSe).",
-      "Valida e converte placas antigas e Mercosul, valida RENAVAM e consulta o preço FIPE, inclusive a partir da placa. O mesmo pacote tem a versão em Python.",
-      "Feita com tcltk: escolhe o comodato, gera de novo o PDF do contrato e reenvia para assinatura. Trabalha junto com a tela de Comodatos do Acompanhamento Logístico.",
-      "Versão em Python do pacote: validação de placa e RENAVAM e consulta FIPE.",
-      "Tradução PT-BR do jogo Yume e o passo a passo para rodá-lo no Nintendo Switch.",
-      "Feita com tkinter: gera e reenvia o contrato de comodato para assinatura, com a mesma lógica da versão em R.",
-      "Projeto pessoal de jogo na Godot Engine (GDScript). Repositório ainda privado.",
-      "Port do jogo Pekka Kana 2 em C++ para rodar nativamente no Nintendo Switch (homebrew)."
+      "NF-e, NFC-e, CT-e, GTV-e, MDF-e e NFS-e: montar o XML pelo schema, assinar, comunicar com a SEFAZ, ler os documentos em tabelas e gerar os PDFs (DANFE, DACTE, DAMDFE, DANFSe). Feito com ajuda do Claude.",
+      "Valida e converte placas antigas e Mercosul, valida RENAVAM e consulta o preço FIPE, inclusive a partir da placa. O mesmo pacote existe em R e em Python. Feito com ajuda do Claude."
     ),
     logo = c(
-      "r.svg", "r.svg;python.svg", "r.svg;python.svg",
-      "python.svg;r.svg", "python.svg", "python.svg;r.svg",
-      "godot.svg",
-      "cpp.svg"
+      "r.svg", "r.svg;python.svg"
     ),
     cor = c(
-      "info", "info", "info",
-      "primary", "primary", "primary",
-      "info",
-      "primary"
+      "info", "info"
     ),
     print = c(
-      "prints/repo_rnfe.png", "prints/repo_veiculosbr.png", "prints/repo_comodato_cev.png",
-      "prints/repo_veiculosbr.png", "prints/repo_yume_switch_ptbr.png", "prints/repo_comodato_cev.png",
-      "prints/godot_rivals_avenue.png",
-      "prints/cpp_pekka_kana.png"
+      "prints/repo_rnfe.png", "prints/repo_veiculosbr.png"
     ),
     link = c(
-      paste0(github, "RNFe"), paste0(github, "veiculosbr"), paste0(github, "comodato-cev;", github, "comodato-cev/tree/main/app"),
-      paste0(github, "veiculosbr"), paste0(github, "yume-switch-ptbr"), paste0(github, "comodato-cev;", github, "comodato-cev/tree/main/app"),
-      "",
-      paste0(github, "pekka-kana-2-switch")
+      paste0(github, "RNFe"),
+      paste0(github, "veiculosbr/tree/main/r;", github, "veiculosbr/tree/main/python")
     ),
     rotulo = c(
-      "", "", "Versão R;Versão Python",
-      "", "", "Versão R;Versão Python",
-      "",
-      ""
+      "", "Pacote R;Pacote Python"
     ),
     modo = c(
-      "repo", "repo", "repo",
-      "repo", "repo", "repo",
-      "em_breve",
-      "repo"
+      "repo", "repo"
+    )
+  )
+
+  # Jogos
+  jogos = data.frame(
+    id = c(
+      "pekka_kana", "rivals_avenue", "yume"
+    ),
+    titulo = c(
+      "Pekka Kana 2 para Nintendo Switch", "Rivals Avenue", "Yume em PT-BR no Switch"
+    ),
+    descricao = c(
+      "Port nativo (homebrew) de Pekka Kana 2 para Nintendo Switch.",
+      "Jogo em desenvolvimento na Godot Engine.",
+      "Tradução para português e guia para jogar Yume no Nintendo Switch."
+    ),
+    detalhes = c(
+      "Port do jogo Pekka Kana 2 em C++ para rodar nativamente no Nintendo Switch (homebrew). Feito com ajuda do Claude.",
+      "Projeto pessoal de jogo na Godot Engine (GDScript). Repositório ainda privado. Feito com ajuda do Claude.",
+      "Tradução PT-BR do jogo Yume e o passo a passo para rodá-lo no Nintendo Switch. Feito com ajuda do Claude."
+    ),
+    logo = c(
+      "cpp.svg", "godot.svg", "python.svg"
+    ),
+    cor = c(
+      "primary", "primary", "primary"
+    ),
+    print = c(
+      "prints/cpp_pekka_kana.png", "prints/godot_rivals_avenue.png", "prints/repo_yume_switch_ptbr.png"
+    ),
+    link = c(
+      paste0(github, "pekka-kana-2-switch"),
+      "#",
+      paste0(github, "yume-switch-ptbr")
+    ),
+    rotulo = c(
+      "", "", ""
+    ),
+    modo = c(
+      "repo", "em_breve", "repo"
     )
   )
 
   # UI ----------------------------------------------------------------------
 
-  if (item == "r") {
+  if (item == "pacotes") {
 
     fluidPage(
-      h2("Dev & Open Source em R"),
+      h2("Pacotes"),
       faixa_etapas(etapas, "Etapas de um projeto aberto"),
-      fluidRow(card_projeto(projetos, "r_rnfe")),
-      fluidRow(card_projeto(projetos, "r_veiculosbr")),
-      fluidRow(card_projeto(projetos, "r_reenvio_cev"))
+      fluidRow(card_projeto(pacotes, "rnfe")),
+      fluidRow(card_projeto(pacotes, "veiculosbr"))
     )
 
-  } else if (item == "python") {
+  } else if (item == "jogos") {
 
     fluidPage(
-      h2("Dev & Open Source em Python"),
+      h2("Jogos"),
       faixa_etapas(etapas, "Etapas de um projeto aberto"),
-      fluidRow(card_projeto(projetos, "py_veiculosbr")),
-      fluidRow(card_projeto(projetos, "py_yume")),
-      fluidRow(card_projeto(projetos, "py_reenvio_cev"))
-    )
-
-  } else if (item == "godot") {
-
-    fluidPage(
-      h2("Dev & Open Source com Godot"),
-      faixa_etapas(etapas, "Etapas de um projeto aberto"),
-      fluidRow(card_projeto(projetos, "godot_rivals_avenue"))
-    )
-
-  } else if (item == "cpp") {
-
-    fluidPage(
-      h2("Dev & Open Source em C++"),
-      faixa_etapas(etapas, "Etapas de um projeto aberto"),
-      fluidRow(card_projeto(projetos, "cpp_pekka_kana"))
+      fluidRow(card_projeto(jogos, "pekka_kana")),
+      fluidRow(card_projeto(jogos, "rivals_avenue")),
+      fluidRow(card_projeto(jogos, "yume"))
     )
 
   }

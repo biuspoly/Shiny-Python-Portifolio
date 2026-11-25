@@ -1,12 +1,15 @@
 # Card de projeto, usado por todas as páginas de projetos.
 # Recebe o data.frame da página e o id do projeto; lê a linha daquele projeto.
+# Um projeto pode ter até 5 versões (um botão para cada) e até 3 linguagens (um círculo para cada).
 #
-# Colunas esperadas no data.frame:
+# Colunas esperadas no data.frame (valores de cada versão separados por ";"):
 #   id, titulo, descricao, detalhes, cor, print
-#   logo       -> um ou dois arquivos separados por ";"  (ex.: "r.svg;python.svg")
-#   link       -> um ou dois endereços separados por ";" (um botão para cada)
-#   rotulo     -> texto de cada botão, separado por ";"  ("" usa o texto padrão)
-#   modo       -> "app" (abre no modal), "repo" (abre o GitHub em nova aba) ou "em_breve"
+#   logo   -> até 3 arquivos, um por linguagem   (ex.: "powerbi.svg;r.svg;python.svg")
+#   link   -> um endereço por versão
+#   rotulo -> o texto do botão de cada versão  ("" usa o texto padrão)
+#   modo   -> o modo de cada versão; um valor só vale para todas:
+#             "app" (abre no modal), "repo" (GitHub em nova aba),
+#             "externo" (site em nova aba) ou "em_breve"
 
 card_projeto = function(projetos, id_projeto){
 
@@ -15,61 +18,61 @@ card_projeto = function(projetos, id_projeto){
   logos   = strsplit(projeto$logo, ";")[[1]]
   links   = strsplit(projeto$link, ";")[[1]]
   rotulos = strsplit(projeto$rotulo, ";")[[1]]
+  modos   = strsplit(projeto$modo, ";")[[1]]
 
-  if (length(links) == 0)   links = ""
-  if (length(rotulos) < length(links)) rotulos = c(rotulos, rep("", length(links) - length(rotulos)))
+  if (length(links) == 0) links = ""
+  versoes = length(links)
+  if (length(rotulos) < versoes) rotulos = c(rotulos, rep("", versoes - length(rotulos)))
+  if (length(modos) < versoes)   modos   = rep(modos[1], versoes)
 
   # SERVER ------------------------------------------------------------------
 
-  # Botões "Ver projeto" no modo app: abrem o app num modal
-  if (projeto$modo == "app") {
-
-    observeEvent(input[[paste0("bt_ver_", id_projeto, "_1")]], {
-      showModal(
-        modalDialog(
-          title = projeto$titulo,
-          size = "xl",
-          easyClose = TRUE,
-          footer = modalButton("Fechar"),
-          tags$iframe(src = links[1], width = "100%", style = "height: 75vh;", frameborder = "0")
-        )
-      )
-    })
-
-    if (length(links) == 2) {
-      observeEvent(input[[paste0("bt_ver_", id_projeto, "_2")]], {
+  # Versão no modo app: o botão abre o app num modal
+  abrir_modal = function(posicao){
+    if (versoes >= posicao && modos[posicao] == "app") {
+      observeEvent(input[[paste0("bt_ver_", id_projeto, "_", posicao)]], {
         showModal(
           modalDialog(
             title = projeto$titulo,
             size = "xl",
             easyClose = TRUE,
             footer = modalButton("Fechar"),
-            tags$iframe(src = links[2], width = "100%", style = "height: 75vh;", frameborder = "0")
+            tags$iframe(src = links[posicao], width = "100%", style = "height: 75vh;", frameborder = "0")
           )
         )
       })
     }
   }
 
-  # Botões "Ver projeto" ----------------------------------------------------
+  abrir_modal(1)
+  abrir_modal(2)
+  abrir_modal(3)
+  abrir_modal(4)
+  abrir_modal(5)
+
+  # Botões das versões --------------------------------------------------------
 
   botao_ver = function(posicao){
 
-    rotulo = rotulos[posicao]
+    if (versoes < posicao) return(NULL)
 
-    if (projeto$modo == "app") {
-      actionButton(
-        paste0("bt_ver_", id_projeto, "_", posicao),
+    rotulo = rotulos[posicao]
+    modo   = modos[posicao]
+    id_bt  = paste0("bt_ver_", id_projeto, "_", posicao)
+
+    if (modo == "app") {
+      botao = actionButton(
+        id_bt,
         label = if (rotulo == "") "Ver projeto" else rotulo,
         icon = icon("up-right-from-square"),
         status = "primary",
         size = "sm",
         width = "100%"
       )
-    } else if (projeto$modo == "repo") {
+    } else if (modo == "repo") {
       # o GitHub não abre dentro de modal: abre o repositório em nova aba
-      actionButton(
-        paste0("bt_ver_", id_projeto, "_", posicao),
+      botao = actionButton(
+        id_bt,
         label = if (rotulo == "") "Ver no GitHub" else rotulo,
         icon = icon("github"),
         status = "primary",
@@ -77,10 +80,21 @@ card_projeto = function(projetos, id_projeto){
         width = "100%",
         onclick = paste0("window.open('", links[posicao], "', '_blank')")
       )
+    } else if (modo == "externo") {
+      # sites que não deixam abrir dentro do shinylive (Power BI, RPubs): abre em nova aba
+      botao = actionButton(
+        id_bt,
+        label = if (rotulo == "") "Ver projeto" else rotulo,
+        icon = icon("up-right-from-square"),
+        status = "primary",
+        size = "sm",
+        width = "100%",
+        onclick = paste0("window.open('", links[posicao], "', '_blank')")
+      )
     } else {
-      actionButton(
-        paste0("bt_ver_", id_projeto, "_", posicao),
-        label = "Em breve",
+      botao = actionButton(
+        id_bt,
+        label = if (rotulo == "") "Em breve" else paste(rotulo, "(em breve)"),
         icon = icon("clock"),
         status = "primary",
         size = "sm",
@@ -88,35 +102,39 @@ card_projeto = function(projetos, id_projeto){
         disabled = NA
       )
     }
+
+    # com uma versão só, o botão divide a linha com "Detalhes"; com várias, duas por linha
+    column(width = 6, class = "mb-2", botao)
   }
 
   # sem status: segue o modo claro/escuro do bs4Dash
-  botao_detalhes = actionButton(
-    paste0("bt_detalhes_", id_projeto),
-    label = "Detalhes",
-    icon = icon("circle-info"),
-    size = "sm",
-    width = "100%"
+  botao_detalhes = column(
+    width = 6,
+    class = "mb-2",
+    actionButton(
+      paste0("bt_detalhes_", id_projeto),
+      label = "Detalhes",
+      icon = icon("circle-info"),
+      size = "sm",
+      width = "100%"
+    )
   )
 
-  if (length(links) == 2) {
-    botoes = fluidRow(
-      column(width = 4, botao_ver(1)),
-      column(width = 4, botao_ver(2)),
-      column(width = 4, botao_detalhes)
-    )
-  } else {
-    botoes = fluidRow(
-      column(width = 6, botao_ver(1)),
-      column(width = 6, botao_detalhes)
-    )
-  }
+  botoes = fluidRow(
+    botao_ver(1),
+    botao_ver(2),
+    botao_ver(3),
+    botao_ver(4),
+    botao_ver(5),
+    botao_detalhes
+  )
 
-  # Círculos do header -------------------------------------------------------
+  # Círculos do header (uma linguagem por círculo) ----------------------------
 
-  circulo = function(arquivo){
+  circulo = function(posicao){
+    if (length(logos) < posicao) return(NULL)
     img(
-      src = arquivo,
+      src = logos[posicao],
       # altura relativa ao texto (rem); a largura acompanha
       style = "height: 2.25rem;",
       class = "img-circle elevation-2 bg-white p-1 mt-n3 mb-n4 mr-2"
@@ -126,8 +144,9 @@ card_projeto = function(projetos, id_projeto){
   # d-flex: círculos lado a lado sem ocupar altura de linha (a faixa fica estreita)
   circulos = span(
     class = "d-flex",
-    circulo(logos[1]),
-    if (length(logos) == 2) circulo(logos[2])
+    circulo(1),
+    circulo(2),
+    circulo(3)
   )
 
   # UI ----------------------------------------------------------------------

@@ -40,7 +40,7 @@ ciencia_dados = function(){
       ""
     ),
     modo = c(
-      "app"
+      "externo"
     )
   )
 

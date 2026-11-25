@@ -1,78 +1,57 @@
-apps_mobile = function(item){
+apps_mobile = function(){
 
   # DADOS ------------------------------------------------------------------
 
   # Etapas do processo (faixa antes dos cards)
   etapas = data.frame(
     titulo    = c("Dados", "App", "Uso em campo", "Retorno"),
-    descricao = c("Banco ou planilha.", "shinyMobile e Flet.", "Motorista na entrega.", "Status atualizado."),
+    descricao = c("Banco ou planilha.", "AppSheet, shinyMobile e Flet.", "Motorista na entrega.", "Status atualizado."),
     icone     = c("database", "mobile-screen", "truck", "rotate"),
     cor       = c("primary", "purple", "teal", "orange")
   )
 
   github = "https://github.com/biuspoly/"
 
+  # Valores de cada versão separados por ";" ("#" = versão ainda sem endereço)
   projetos = data.frame(
     id = c(
-      "shiny_r_comodato_mobile",
-      "shiny_py_comodato_mobile"
+      "comodato_motorista"
     ),
     titulo = c(
-      "Comodato Mobile (shinyMobile)",
-      "Comodato Mobile (Python)"
+      "Comodato do motorista"
     ),
     descricao = c(
-      "App do motorista: consulta, na entrega, os comodatos pendentes de assinatura.",
-      "O mesmo app do motorista, portado para Python."
+      "App para o motorista consultar, na entrega, os comodatos pendentes de assinatura."
     ),
     detalhes = c(
-      "Feito em R com shinyMobile. Mostra os comodatos pendentes do motorista, os detalhes de cada um e a busca por cliente, CEV ou nota. App descontinuado; o código fica no repositório, com dados fictícios.",
-      "Versão em Python do app do motorista. Repositório ainda privado."
+      "Três versões do mesmo app. Primeiro em AppSheet, sobre uma planilha Google que uma automação em R mantinha atualizada. Depois em R com shinyMobile (descontinuado; o código fica no repositório, com dados fictícios). A próxima é em Python com Flet, feita com ajuda do Claude."
     ),
     logo = c(
-      "shiny.svg",
-      "shiny.svg"
+      "appsheet.svg;r.svg;python.svg"
     ),
     cor = c(
-      "info",
-      "primary"
+      "info"
     ),
     print = c(
-      "prints/mobile_comodato_r.png",
-      "prints/mobile_comodato_py.png"
+      "prints/mobile_comodato_r.png"
     ),
     link = c(
-      paste0(github, "comodato-mobile"),
-      ""
+      paste0(github, "comodato-appsheet;", github, "comodato-mobile;#")
     ),
     rotulo = c(
-      "",
-      ""
+      "AppSheet;shinyMobile;Flet"
     ),
     modo = c(
-      "repo",
-      "em_breve"
+      "repo;repo;em_breve"
     )
   )
 
   # UI ----------------------------------------------------------------------
 
-  if (item == "shiny_r") {
-
-    fluidPage(
-      h2("Apps mobile com Shiny R"),
-      faixa_etapas(etapas, "Etapas de um app"),
-      fluidRow(card_projeto(projetos, "shiny_r_comodato_mobile"))
-    )
-
-  } else if (item == "shiny_python") {
-
-    fluidPage(
-      h2("Apps mobile com Python"),
-      faixa_etapas(etapas, "Etapas de um app"),
-      fluidRow(card_projeto(projetos, "shiny_py_comodato_mobile"))
-    )
-
-  }
+  fluidPage(
+    h2("Apps e Mobile"),
+    faixa_etapas(etapas, "Etapas de um app"),
+    fluidRow(card_projeto(projetos, "comodato_motorista"))
+  )
 
 }

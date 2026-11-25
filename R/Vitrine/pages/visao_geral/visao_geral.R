@@ -41,7 +41,7 @@ visao_geral = function(){
       paste0(github, "pipeline-dados-python"), paste0(github, "comodato-mobile"), paste0(github, "RNFe")
     ),
     modo = c(
-      "app", "app", "app",
+      "app", "app", "externo",
       "repo", "repo", "repo"
     )
   )
@@ -94,7 +94,7 @@ visao_geral = function(){
         color = "primary",
         width = 4,
         elevation = 2,
-        tabName = "id_analise_dados_python"
+        tabName = "id_analise_dados_gestao"
       ),
       infoBox(
         title = "Ciência de Dados",
@@ -112,7 +112,7 @@ visao_geral = function(){
         color = "indigo",
         width = 4,
         elevation = 2,
-        tabName = "id_engenharia_dados_r"
+        tabName = "id_engenharia_dados"
       )
     ),
     fluidRow(
@@ -123,7 +123,7 @@ visao_geral = function(){
         color = "purple",
         width = 4,
         elevation = 2,
-        tabName = "id_automacoes_r"
+        tabName = "id_automacoes"
       ),
       infoBox(
         title = "Apps e Mobile",
@@ -132,7 +132,7 @@ visao_geral = function(){
         color = "orange",
         width = 4,
         elevation = 2,
-        tabName = "id_apps_mobile_shiny_r"
+        tabName = "id_apps_mobile"
       ),
       infoBox(
         title = "Dev & Open Source",
@@ -141,7 +141,7 @@ visao_geral = function(){
         color = "navy",
         width = 4,
         elevation = 2,
-        tabName = "id_dev_open_source_r"
+        tabName = "id_dev_open_source_pacotes"
       )
     ),
 
