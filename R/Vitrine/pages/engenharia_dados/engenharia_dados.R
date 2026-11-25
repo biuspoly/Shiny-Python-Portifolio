@@ -12,40 +12,35 @@ engenharia_dados = function(){
 
   github = "https://github.com/biuspoly/"
 
-  # Valores de cada versão separados por ";"
-  projetos = data.frame(
-    id = c(
-      "pipeline", "webhooks"
+  # Um bloco por projeto; valores de cada versão separados por ";"
+  projetos = rbind(
+
+    # Pipeline de dados -----------------------------------------------------
+    data.frame(
+      id        = "pipeline",
+      titulo    = "Pipeline de dados",
+      descricao = "Rotina da madrugada que extrai do ERP, monta a camada bruta e atualiza as tabelas dos painéis.",
+      detalhes  = "Duas versões. Em R (escrita sem IA): camada bruta, tabelas dos apps Shiny em R e consultas diretas ao ERP. Em Python (com ajuda do Claude): orquestração com Prefect, camada bruta, camada intermediária e os Parquet dos apps Shiny for Python, com o aviso de prazo de comodato ao meio-dia. As duas rodam aqui sobre Parquet fictício no lugar do ERP e do MySQL.",
+      logo      = "r.svg;python.svg",
+      cor       = "info",
+      print     = "prints/repo_pipeline_dados_python.png",
+      link      = paste0(github, "pipeline-dados-r;", github, "pipeline-dados-python"),
+      rotulo    = "Versão R;Versão Python",
+      modo      = "repo"
     ),
-    titulo = c(
-      "Pipeline de dados", "Webhooks e APIs com plumber"
-    ),
-    descricao = c(
-      "Rotina da madrugada que extrai do ERP, monta a camada bruta e atualiza as tabelas dos painéis.",
-      "API em R que recebe webhooks (Clicksign, GitHub) e expõe consultas de veículos."
-    ),
-    detalhes = c(
-      "Duas versões. Em R (escrita sem IA): camada bruta, tabelas dos apps Shiny em R e consultas diretas ao ERP. Em Python (com ajuda do Claude): orquestração com Prefect, camada bruta, camada intermediária e os Parquet dos apps Shiny for Python, com o aviso de prazo de comodato ao meio-dia. As duas rodam aqui sobre Parquet fictício no lugar do ERP e do MySQL.",
-      "Rotas plumber: webhook da Clicksign (contrato assinado atualiza o status do comodato), webhook do GitHub, consulta FIPE e rastreio de veículos."
-    ),
-    logo = c(
-      "r.svg;python.svg", "r.svg"
-    ),
-    cor = c(
-      "info", "info"
-    ),
-    print = c(
-      "prints/repo_pipeline_dados_python.png", "prints/repo_webhooks_plumber.png"
-    ),
-    link = c(
-      paste0(github, "pipeline-dados-r;", github, "pipeline-dados-python"),
-      paste0(github, "webhooks-plumber")
-    ),
-    rotulo = c(
-      "Versão R;Versão Python", ""
-    ),
-    modo = c(
-      "repo", "repo"
+
+    # Webhooks e APIs com plumber -------------------------------------------
+    data.frame(
+      id        = "webhooks",
+      titulo    = "Webhooks e APIs com plumber",
+      descricao = "API em R que recebe webhooks (Clicksign, GitHub) e expõe consultas de veículos.",
+      detalhes  = "Rotas plumber: webhook da Clicksign (contrato assinado atualiza o status do comodato), webhook do GitHub, consulta FIPE e rastreio de veículos.",
+      logo      = "r.svg",
+      cor       = "info",
+      print     = "prints/repo_webhooks_plumber.png",
+      link      = paste0(github, "webhooks-plumber"),
+      rotulo    = "",
+      modo      = "repo"
     )
   )
 

@@ -12,37 +12,22 @@ apps_mobile = function(){
 
   github = "https://github.com/biuspoly/"
 
-  # Valores de cada versão separados por ";" ("#" = versão ainda sem endereço)
-  projetos = data.frame(
-    id = c(
-      "comodato_motorista"
-    ),
-    titulo = c(
-      "Comodato do motorista"
-    ),
-    descricao = c(
-      "App para o motorista consultar, na entrega, os comodatos pendentes de assinatura."
-    ),
-    detalhes = c(
-      "Três versões do mesmo app. Primeiro em AppSheet, sobre uma planilha Google que uma automação em R mantinha atualizada. Depois em R com shinyMobile (descontinuado; o código fica no repositório, com dados fictícios). A próxima é em Python com Flet, feita com ajuda do Claude."
-    ),
-    logo = c(
-      "appsheet.svg;r.svg;python.svg"
-    ),
-    cor = c(
-      "info"
-    ),
-    print = c(
-      "prints/mobile_comodato_r.png"
-    ),
-    link = c(
-      paste0(github, "comodato-appsheet;", github, "comodato-mobile;#")
-    ),
-    rotulo = c(
-      "AppSheet;shinyMobile;Flet"
-    ),
-    modo = c(
-      "repo;repo;em_breve"
+  # Um bloco por projeto; valores de cada versão separados por ";"
+  # ("#" = versão ainda sem endereço)
+  projetos = rbind(
+
+    # Comodato do motorista -------------------------------------------------
+    data.frame(
+      id        = "comodato_motorista",
+      titulo    = "Comodato do motorista",
+      descricao = "App para o motorista consultar, na entrega, os comodatos pendentes de assinatura.",
+      detalhes  = "Três versões do mesmo app. Primeiro em AppSheet, sobre uma planilha Google que uma automação em R mantinha atualizada. Depois em R com shinyMobile (descontinuado; o código fica no repositório, com dados fictícios). A próxima é em Python com Flet, feita com ajuda do Claude.",
+      logo      = "appsheet.svg;r.svg;python.svg",
+      cor       = "info",
+      print     = "prints/mobile_comodato_r.png",
+      link      = paste0(github, "comodato-appsheet;", github, "comodato-mobile;#"),
+      rotulo    = "AppSheet;shinyMobile;Flet",
+      modo      = "repo;repo;em_breve"
     )
   )
 

@@ -5,44 +5,79 @@ visao_geral = function(){
   github = "https://github.com/biuspoly/"
   site_portfolio = "https://biuspoly.github.io/Shiny-Python-Portifolio/"
 
-  # Projetos em destaque
-  destaques = data.frame(
-    id = c(
-      "comercial_py", "logistico_r", "trf5",
-      "pipelines", "comodato_mobile", "rnfe"
+  # Projetos em destaque: um bloco por card; selos separados por ";"
+  destaques = rbind(
+
+    # Acompanhamento Comercial ----------------------------------------------
+    data.frame(
+      id        = "comercial_py",
+      titulo    = "Acompanhamento Comercial",
+      descricao = "Diário de vendas, curva ABC de clientes e mapa comercial.",
+      selos     = "Shiny Python;Polars",
+      cor       = "primary",
+      print     = "prints/shiny_py_comercial.webp",
+      link      = paste0(site_portfolio, "comercial/"),
+      modo      = "app"
     ),
-    titulo = c(
-      "Acompanhamento Comercial", "Acompanhamento Logístico", "Congestionamento no TRF5",
-      "Pipelines de dados", "Comodato Mobile", "RNFe"
+
+    # Acompanhamento Logístico ----------------------------------------------
+    data.frame(
+      id        = "logistico_r",
+      titulo    = "Acompanhamento Logístico",
+      descricao = "Frota, planilha de entregas, devoluções e comodato, na versão original em R.",
+      selos     = "Shiny R;DuckDB",
+      cor       = "info",
+      print     = "prints/shiny_r_logistico.webp",
+      link      = paste0(site_portfolio, "r/logistico/"),
+      modo      = "app"
     ),
-    descricao = c(
-      "Diário de vendas, curva ABC de clientes e mapa comercial.",
-      "Frota, planilha de entregas, devoluções e comodato, na versão original em R.",
-      "Estudo de taxa de congestionamento e força de trabalho até 2021.",
-      "Extração do ERP, camada bruta e tabelas dos apps, rodando de madrugada.",
-      "App do motorista para consultar comodatos pendentes de assinatura.",
-      "Documentos fiscais eletrônicos em R: XML, assinatura, SEFAZ e PDFs."
+
+    # Congestionamento no TRF5 ----------------------------------------------
+    data.frame(
+      id        = "trf5",
+      titulo    = "Congestionamento no TRF5",
+      descricao = "Estudo de taxa de congestionamento e força de trabalho até 2021.",
+      selos     = "R Markdown;Estatística",
+      cor       = "success",
+      print     = "prints/ufpe.png",
+      link      = "https://rstudio-pubs-static.s3.amazonaws.com/1018240_6c09a7b337324a8cbedadc9ffd9bc670.html",
+      modo      = "externo"
     ),
-    selos = c(
-      "Shiny Python;Polars", "Shiny R;DuckDB", "R Markdown;Estatística",
-      "R;Python", "shinyMobile", "Pacote R"
+
+    # Pipelines de dados ----------------------------------------------------
+    data.frame(
+      id        = "pipelines",
+      titulo    = "Pipelines de dados",
+      descricao = "Extração do ERP, camada bruta e tabelas dos apps, rodando de madrugada.",
+      selos     = "R;Python",
+      cor       = "warning",
+      print     = "prints/repo_pipeline_dados_python.png",
+      link      = paste0(github, "pipeline-dados-python"),
+      modo      = "repo"
     ),
-    cor = c(
-      "primary", "info", "success",
-      "warning", "info", "primary"
+
+    # Comodato Mobile -------------------------------------------------------
+    data.frame(
+      id        = "comodato_mobile",
+      titulo    = "Comodato Mobile",
+      descricao = "App do motorista para consultar comodatos pendentes de assinatura.",
+      selos     = "shinyMobile",
+      cor       = "info",
+      print     = "prints/mobile_comodato_r.png",
+      link      = paste0(github, "comodato-mobile"),
+      modo      = "repo"
     ),
-    print = c(
-      "prints/shiny_py_comercial.webp", "prints/shiny_r_logistico.webp", "prints/ufpe.png",
-      "prints/repo_pipeline_dados_python.png", "prints/mobile_comodato_r.png", "prints/repo_rnfe.png"
-    ),
-    link = c(
-      paste0(site_portfolio, "comercial/"), paste0(site_portfolio, "r/logistico/"),
-      "https://rstudio-pubs-static.s3.amazonaws.com/1018240_6c09a7b337324a8cbedadc9ffd9bc670.html",
-      paste0(github, "pipeline-dados-python"), paste0(github, "comodato-mobile"), paste0(github, "RNFe")
-    ),
-    modo = c(
-      "app", "app", "externo",
-      "repo", "repo", "repo"
+
+    # RNFe ------------------------------------------------------------------
+    data.frame(
+      id        = "rnfe",
+      titulo    = "RNFe",
+      descricao = "Documentos fiscais eletrônicos em R: XML, assinatura, SEFAZ e PDFs.",
+      selos     = "Pacote R",
+      cor       = "primary",
+      print     = "prints/repo_rnfe.png",
+      link      = paste0(github, "RNFe"),
+      modo      = "repo"
     )
   )
 

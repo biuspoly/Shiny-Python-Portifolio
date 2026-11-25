@@ -14,119 +14,172 @@ analise_dados = function(item){
   powerbi        = "https://app.powerbi.com/view?r="
 
   # Painéis de gestão: o sistema da distribuidora, com as versões de cada painel
-  # (Power BI, Shiny R e Shiny Python). Valores de cada versão separados por ";".
-  paineis_gestao = data.frame(
-    id = c(
-      "logistico", "comercial", "financeiro",
-      "fiscal", "monitoramento", "acessos"
-    ),
-    titulo = c(
-      "Acompanhamento Logístico", "Acompanhamento Comercial", "Acompanhamento Financeiro",
-      "Acompanhamento Fiscal", "Monitoramento", "Acessos"
-    ),
-    descricao = c(
-      "Frota, comodatos, planilha de entregas e devoluções.",
-      "Diário de vendas, curva ABC de clientes e mapa comercial.",
-      "Diário financeiro, pagamentos, fluxo, empréstimos, juros e extratos.",
-      "Apuração de ICMS e PIS/COFINS e demonstrativo de faturamento em PDF.",
-      "Usuários conectados, erros, desempenho e rotinas, a partir da telemetria.",
-      "Acesso por painel, visão geral de uso e histórico de acessos."
-    ),
-    detalhes = c(
-      "Começou em Power BI (Frotas, Custos de frota e Devoluções, com dados fictícios), passou para Shiny R (bs4Dash, reactable, DuckDB) e hoje está em Shiny for Python. Frota: débitos, multas, restrições, combustível e mapa; comodatos: solicitação, travas do cliente, pedido ao ERP, documentos, recolha e distrato.",
-      "Primeiro em Shiny R e hoje em Shiny for Python. Meta, tendência, cobertura e histórico por categoria e produto; curva ABC de clientes; potencial e cobertura por município sobre a malha e a população do IBGE.",
-      "Saldos dos bancos, composição financeira do dia, contas a pagar com auditoria, posição com a fábrica, empréstimos entre revendas, juros e extratos bancários.",
-      "Apuração de ICMS com livro fiscal item a item, PIS/COFINS e demonstrativo de faturamento gerado em PDF.",
-      "Painel lido dos logs de telemetria do próprio sistema: quem está conectado, erros, tempo de resposta e execução das rotinas.",
-      "Primeiro em Shiny R e hoje em Shiny for Python. Controle de acesso aos painéis: quem acessou, quando e com que frequência."
-    ),
-    logo = c(
-      "powerbi.svg;r.svg;python.svg", "r.svg;python.svg", "python.svg",
-      "python.svg", "python.svg", "r.svg;python.svg"
-    ),
-    cor = c(
-      "primary", "primary", "primary",
-      "primary", "primary", "primary"
-    ),
-    print = c(
-      "prints/shiny_py_logistico.webp", "prints/shiny_py_comercial.webp", "prints/shiny_py_financeiro.webp",
-      "prints/shiny_py_fiscal.webp", "prints/shiny_py_monitoramento.webp", "prints/shiny_py_acessos.webp"
-    ),
-    link = c(
-      paste0(
+  # (Power BI, Shiny R e Shiny Python). Um bloco por projeto; os valores de cada
+  # versão (logo, link, rotulo, modo) ficam separados por ";".
+  paineis_gestao = rbind(
+
+    # Acompanhamento Logístico ----------------------------------------------
+    data.frame(
+      id        = "logistico",
+      titulo    = "Acompanhamento Logístico",
+      descricao = "Frota, comodatos, planilha de entregas e devoluções.",
+      detalhes  = "Começou em Power BI (Frotas, Custos de frota e Devoluções, com dados fictícios), passou para Shiny R (bs4Dash, reactable, DuckDB) e hoje está em Shiny for Python. Frota: débitos, multas, restrições, combustível e mapa; comodatos: solicitação, travas do cliente, pedido ao ERP, documentos, recolha e distrato.",
+      logo      = "powerbi.svg;r.svg;python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_logistico.webp",
+      link      = paste0(
         powerbi, "eyJrIjoiMDg4YzVmMjctY2Q0YS00NDBlLTg3YzgtOTFjY2UzMGEyMDk4IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9;",
         powerbi, "eyJrIjoiZjAxNzM5MjEtODY1MS00ZWU3LWFmODctZThmNWMxYzc5YTA2IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9;",
         powerbi, "eyJrIjoiODEwYjBmMGYtYzQ1OC00ZTA3LTg0YzMtMTNkNDYzNzJkZjQzIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9;",
         site_portfolio, "r/logistico/;",
         site_portfolio, "logistico/"
       ),
-      paste0(site_portfolio, "r/comercial/;", site_portfolio, "comercial/"),
-      paste0(site_portfolio, "financeiro/"),
-      paste0(site_portfolio, "fiscal/"),
-      paste0(site_portfolio, "monitoramento/"),
-      paste0(site_portfolio, "r/acessos/;", site_portfolio, "acessos/")
+      rotulo    = "Frotas (Power BI);Custos (Power BI);Devoluções (Power BI);Shiny R;Shiny Python",
+      modo      = "externo;externo;externo;app;app"
     ),
-    rotulo = c(
-      "Frotas (Power BI);Custos (Power BI);Devoluções (Power BI);Shiny R;Shiny Python",
-      "Shiny R;Shiny Python",
-      "Shiny Python",
-      "Shiny Python",
-      "Shiny Python",
-      "Shiny R;Shiny Python"
+
+    # Acompanhamento Comercial ----------------------------------------------
+    data.frame(
+      id        = "comercial",
+      titulo    = "Acompanhamento Comercial",
+      descricao = "Diário de vendas, curva ABC de clientes e mapa comercial.",
+      detalhes  = "Primeiro em Shiny R e hoje em Shiny for Python. Meta, tendência, cobertura e histórico por categoria e produto; curva ABC de clientes; potencial e cobertura por município sobre a malha e a população do IBGE.",
+      logo      = "r.svg;python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_comercial.webp",
+      link      = paste0(site_portfolio, "r/comercial/;", site_portfolio, "comercial/"),
+      rotulo    = "Shiny R;Shiny Python",
+      modo      = "app"
     ),
-    modo = c(
-      "externo;externo;externo;app;app",
-      "app",
-      "app",
-      "app",
-      "app",
-      "app"
+
+    # Acompanhamento Financeiro ---------------------------------------------
+    data.frame(
+      id        = "financeiro",
+      titulo    = "Acompanhamento Financeiro",
+      descricao = "Diário financeiro, pagamentos, fluxo, empréstimos, juros e extratos.",
+      detalhes  = "Saldos dos bancos, composição financeira do dia, contas a pagar com auditoria, posição com a fábrica, empréstimos entre revendas, juros e extratos bancários.",
+      logo      = "python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_financeiro.webp",
+      link      = paste0(site_portfolio, "financeiro/"),
+      rotulo    = "Shiny Python",
+      modo      = "app"
+    ),
+
+    # Acompanhamento Fiscal -------------------------------------------------
+    data.frame(
+      id        = "fiscal",
+      titulo    = "Acompanhamento Fiscal",
+      descricao = "Apuração de ICMS e PIS/COFINS e demonstrativo de faturamento em PDF.",
+      detalhes  = "Apuração de ICMS com livro fiscal item a item, PIS/COFINS e demonstrativo de faturamento gerado em PDF.",
+      logo      = "python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_fiscal.webp",
+      link      = paste0(site_portfolio, "fiscal/"),
+      rotulo    = "Shiny Python",
+      modo      = "app"
+    ),
+
+    # Monitoramento ---------------------------------------------------------
+    data.frame(
+      id        = "monitoramento",
+      titulo    = "Monitoramento",
+      descricao = "Usuários conectados, erros, desempenho e rotinas, a partir da telemetria.",
+      detalhes  = "Painel lido dos logs de telemetria do próprio sistema: quem está conectado, erros, tempo de resposta e execução das rotinas.",
+      logo      = "python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_monitoramento.webp",
+      link      = paste0(site_portfolio, "monitoramento/"),
+      rotulo    = "Shiny Python",
+      modo      = "app"
+    ),
+
+    # Acessos ---------------------------------------------------------------
+    data.frame(
+      id        = "acessos",
+      titulo    = "Acessos",
+      descricao = "Acesso por painel, visão geral de uso e histórico de acessos.",
+      detalhes  = "Primeiro em Shiny R e hoje em Shiny for Python. Controle de acesso aos painéis: quem acessou, quando e com que frequência.",
+      logo      = "r.svg;python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_acessos.webp",
+      link      = paste0(site_portfolio, "r/acessos/;", site_portfolio, "acessos/"),
+      rotulo    = "Shiny R;Shiny Python",
+      modo      = "app"
     )
   )
 
   # Painéis em Power BI (publicados na web; abrem em nova aba)
-  paineis_powerbi = data.frame(
-    id = c(
-      "pbi_secoge", "pbi_dengue", "pbi_performance", "pbi_vendas", "pbi_acoes"
+  paineis_powerbi = rbind(
+
+    # Vacinação COVID-19 (SECOGE) -------------------------------------------
+    data.frame(
+      id        = "pbi_secoge",
+      titulo    = "Vacinação COVID-19 (SECOGE)",
+      descricao = "Doses aplicadas, reforços e cobertura vacinal contra a COVID-19.",
+      detalhes  = "Dados públicos. O painel não está atualizado porque o Power BI não permite atualizar esse tipo de publicação pela API.",
+      logo      = "powerbi.svg",
+      cor       = "warning",
+      print     = "prints/pbi_secoge.png",
+      link      = paste0(powerbi, "eyJrIjoiZTc3ZTc0MjItZDVjMy00MTg5LTgyMDQtZGE4NDM1Yjk5YWNhIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
+      rotulo    = "",
+      modo      = "externo"
     ),
-    titulo = c(
-      "Vacinação COVID-19 (SECOGE)", "Dengue e Chikungunya no Recife", "Painel de performance", "Dashboard de vendas", "Mercado de ações"
+
+    # Dengue e Chikungunya no Recife ----------------------------------------
+    data.frame(
+      id        = "pbi_dengue",
+      titulo    = "Dengue e Chikungunya no Recife",
+      descricao = "Notificações de dengue e chikungunya na cidade do Recife entre 2020 e 2021.",
+      detalhes  = "Dados públicos. O painel não está atualizado porque o Power BI não permite atualizar esse tipo de publicação pela API.",
+      logo      = "powerbi.svg",
+      cor       = "warning",
+      print     = "prints/pbi_dengue.png",
+      link      = paste0(powerbi, "eyJrIjoiY2QyMTBkMjgtZmIxZS00ZWJjLWI1NzgtNmJkOTE4YjMxNDY5IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
+      rotulo    = "",
+      modo      = "externo"
     ),
-    descricao = c(
-      "Doses aplicadas, reforços e cobertura vacinal contra a COVID-19.",
-      "Notificações de dengue e chikungunya na cidade do Recife entre 2020 e 2021.",
-      "Tempo das fases do pedido, faturamento, ticket médio e pedidos ao longo do tempo.",
-      "Lucro, faturamento e quantidade de vendas por ano, produto, fabricante e canal.",
-      "Volume e preço de ações ao longo do tempo, com narrativa inteligente."
+
+    # Painel de performance -------------------------------------------------
+    data.frame(
+      id        = "pbi_performance",
+      titulo    = "Painel de performance",
+      descricao = "Tempo das fases do pedido, faturamento, ticket médio e pedidos ao longo do tempo.",
+      detalhes  = "Dados fictícios.",
+      logo      = "powerbi.svg",
+      cor       = "warning",
+      print     = "prints/pbi_performance.png",
+      link      = paste0(powerbi, "eyJrIjoiZDJkYzJiMGQtNDQ1ZS00ZmIxLWEzYjMtMDliMjZjYTdkMDM2IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
+      rotulo    = "",
+      modo      = "externo"
     ),
-    detalhes = c(
-      "Dados públicos. O painel não está atualizado porque o Power BI não permite atualizar esse tipo de publicação pela API.",
-      "Dados públicos. O painel não está atualizado porque o Power BI não permite atualizar esse tipo de publicação pela API.",
-      "Dados fictícios.",
-      "Dados fictícios.",
-      "Dados fictícios. O primeiro painel que fiz em Power BI."
+
+    # Dashboard de vendas ---------------------------------------------------
+    data.frame(
+      id        = "pbi_vendas",
+      titulo    = "Dashboard de vendas",
+      descricao = "Lucro, faturamento e quantidade de vendas por ano, produto, fabricante e canal.",
+      detalhes  = "Dados fictícios.",
+      logo      = "powerbi.svg",
+      cor       = "warning",
+      print     = "prints/pbi_vendas.png",
+      link      = paste0(powerbi, "eyJrIjoiMzg4NGIyNDMtODQ1Ny00YmY3LTkwZTUtNmU3YmY0ODZjNTE3IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
+      rotulo    = "",
+      modo      = "externo"
     ),
-    logo = c(
-      "powerbi.svg", "powerbi.svg", "powerbi.svg", "powerbi.svg", "powerbi.svg"
-    ),
-    cor = c(
-      "warning", "warning", "warning", "warning", "warning"
-    ),
-    print = c(
-      "prints/pbi_secoge.png", "prints/pbi_dengue.png", "prints/pbi_performance.png", "prints/pbi_vendas.png", "prints/pbi_acoes.png"
-    ),
-    link = c(
-      paste0(powerbi, "eyJrIjoiZTc3ZTc0MjItZDVjMy00MTg5LTgyMDQtZGE4NDM1Yjk5YWNhIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
-      paste0(powerbi, "eyJrIjoiY2QyMTBkMjgtZmIxZS00ZWJjLWI1NzgtNmJkOTE4YjMxNDY5IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
-      paste0(powerbi, "eyJrIjoiZDJkYzJiMGQtNDQ1ZS00ZmIxLWEzYjMtMDliMjZjYTdkMDM2IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
-      paste0(powerbi, "eyJrIjoiMzg4NGIyNDMtODQ1Ny00YmY3LTkwZTUtNmU3YmY0ODZjNTE3IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
-      paste0(powerbi, "eyJrIjoiMDYwODRmZDctYmU4NS00M2Y4LThiZGUtZjhhOThjNGVmNWFhIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9")
-    ),
-    rotulo = c(
-      "", "", "", "", ""
-    ),
-    modo = c(
-      "externo", "externo", "externo", "externo", "externo"
+
+    # Mercado de ações ------------------------------------------------------
+    data.frame(
+      id        = "pbi_acoes",
+      titulo    = "Mercado de ações",
+      descricao = "Volume e preço de ações ao longo do tempo, com narrativa inteligente.",
+      detalhes  = "Dados fictícios. O primeiro painel que fiz em Power BI.",
+      logo      = "powerbi.svg",
+      cor       = "warning",
+      print     = "prints/pbi_acoes.png",
+      link      = paste0(powerbi, "eyJrIjoiMDYwODRmZDctYmU4NS00M2Y4LThiZGUtZjhhOThjNGVmNWFhIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
+      rotulo    = "",
+      modo      = "externo"
     )
   )
 

@@ -12,80 +12,81 @@ dev_open_source = function(item){
 
   github = "https://github.com/biuspoly/"
 
-  # Pacotes (valores de cada versão separados por ";")
-  pacotes = data.frame(
-    id = c(
-      "rnfe", "veiculosbr"
+  # Pacotes: um bloco por projeto; valores de cada versão separados por ";"
+  pacotes = rbind(
+
+    # RNFe ------------------------------------------------------------------
+    data.frame(
+      id        = "rnfe",
+      titulo    = "RNFe",
+      descricao = "Documentos fiscais eletrônicos brasileiros em R: XML, assinatura, SEFAZ e PDFs.",
+      detalhes  = "NF-e, NFC-e, CT-e, GTV-e, MDF-e e NFS-e: montar o XML pelo schema, assinar, comunicar com a SEFAZ, ler os documentos em tabelas e gerar os PDFs (DANFE, DACTE, DAMDFE, DANFSe). Feito com ajuda do Claude.",
+      logo      = "r.svg",
+      cor       = "info",
+      print     = "prints/repo_rnfe.png",
+      link      = paste0(github, "RNFe"),
+      rotulo    = "",
+      modo      = "repo"
     ),
-    titulo = c(
-      "RNFe", "veiculosbr"
-    ),
-    descricao = c(
-      "Documentos fiscais eletrônicos brasileiros em R: XML, assinatura, SEFAZ e PDFs.",
-      "Placa (antiga e Mercosul), RENAVAM e preço FIPE de veículos brasileiros, em R e Python."
-    ),
-    detalhes = c(
-      "NF-e, NFC-e, CT-e, GTV-e, MDF-e e NFS-e: montar o XML pelo schema, assinar, comunicar com a SEFAZ, ler os documentos em tabelas e gerar os PDFs (DANFE, DACTE, DAMDFE, DANFSe). Feito com ajuda do Claude.",
-      "Valida e converte placas antigas e Mercosul, valida RENAVAM e consulta o preço FIPE, inclusive a partir da placa. O mesmo pacote existe em R e em Python. Feito com ajuda do Claude."
-    ),
-    logo = c(
-      "r.svg", "r.svg;python.svg"
-    ),
-    cor = c(
-      "info", "info"
-    ),
-    print = c(
-      "prints/repo_rnfe.png", "prints/repo_veiculosbr.png"
-    ),
-    link = c(
-      paste0(github, "RNFe"),
-      paste0(github, "veiculosbr/tree/main/r;", github, "veiculosbr/tree/main/python")
-    ),
-    rotulo = c(
-      "", "Pacote R;Pacote Python"
-    ),
-    modo = c(
-      "repo", "repo"
+
+    # veiculosbr ------------------------------------------------------------
+    data.frame(
+      id        = "veiculosbr",
+      titulo    = "veiculosbr",
+      descricao = "Placa (antiga e Mercosul), RENAVAM e preço FIPE de veículos brasileiros, em R e Python.",
+      detalhes  = "Valida e converte placas antigas e Mercosul, valida RENAVAM e consulta o preço FIPE, inclusive a partir da placa. O mesmo pacote existe em R e em Python. Feito com ajuda do Claude.",
+      logo      = "r.svg;python.svg",
+      cor       = "info",
+      print     = "prints/repo_veiculosbr.png",
+      link      = paste0(github, "veiculosbr/tree/main/r;", github, "veiculosbr/tree/main/python"),
+      rotulo    = "Pacote R;Pacote Python",
+      modo      = "repo"
     )
   )
 
-  # Jogos
-  jogos = data.frame(
-    id = c(
-      "pekka_kana", "rivals_avenue", "yume"
+  # Jogos: um bloco por projeto
+  jogos = rbind(
+
+    # Pekka Kana 2 para Nintendo Switch -------------------------------------
+    data.frame(
+      id        = "pekka_kana",
+      titulo    = "Pekka Kana 2 para Nintendo Switch",
+      descricao = "Port nativo (homebrew) de Pekka Kana 2 para Nintendo Switch.",
+      detalhes  = "Port do jogo Pekka Kana 2 em C++ para rodar nativamente no Nintendo Switch (homebrew). Feito com ajuda do Claude.",
+      logo      = "cpp.svg",
+      cor       = "primary",
+      print     = "prints/cpp_pekka_kana.png",
+      link      = paste0(github, "pekka-kana-2-switch"),
+      rotulo    = "",
+      modo      = "repo"
     ),
-    titulo = c(
-      "Pekka Kana 2 para Nintendo Switch", "Rivals Avenue", "Yume em PT-BR no Switch"
+
+    # Rivals Avenue ---------------------------------------------------------
+    data.frame(
+      id        = "rivals_avenue",
+      titulo    = "Rivals Avenue",
+      descricao = "Jogo em desenvolvimento na Godot Engine.",
+      detalhes  = "Projeto pessoal de jogo na Godot Engine (GDScript). Repositório ainda privado. Feito com ajuda do Claude.",
+      logo      = "godot.svg",
+      cor       = "primary",
+      print     = "prints/godot_rivals_avenue.png",
+      link      = "#",
+      rotulo    = "",
+      modo      = "em_breve"
     ),
-    descricao = c(
-      "Port nativo (homebrew) de Pekka Kana 2 para Nintendo Switch.",
-      "Jogo em desenvolvimento na Godot Engine.",
-      "Tradução para português e guia para jogar Yume no Nintendo Switch."
-    ),
-    detalhes = c(
-      "Port do jogo Pekka Kana 2 em C++ para rodar nativamente no Nintendo Switch (homebrew). Feito com ajuda do Claude.",
-      "Projeto pessoal de jogo na Godot Engine (GDScript). Repositório ainda privado. Feito com ajuda do Claude.",
-      "Tradução PT-BR do jogo Yume e o passo a passo para rodá-lo no Nintendo Switch. Feito com ajuda do Claude."
-    ),
-    logo = c(
-      "cpp.svg", "godot.svg", "python.svg"
-    ),
-    cor = c(
-      "primary", "primary", "primary"
-    ),
-    print = c(
-      "prints/cpp_pekka_kana.png", "prints/godot_rivals_avenue.png", "prints/repo_yume_switch_ptbr.png"
-    ),
-    link = c(
-      paste0(github, "pekka-kana-2-switch"),
-      "#",
-      paste0(github, "yume-switch-ptbr")
-    ),
-    rotulo = c(
-      "", "", ""
-    ),
-    modo = c(
-      "repo", "em_breve", "repo"
+
+    # Yume em PT-BR no Switch -----------------------------------------------
+    data.frame(
+      id        = "yume",
+      titulo    = "Yume em PT-BR no Switch",
+      descricao = "Tradução para português e guia para jogar Yume no Nintendo Switch.",
+      detalhes  = "Tradução PT-BR do jogo Yume e o passo a passo para rodá-lo no Nintendo Switch. Feito com ajuda do Claude.",
+      logo      = "python.svg",
+      cor       = "primary",
+      print     = "prints/repo_yume_switch_ptbr.png",
+      link      = paste0(github, "yume-switch-ptbr"),
+      rotulo    = "",
+      modo      = "repo"
     )
   )
 
