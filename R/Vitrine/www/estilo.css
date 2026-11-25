@@ -48,6 +48,19 @@
 
 FIM DESATIVADO */
 
+/* Menu lateral escuro (padrão do app): logos em tons claros, sem cor,
+   no mesmo tom dos outros ícones do menu */
+.main-sidebar .logo-powerbi  { background-image: url("powerbi_white.svg"); }
+.main-sidebar .logo-excel    { background-image: url("excel_white.svg"); }
+.main-sidebar .logo-r        { background-image: url("r_white.svg"); }
+.main-sidebar .logo-python   { background-image: url("python_white.svg"); }
+.main-sidebar .logo-godot    { background-image: url("godot_white.svg"); }
+.main-sidebar .logo-cpp      { background-image: url("cpp_white.svg"); }
+.main-sidebar .logo-claude   { background-image: url("claude_white.svg"); }
+.main-sidebar .logo-shiny    { background-image: url("shiny_white.svg"); }
+.main-sidebar .logo-appsheet { background-image: url("appsheet_white.svg"); }
+.main-sidebar [class*="logo-"].nav-icon { opacity: 0.8; }
+
 
 /* Cards de projeto (core/card_projeto.R): faixa do header em degradê,
    da cor do status até transparente à direita */
