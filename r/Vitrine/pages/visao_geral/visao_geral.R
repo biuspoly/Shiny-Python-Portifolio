@@ -6,7 +6,7 @@ visao_geral = function(){
   # Apps no Posit Connect Cloud: abrem em nova aba (o Shinylive não deixa abrir num iframe).
   posit_r  = "https://01a2190a-f130-f119-72e4-d16f0322add0.share.connect.posit.cloud/"
   posit_py = "https://01a2190b-b942-a96c-d03c-a67adef5d830.share.connect.posit.cloud/"
-  site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
+  site_portfolio = "https://biuspoly.github.io/Shiny-Python-Portifolio/"
 
   # Projetos em destaque: um bloco por card; selos separados por ";"
   destaques = rbind(
@@ -35,15 +35,15 @@ visao_geral = function(){
       modo      = "externo"
     ),
 
-    # Congestionamento no TRF5 ----------------------------------------------
+    # TCC: gráficos de controle no TRF5 -------------------------------------
     data.frame(
-      id        = "trf5",
-      titulo    = "Congestionamento no TRF5",
-      descricao = "Estudo de taxa de congestionamento e força de trabalho até 2021.",
-      selos     = "R Markdown;Estatística",
+      id        = "tcc",
+      titulo    = "TCC: gráficos de controle no TRF5",
+      descricao = "Gráficos de controle nos indicadores de eficiência do TRF5.",
+      selos     = "Estatística;R Markdown",
       cor       = "success",
       print     = "prints/ufpe.png",
-      link      = "https://rstudio-pubs-static.s3.amazonaws.com/1018240_6c09a7b337324a8cbedadc9ffd9bc670.html",
+      link      = "https://repositorio.ufpe.br/handle/123456789/47526",
       modo      = "externo"
     ),
 
@@ -188,7 +188,7 @@ visao_geral = function(){
     fluidRow(
       card_destaque(destaques, "comercial_py"),
       card_destaque(destaques, "logistico_r"),
-      card_destaque(destaques, "trf5")
+      card_destaque(destaques, "tcc")
     ),
     fluidRow(
       card_destaque(destaques, "pipelines"),

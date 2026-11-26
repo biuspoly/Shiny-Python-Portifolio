@@ -84,6 +84,10 @@ body.modal-open { padding-right: 0 !important; overflow: visible; }
 /* Título do menu (AdminLTE clássico): azul um tom mais escuro que a barra */
 .main-sidebar .brand-link.bg-primary { background-color: #22527c !important; color: #ffffff !important; }
 
+/* Blocos de área da Visão Geral: o bloco inteiro leva à aba (script no app.R) */
+#conteudo_visao_geral .info-box { cursor: pointer; transition: transform 0.2s ease; }
+#conteudo_visao_geral .info-box:hover { transform: scale(1.02); }
+
 /* Cards da Visão Geral: mesmo zoom leve dos cards de projeto */
 [id^="card_destaque_"] { transition: transform 0.2s ease; }
 [id^="card_destaque_"]:hover { transform: scale(1.02); }

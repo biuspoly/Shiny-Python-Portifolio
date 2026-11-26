@@ -98,15 +98,44 @@ ui = dashboardPage(
     )
   ),
   body = dashboardBody(
-    tags$head(tags$link(rel = "stylesheet", href = "estilo.css?v=16")),
+    tags$head(tags$link(rel = "stylesheet", href = "estilo.css?v=17")),
 
     # No celular o menu lateral abre POR CIMA da página e não fecha sozinho: depois de tocar num item,
     # a página trocava atrás do menu e parecia que só a Visão Geral existia. Fecha o menu após o toque.
+    # Os blocos da Visão Geral (infoBox com tabName): o bs4Dash só deixa clicável o quadrado do ícone.
+    # Aqui o bloco inteiro leva à aba (no celular, quem tocava no texto ficava parado na Visão Geral).
     tags$script(HTML("
       $(document).on('click', '.main-sidebar a.nav-link[data-toggle=\\'tab\\']', function () {
         if (window.innerWidth < 992) {
           $('[data-widget=\\'pushmenu\\']').PushMenu('collapse');
         }
+      });
+      // No iPhone, tocar num bloco que não é link não gera 'click': trata o toque direto
+      // (só se o dedo não arrastou, para não abrir a aba ao rolar a página).
+      var bloco_toque = null, bloco_ultimo = 0;
+      function abrir_aba_do_bloco(bloco) {
+        var icone = $(bloco).find('[id^=\\'icon-\\']');
+        if (!icone.length || Date.now() - bloco_ultimo < 600) return;
+        bloco_ultimo = Date.now();
+        $('#tab-' + icone.attr('id').substring(5)).click();
+      }
+      $(document).on('touchstart', '.info-box', function (e) {
+        var t = e.originalEvent.touches[0];
+        bloco_toque = { x: t.clientX, y: t.clientY };
+      });
+      $(document).on('touchend', '.info-box', function (e) {
+        var t = e.originalEvent.changedTouches[0];
+        if (bloco_toque && Math.abs(t.clientX - bloco_toque.x) < 10 && Math.abs(t.clientY - bloco_toque.y) < 10) {
+          abrir_aba_do_bloco(this);
+        }
+        bloco_toque = null;
+      });
+      $(document).on('click', '.info-box', function (e) {
+        if ($(e.target).closest('[id^=\\'icon-\\']').length) return;   // o ícone o bs4Dash já trata
+        abrir_aba_do_bloco(this);
+      });
+      $(document).on('shown.bs.tab', '.main-sidebar a[data-toggle=\\'tab\\']', function () {
+        window.scrollTo(0, 0);
       });
     ")),
 
