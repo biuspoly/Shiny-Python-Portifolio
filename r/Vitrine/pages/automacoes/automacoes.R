@@ -55,6 +55,20 @@ automacoes = function(){
       link      = paste0(github, "automacao-senatran"),
       rotulo    = "",
       modo      = "repo"
+    ),
+
+    # Power BI na TV (RSelenium) --------------------------------------------
+    data.frame(
+      id        = "powerbi_tv",
+      titulo    = "Power BI na TV",
+      descricao = "Mostra painéis do Power BI em modo apresentação numa TV ou monitor, passando as páginas sozinho.",
+      detalhes  = "Depois de testar vários programas e plugins de navegador, a solução foi o RSelenium, pacote de R para automação de navegador. A automação roda direto numa máquina com R: basta informar o link do painel, quantas páginas mostrar e quantos segundos cada uma fica na tela. A demonstração usa o painel de performance, com dados fictícios.",
+      logo      = "r.svg;powerbi.svg",
+      cor       = "primary",
+      print     = "prints/automacao_tv_powerbi.png",
+      link      = "https://marlonheslypro.wixsite.com/portfolio/automacaor",
+      rotulo    = "Ver demonstração",
+      modo      = "externo"
     )
   )
 
@@ -65,7 +79,8 @@ automacoes = function(){
     faixa_etapas(etapas, "Estrutura de uma automação"),
     fluidRow(card_projeto(projetos, "comodato_cev")),
     fluidRow(card_projeto(projetos, "verificador_powerbi")),
-    fluidRow(card_projeto(projetos, "senatran"))
+    fluidRow(card_projeto(projetos, "senatran")),
+    fluidRow(card_projeto(projetos, "powerbi_tv"))
   )
 
 }

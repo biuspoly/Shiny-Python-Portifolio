@@ -10,7 +10,7 @@ analise_dados = function(item){
     cor       = c("primary", "purple", "teal", "orange")
   )
 
-  site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
+  site_portfolio = "https://biuspoly.github.io/Shiny-Python-Portifolio/"
   powerbi        = "https://app.powerbi.com/view?r="
 
   # Apps no Posit Connect Cloud (um servidor por linguagem, com todos os painéis dentro). Abrem em nova
@@ -112,6 +112,20 @@ analise_dados = function(item){
       link      = paste0(posit_r, "?painel=acessos;", posit_py, "acessos/"),
       rotulo    = "Shiny R;Shiny Python",
       modo      = "externo"
+    ),
+
+    # Primeiros painéis em Shiny --------------------------------------------
+    data.frame(
+      id        = "primeiros_shiny",
+      titulo    = "Primeiros painéis em Shiny",
+      descricao = "Painel de vendas e painel de demandas: os primeiros passos com Shiny, em flexdashboard.",
+      detalhes  = "Feitos para aprender os recursos do Shiny em R. O de vendas usa flexdashboard em R Markdown com Shiny por dentro, sobre dados fictícios de uma empresa. O de demandas adapta um painel de Power BI: filtra as tarefas por responsável e status e permite baixar os dados. Hospedados no shinyapps.io (podem levar alguns segundos para acordar).",
+      logo      = "r.svg",
+      cor       = "primary",
+      print     = "prints/shiny_r_primeiros_paineis.png",
+      link      = "https://marlonufpe.shinyapps.io/VENDAS/;https://marlonufpe.shinyapps.io/demanda/",
+      rotulo    = "Vendas;Demandas",
+      modo      = "externo"
     )
   )
 
@@ -201,7 +215,8 @@ analise_dados = function(item){
       fluidRow(card_projeto(paineis_gestao, "financeiro")),
       fluidRow(card_projeto(paineis_gestao, "fiscal")),
       fluidRow(card_projeto(paineis_gestao, "monitoramento")),
-      fluidRow(card_projeto(paineis_gestao, "acessos"))
+      fluidRow(card_projeto(paineis_gestao, "acessos")),
+      fluidRow(card_projeto(paineis_gestao, "primeiros_shiny"))
     )
 
   } else if (item == "powerbi") {

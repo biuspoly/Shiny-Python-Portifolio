@@ -4201,16 +4201,16 @@
       "checksum": "e0323ce8933c31a417f526d9af0a4521"
     },
     "Vitrine/pages/analise_dados/analise_dados.R": {
-      "checksum": "749d6dfdba1fab5dd190cb495fa6499f"
+      "checksum": "d53ce5bc65d76daebbfe6bddb120e169"
     },
     "Vitrine/pages/apps_mobile/apps_mobile.R": {
-      "checksum": "d15cf3b9b0cdf4f909dedcb2f75c1a5e"
+      "checksum": "eba7dd34f2cba933e12c0f2081684380"
     },
     "Vitrine/pages/automacoes/automacoes.R": {
-      "checksum": "d4e0cea4441cf9019fe8c5f24350ad4f"
+      "checksum": "b65830d41651cc811fd203e5673bddbd"
     },
     "Vitrine/pages/ciencia_dados/ciencia_dados.R": {
-      "checksum": "2ecf3244f5fde113a62eee8f16160673"
+      "checksum": "b6ac250d7d3f768b832fa8c175cbc4e0"
     },
     "Vitrine/pages/dev_open_source/dev_open_source.R": {
       "checksum": "3e7f0995d80ab1b1b2409d26b32767cb"
@@ -4418,6 +4418,18 @@
     },
     "www/icone.svg": {
       "checksum": "92c1d5cd1afbc22dcac7cf5b59af11d5"
+    },
+    "Vitrine/www/prints/mobile_entregas.png": {
+      "checksum": "ee3413a02d73ae0e62ac0f608e3e1d16"
+    },
+    "Vitrine/www/prints/mobile_portfolio_appsheet.png": {
+      "checksum": "ba76a8698d4f76310cfe944b86082615"
+    },
+    "Vitrine/www/prints/shiny_r_primeiros_paineis.png": {
+      "checksum": "072a5e916c4bc71e73d8057087a63568"
+    },
+    "Vitrine/www/prints/automacao_tv_powerbi.png": {
+      "checksum": "d90c75b6c99fc67c3648183d00a5ad03"
     }
   },
   "users": null
