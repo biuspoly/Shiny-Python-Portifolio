@@ -191,7 +191,7 @@ def _pagina_principal() -> str:
 </main>
 <footer class="conteudo">
   <a href="{site}">Voltar à vitrine</a> · código em
-  <a href="https://github.com/biuspoly/Shiny-Python-Portifolio">github.com/biuspoly/Shiny-Python-Portifolio</a>
+  <a href="https://github.com/biuspoly/shiny-portfolio">github.com/biuspoly/shiny-portfolio</a>
 </footer>
 </body>
 </html>"""

@@ -1,7 +1,7 @@
 {
   "_como_usar": "Endereço de cada app publicado no Posit Connect Cloud. Vazio (null) = o app segue no Shinylive, exportado pelo publicar/montar_site.py para a subpasta dele.",
   "_acompanhamentos": "Endereço dos apps unificados (python/app.py e r/app.R). Preenchido, todo app daquela linguagem sem endereço próprio abre por ele: Python em <endereço>/comercial/, R em <endereço>/?painel=comercial. O endereço próprio de um app, se houver, vale mais.",
-  "site": "https://biuspoly.github.io/Shiny-Python-Portifolio/",
+  "site": "https://biuspoly.github.io/shiny-portfolio/",
   "acompanhamentos": {
     "python": null,
     "r": null

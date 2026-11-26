@@ -1,5 +1,5 @@
 [project]
-name = "portifolio-shiny"
+name = "shiny-portfolio"
 version = "1.0.0"
 description = "Portfólio Marlon Amaral: seis painéis Shiny for Python com dados fictícios"
 requires-python = ">=3.12"

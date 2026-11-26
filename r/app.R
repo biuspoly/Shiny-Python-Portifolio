@@ -127,7 +127,7 @@ pagina_principal <- function() {
     ),
     tags$body(
       tags$header(class = "topo", div(class = "conteudo",
-        tags$a(class = "marca", href = "https://biuspoly.github.io/Shiny-Python-Portifolio/",
+        tags$a(class = "marca", href = "https://biuspoly.github.io/shiny-portfolio/",
                tags$img(src = "icone.svg", alt = ""), span("Portfólio Marlon Amaral")),
         tags$h1("Acompanhamentos em R Shiny"),
         tags$p("A versão original do sistema, antes do Python (bs4Dash, reactable, DuckDB), num servidor só.",
@@ -135,8 +135,8 @@ pagina_principal <- function() {
       )),
       tags$main(class = "conteudo", div(class = "grade", cartoes)),
       tags$footer(class = "conteudo",
-        tags$a(href = "https://biuspoly.github.io/Shiny-Python-Portifolio/", "Voltar à vitrine"), " · código em ",
-        tags$a(href = "https://github.com/biuspoly/Shiny-Python-Portifolio", "github.com/biuspoly/Shiny-Python-Portifolio"))
+        tags$a(href = "https://biuspoly.github.io/shiny-portfolio/", "Voltar à vitrine"), " · código em ",
+        tags$a(href = "https://github.com/biuspoly/shiny-portfolio", "github.com/biuspoly/shiny-portfolio"))
     )
   )
 }

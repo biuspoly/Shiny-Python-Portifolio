@@ -278,8 +278,8 @@ app_ui = ui.page_bootstrap(
     ui.tags.footer(
         "Marlon Amaral · código em ",
         ui.tags.a(
-            "github.com/biuspoly/Shiny-Python-Portifolio",
-            href="https://github.com/biuspoly/Shiny-Python-Portifolio",
+            "github.com/biuspoly/shiny-portfolio",
+            href="https://github.com/biuspoly/shiny-portfolio",
             target="_blank",
         ),
         ui.br(),

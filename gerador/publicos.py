@@ -31,7 +31,7 @@ _CODIGO_UF = {21: "MA", 22: "PI", 23: "CE", 24: "RN"}
 
 
 def _baixar(url: str, tempo: int = 60) -> bytes:
-    pedido = urllib.request.Request(url, headers={"User-Agent": "portifolio-shiny/1.0"})
+    pedido = urllib.request.Request(url, headers={"User-Agent": "shiny-portfolio/1.0"})
     with urllib.request.urlopen(pedido, timeout=tempo) as resposta:
         return resposta.read()
 

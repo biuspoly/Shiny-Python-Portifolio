@@ -10,7 +10,7 @@ analise_dados = function(item){
     cor       = c("primary", "purple", "teal", "orange")
   )
 
-  site_portfolio = "https://biuspoly.github.io/Shiny-Python-Portifolio/"
+  site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
   powerbi        = "https://app.powerbi.com/view?r="
 
   # Painéis de gestão: o sistema da distribuidora, com as versões de cada painel

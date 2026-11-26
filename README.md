@@ -5,7 +5,7 @@ Telas de um sistema que desenvolvo e mantenho em produção numa distribuidora d
 de três delas em R Shiny. O código de cada tela é o do sistema real; os dados são **fictícios**, gerados nas
 mesmas colunas e formatos da produção, com alguns dados públicos de verdade (IBGE).
 
-**Ver funcionando:** https://biuspoly.github.io/Shiny-Python-Portifolio/
+**Ver funcionando:** https://biuspoly.github.io/shiny-portfolio/
 
 | | |
 |---|---|

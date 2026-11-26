@@ -3,7 +3,7 @@ visao_geral = function(){
   # DADOS ------------------------------------------------------------------
 
   github = "https://github.com/biuspoly/"
-  site_portfolio = "https://biuspoly.github.io/Shiny-Python-Portifolio/"
+  site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
 
   # Projetos em destaque: um bloco por card; selos separados por ";"
   destaques = rbind(
