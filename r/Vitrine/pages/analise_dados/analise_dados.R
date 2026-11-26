@@ -13,7 +13,8 @@ analise_dados = function(item){
   site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
   powerbi        = "https://app.powerbi.com/view?r="
 
-  # Apps no Posit Connect Cloud (um servidor por linguagem, com todos os painéis dentro).
+  # Apps no Posit Connect Cloud (um servidor por linguagem, com todos os painéis dentro). Abrem em nova
+  # aba: o Shinylive (webR) roda isolado (COEP) e não deixa outro app abrir num iframe dentro dele.
   # R: o painel vem pela URL (?painel=comercial). Python: cada painel tem a sua rota (comercial/).
   posit_r  = "https://01a2190a-f130-f119-72e4-d16f0322add0.share.connect.posit.cloud/"
   posit_py = "https://01a2190b-b942-a96c-d03c-a67adef5d830.share.connect.posit.cloud/"
@@ -40,7 +41,7 @@ analise_dados = function(item){
         posit_py, "logistico/"
       ),
       rotulo    = "Frotas (Power BI);Custos (Power BI);Devoluções (Power BI);Shiny R;Shiny Python",
-      modo      = "externo;externo;externo;app;app"
+      modo      = "externo"
     ),
 
     # Acompanhamento Comercial ----------------------------------------------
@@ -54,7 +55,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_comercial.webp",
       link      = paste0(posit_r, "?painel=comercial;", posit_py, "comercial/"),
       rotulo    = "Shiny R;Shiny Python",
-      modo      = "app"
+      modo      = "externo"
     ),
 
     # Acompanhamento Financeiro ---------------------------------------------
@@ -68,7 +69,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_financeiro.webp",
       link      = paste0(posit_py, "financeiro/"),
       rotulo    = "Shiny Python",
-      modo      = "app"
+      modo      = "externo"
     ),
 
     # Acompanhamento Fiscal -------------------------------------------------
@@ -82,7 +83,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_fiscal.webp",
       link      = paste0(posit_py, "fiscal/"),
       rotulo    = "Shiny Python",
-      modo      = "app"
+      modo      = "externo"
     ),
 
     # Monitoramento ---------------------------------------------------------
@@ -96,7 +97,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_monitoramento.webp",
       link      = paste0(posit_py, "monitoramento/"),
       rotulo    = "Shiny Python",
-      modo      = "app"
+      modo      = "externo"
     ),
 
     # Acessos ---------------------------------------------------------------
@@ -110,7 +111,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_acessos.webp",
       link      = paste0(posit_r, "?painel=acessos;", posit_py, "acessos/"),
       rotulo    = "Shiny R;Shiny Python",
-      modo      = "app"
+      modo      = "externo"
     )
   )
 

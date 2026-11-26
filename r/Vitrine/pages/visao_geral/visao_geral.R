@@ -3,6 +3,9 @@ visao_geral = function(){
   # DADOS ------------------------------------------------------------------
 
   github = "https://github.com/biuspoly/"
+  # Apps no Posit Connect Cloud: abrem em nova aba (o Shinylive não deixa abrir num iframe).
+  posit_r  = "https://01a2190a-f130-f119-72e4-d16f0322add0.share.connect.posit.cloud/"
+  posit_py = "https://01a2190b-b942-a96c-d03c-a67adef5d830.share.connect.posit.cloud/"
   site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
 
   # Projetos em destaque: um bloco por card; selos separados por ";"
@@ -16,8 +19,8 @@ visao_geral = function(){
       selos     = "Shiny Python;Polars",
       cor       = "primary",
       print     = "prints/shiny_py_comercial.webp",
-      link      = paste0(site_portfolio, "comercial/"),
-      modo      = "app"
+      link      = paste0(posit_py, "comercial/"),
+      modo      = "externo"
     ),
 
     # Acompanhamento Logístico ----------------------------------------------
@@ -28,8 +31,8 @@ visao_geral = function(){
       selos     = "Shiny R;DuckDB",
       cor       = "info",
       print     = "prints/shiny_r_logistico.webp",
-      link      = paste0(site_portfolio, "r/logistico/"),
-      modo      = "app"
+      link      = paste0(posit_r, "?painel=logistico"),
+      modo      = "externo"
     ),
 
     # Congestionamento no TRF5 ----------------------------------------------
