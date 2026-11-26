@@ -3,16 +3,24 @@ library(bs4Dash)
 library(htmltools)
 library(fresh)
 
+# Pasta do app e arquivos do www ---------------------------------------------
+# Rodando sozinho, "diretorio" fica vazio (caminhos relativos à pasta do app). No Posit, o r/app.R
+# carrega este app junto com os outros e troca "diretorio" pelo caminho desta pasta.
+# O www sai com prefixo próprio ("vitrine_www/"), para não disputar endereço com os outros apps.
+
+diretorio = ""
+addResourcePath("vitrine_www", paste0(diretorio, "www"))
+caminho_www = "vitrine_www/"
+
 # Tema (cores) -------------------------------------------------------------
 # carregado aqui em cima porque a UI usa o tema.
-# Com o www/tema.css pronto (o CI gera com core/gerar_tema.R antes de publicar), o app só aponta para
-# ele: compilar o tema a cada abertura deixava o Shinylive mais lento. Sem o arquivo (rodando local),
-# o tema é compilado na hora, a partir do core/tema.R.
+# Com o www/tema.css pronto, o app só aponta para ele. Sem o arquivo, o tema é compilado na hora,
+# a partir do core/tema.R.
 
-if (file.exists("www/tema.css")) {
-  tema = "tema.css"
+if (file.exists(paste0(diretorio, "www/tema.css"))) {
+  tema = paste0(caminho_www, "tema.css")
 } else {
-  source("core/tema.R", local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "core/tema.R"), local = TRUE, encoding = "UTF-8")
 }
 
 # Links do canto superior direito ------------------------------------------
@@ -98,7 +106,7 @@ ui = dashboardPage(
     )
   ),
   body = dashboardBody(
-    tags$head(tags$link(rel = "stylesheet", href = "estilo.css?v=17")),
+    tags$head(tags$link(rel = "stylesheet", href = paste0(caminho_www, "estilo.css?v=18"))),
 
     # No celular o menu lateral abre POR CIMA da página e não fecha sozinho: depois de tocar num item,
     # a página trocava atrás do menu e parecia que só a Visão Geral existia. Fecha o menu após o toque.
@@ -193,17 +201,17 @@ server = function(input, output, session){
 
   # Carregar páginas separadas ---------------------------------------------
 
-  source("core/card_projeto.R", local = TRUE, encoding = "UTF-8")
-  source("core/card_destaque.R", local = TRUE, encoding = "UTF-8")
-  source("core/faixa_etapas.R", local = TRUE, encoding = "UTF-8")
-  source("pages/visao_geral/visao_geral.R", local = TRUE, encoding = "UTF-8")
-  source("pages/analise_dados/analise_dados.R", local = TRUE, encoding = "UTF-8")
-  source("pages/ciencia_dados/ciencia_dados.R", local = TRUE, encoding = "UTF-8")
-  source("pages/engenharia_dados/engenharia_dados.R", local = TRUE, encoding = "UTF-8")
-  source("pages/automacoes/automacoes.R", local = TRUE, encoding = "UTF-8")
-  source("pages/apps_mobile/apps_mobile.R", local = TRUE, encoding = "UTF-8")
-  source("pages/dev_open_source/dev_open_source.R", local = TRUE, encoding = "UTF-8")
-  source("pages/sobre_mim/sobre_mim.R", local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "core/card_projeto.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "core/card_destaque.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "core/faixa_etapas.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/visao_geral/visao_geral.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/analise_dados/analise_dados.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/ciencia_dados/ciencia_dados.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/engenharia_dados/engenharia_dados.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/automacoes/automacoes.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/apps_mobile/apps_mobile.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/dev_open_source/dev_open_source.R"), local = TRUE, encoding = "UTF-8")
+  source(paste0(diretorio, "pages/sobre_mim/sobre_mim.R"), local = TRUE, encoding = "UTF-8")
 
   # Renderizar conteúdo com base na aba ------------------------------------
 

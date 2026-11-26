@@ -45,7 +45,7 @@ Cada app é independente e roda sozinho (`shiny run python/Comercial/app.py`,
 | | Arquivo principal | Endereços |
 |---|---|---|
 | Python | `python/app.py` | `/` (página principal), `/comercial/`, `/logistico/`, `/financeiro/`, `/fiscal/`, `/monitoramento/`, `/acessos/` |
-| R | `r/app.R` | `/` (página principal), `/?painel=comercial`, `/?painel=logistico`, `/?painel=acessos` (aceita também `&REVENDA=`) |
+| R | `r/app.R` | `/` (página principal), `/?painel=vitrine` (o portfólio em bs4Dash), `/?painel=comercial`, `/?painel=logistico`, `/?painel=acessos` (aceita também `&REVENDA=`) |
 
 Como funcionam os dois apps unificados:
 

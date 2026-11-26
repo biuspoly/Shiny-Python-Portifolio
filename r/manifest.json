@@ -3649,7 +3649,7 @@
       "checksum": "3b76bb97c1f0581cd2818591c03172b8"
     },
     "app.R": {
-      "checksum": "2d4bef8552a2135bd837746786cca52e"
+      "checksum": "8a5b1ced0a12c629628a0267ba7f453e"
     },
     "Comercial/app.R": {
       "checksum": "802c408d35fa47f01822dfbd7866f6d9"
@@ -4183,13 +4183,13 @@
       "checksum": "186a3a381711257dc02b63a7b502cee7"
     },
     "Vitrine/app.R": {
-      "checksum": "36b3b605711c702dccbab76d17284e1b"
+      "checksum": "d537b033113b62bcd0a7edd003780559"
     },
     "Vitrine/core/card_destaque.R": {
-      "checksum": "f8a49c050c3f34def29954e35477558b"
+      "checksum": "7de9c7d949a9c73f443f90b1b46a6d8b"
     },
     "Vitrine/core/card_projeto.R": {
-      "checksum": "6fd6ab8626466732659e625f1833171f"
+      "checksum": "833fc8228cd4597a895f25979f2741d4"
     },
     "Vitrine/core/faixa_etapas.R": {
       "checksum": "6edd94c80a9d8db2bf93aaaeb0b015a8"
@@ -4430,6 +4430,9 @@
     },
     "Vitrine/www/prints/automacao_tv_powerbi.png": {
       "checksum": "d90c75b6c99fc67c3648183d00a5ad03"
+    },
+    "Vitrine/www/prints/vitrine_r.png": {
+      "checksum": "5a0c80b001372eec71808840a06b3496"
     }
   },
   "users": null

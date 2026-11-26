@@ -22,6 +22,14 @@ pasta_app <- normalizePath(".", winslash = "/")
 raiz_apps <- pasta_app  # r/: cada app numa subpasta
 
 paineis <- list(
+  # A Vitrine em R (bs4Dash): o portfólio completo. Saiu do Shinylive porque no iPhone o webR não
+  # montava as abas além da Visão Geral; aqui o R roda no servidor.
+  vitrine = list(
+    pasta = "Vitrine", nome = "Portfólio em R", cor = "#2a6496", imagem = "vitrine_r.png",
+    resumo = "Todos os projetos num painel bs4Dash, por área.",
+    telas = c("Análise de dados: painéis de gestão, Power BI e primeiros painéis em Shiny",
+              "Ciência e engenharia de dados, automações, apps mobile, pacotes e jogos")
+  ),
   comercial = list(
     pasta = "Comercial", nome = "Comercial", cor = "#06825d", imagem = "shiny_r_comercial.webp",
     resumo = "O Diário de Venda e o Mapa Comercial originais.",

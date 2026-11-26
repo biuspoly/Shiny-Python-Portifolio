@@ -67,7 +67,7 @@ card_destaque = function(projetos, id_projeto){
     collapsible = FALSE,
     elevation = 2,
 
-    img(src = projeto$print, width = "100%"),
+    img(src = paste0(caminho_www, projeto$print), width = "100%"),   # caminho_www: definido no app.R
     br(),
     br(),
     dashboardBadge(selos[1], color = projeto$cor),

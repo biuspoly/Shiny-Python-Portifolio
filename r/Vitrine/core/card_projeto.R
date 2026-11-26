@@ -134,7 +134,7 @@ card_projeto = function(projetos, id_projeto){
   circulo = function(posicao){
     if (length(logos) < posicao) return(NULL)
     img(
-      src = logos[posicao],
+      src = paste0(caminho_www, logos[posicao]),   # caminho_www: definido no app.R
       # altura relativa ao texto (rem); a largura acompanha
       style = "height: 2.25rem;",
       class = "img-circle elevation-2 bg-white p-1 mt-n3 mb-n4 mr-2"
@@ -166,7 +166,7 @@ card_projeto = function(projetos, id_projeto){
     fluidRow(
       column(
         width = 2,
-        img(src = projeto$print, width = "100%")
+        img(src = paste0(caminho_www, projeto$print), width = "100%")
       ),
       column(
         width = 6,

@@ -30,6 +30,8 @@ APPS = {
 # têm arquivos com o mesmo nome em shinylive/, de versões diferentes. E apps de R exportados para a mesma
 # raiz dividem a pasta de pacotes, e o navegador baixa os pacotes de todos ao abrir qualquer um deles
 # (a Vitrine chegou a baixar 164 MB, com sf, terra, duckdb e plotly, que ela não usa).
+# A Vitrine em R saiu do Shinylive (no iPhone o webR não montava as abas) e roda no Posit, no r/app.R
+# (?painel=vitrine). Fica na lista só para o r/vitrine/ redirecionar para lá (enderecos.json).
 APPS_R = {"Acessos": "acessos", "Logistico": "logistico", "Comercial": "comercial", "Vitrine": "vitrine"}
 ANEXOS_EXEMPLO = ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf")
 ENDERECOS = json.loads((PY / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
