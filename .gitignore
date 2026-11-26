@@ -4,28 +4,21 @@ __pycache__/
 tmp/
 site/
 # O que a tela grava rodando local (no Shinylive fica na memória do navegador).
-Financeiro/data/manual/
-Financeiro/data/leituras/
-Financeiro/uploads/
+python/Financeiro/data/manual/
+python/Financeiro/data/leituras/
+python/Financeiro/uploads/
 .rlib/
-# Cópia dos .parquet para os apps em R (gerador/r_dados.py).
-R/*/data/
-Logistico/uploads/comodatos/*/*
-!Logistico/uploads/comodatos/pdv/PDV_exemplo.pdf
-!Logistico/uploads/comodatos/comodato/CEV_exemplo.pdf
-!Logistico/uploads/comodatos/canhoto/CANHOTO_exemplo.pdf
+python/Logistico/uploads/comodatos/*/*
+!python/Logistico/uploads/comodatos/pdv/PDV_exemplo.pdf
+!python/Logistico/uploads/comodatos/comodato/CEV_exemplo.pdf
+!python/Logistico/uploads/comodatos/canhoto/CANHOTO_exemplo.pdf
 # O que as telas em R gravam rodando local (contrato, distrato, anexos enviados).
-R/Logistico/pages/Comodatos/Dados/*.pdf
-R/Logistico/pages/Comodatos/Dados/*.PDF
-R/Logistico/Anexos_Comodato/*
-!R/Logistico/Anexos_Comodato/*_exemplo.pdf
-# Gerado no workflow para o ramo posit (publicar/ramo_posit.py).
-R/*/manifest.json
+r/Logistico/pages/Comodatos/Dados/*.pdf
+r/Logistico/pages/Comodatos/Dados/*.PDF
+r/Logistico/Anexos_Comodato/*
+!r/Logistico/Anexos_Comodato/*_exemplo.pdf
+# manifest.json de cada app em R: só o de r/ (o app unificado) vai para o repositório.
+r/*/manifest.json
 
-# Gerado pelo R/Vitrine/core/gerar_tema.R (no CI, antes de publicar)
-R/Vitrine/www/tema.css
-
-# Cópias dos apps dentro dos unificados: só existem no ramo posit (publicar/ramo_posit.py).
-Acompanhamentos/apps/
-R/Acompanhamentos/apps/
-R/Acompanhamentos/manifest.json
+# Gerado pelo r/Vitrine/core/gerar_tema.R (no CI, antes de publicar)
+r/Vitrine/www/tema.css

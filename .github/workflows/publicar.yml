@@ -1,6 +1,7 @@
-# Refaz os dados e publica o site no GitHub Pages e o ramo "posit" (de onde o Posit Connect Cloud
-# publica os apps). Toda segunda de manhã: as datas andam para a semana corrente e os indicadores
-# do Banco Central chegam atualizados. Também roda a cada push na main.
+# Refaz os dados e publica o site no GitHub Pages (a vitrine e os apps pelo Shinylive). Toda segunda de
+# manhã: as datas andam para a semana corrente e os indicadores do Banco Central chegam atualizados.
+# Também roda a cada push na main. O Posit Connect Cloud publica direto da main (python/app.py e
+# r/app.R), com os dados que estão commitados nela.
 name: Publicar site
 
 on:
@@ -11,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write # o ramo "posit"
+  contents: read
   pages: write
   id-token: write
 
@@ -31,6 +32,9 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Conferir o código
         run: ruff check . && ruff format --check .
+      # O Posit publica da main (python/app.py e r/app.R): as dependências precisam estar em dia.
+      - name: Conferir as dependências do Posit
+        run: python -m publicar.preparar_posit --conferir
       - name: Gerar os dados
         run: python -m gerador.gerar_tudo
       # Os originais em R: o shinylive (R) só empacota para o navegador os pacotes instalados aqui.
@@ -47,13 +51,8 @@ jobs:
             any::shinycssloaders, any::shinyalert, any::shinyjs, any::cicerone, any::writexl, any::plotly,
             any::ggplot2, any::echarts4r, any::leaflet, any::sf, any::bsicons, any::future, any::promises,
             any::rsconnect, any::cpp11
-      # O Posit Connect Cloud publica cada app de uma pasta deste ramo, com os dados da semana (que a main
-      # não guarda) e o manifest.json de cada app em R. Um commit só, regravado a cada execução: o histórico
-      # não acumula os .parquet de toda semana. Push feito pelo GITHUB_TOKEN não dispara outro workflow.
-      - name: Ramo posit
-        run: python -m publicar.ramo_posit
       - name: Tema da Vitrine em R
-        working-directory: R/Vitrine
+        working-directory: r/Vitrine
         run: Rscript core/gerar_tema.R
       - name: Montar o site
         run: python -m publicar.montar_site

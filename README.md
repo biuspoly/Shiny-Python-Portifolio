@@ -1,67 +1,70 @@
-# Portfólio Marlon Amaral — painéis de gestão em Shiny for Python
+# Portfólio Marlon Amaral — painéis de gestão em Shiny for Python e R Shiny
 
 Telas de um sistema que desenvolvo e mantenho em produção numa distribuidora de bebidas: seis aplicações
-(comercial, logística, financeiro, fiscal, monitoramento e acessos). O código de cada tela é o do sistema
-real; os dados são **fictícios**, gerados nas mesmas colunas e formatos da produção, com alguns dados
-públicos de verdade (IBGE).
+(comercial, logística, financeiro, fiscal, monitoramento e acessos) em Shiny for Python, e a versão original
+de três delas em R Shiny. O código de cada tela é o do sistema real; os dados são **fictícios**, gerados nas
+mesmas colunas e formatos da produção, com alguns dados públicos de verdade (IBGE).
 
 **Ver funcionando:** https://biuspoly.github.io/Shiny-Python-Portifolio/
 
-A página de entrada (`Vitrine/`) é um app Shiny exportado com o
-[Shinylive](https://shiny.posit.co/py/docs/shinylive.html), no GitHub Pages. Cada app é publicado no
-[Posit Connect Cloud](https://connect.posit.cloud/) e roda num servidor; o que ainda não tem endereço lá
-(`Vitrine/enderecos.json`) roda no próprio navegador pelo Shinylive, e a primeira abertura baixa o ambiente
-(de 15 a 60 segundos).
-
 | | |
 |---|---|
-| ![Comercial](Vitrine/www/img/comercial.webp) | ![Financeiro](Vitrine/www/img/financeiro.webp) |
-| ![Logístico](Vitrine/www/img/logistico.webp) | ![Fiscal](Vitrine/www/img/fiscal.webp) |
+| ![Comercial](python/Vitrine/www/img/comercial.webp) | ![Financeiro](python/Vitrine/www/img/financeiro.webp) |
+| ![Logístico](python/Vitrine/www/img/logistico.webp) | ![Fiscal](python/Vitrine/www/img/fiscal.webp) |
 
-## Publicação
+## Organização
 
-O workflow `.github/workflows/publicar.yml` roda a cada push na `main` e toda segunda de manhã:
+```
+python/                 Shiny for Python
+├── app.py              os seis apps num servidor só (para o Posit Connect Cloud)
+├── requirements.txt    as dependências dele (a união das de cada app)
+├── Comercial/ Logistico/ Financeiro/ Fiscal/ Monitoramento/ Acessos/
+└── Vitrine/            a página de entrada do site
+r/                      R Shiny, a versão original
+├── app.R               os três apps num servidor só (para o Posit Connect Cloud)
+├── manifest.json       as dependências dele
+├── Comercial/ Logistico/ Acessos/
+└── Vitrine/            o portfólio em bs4Dash
+gerador/                os dados fictícios das duas linguagens
+publicar/               o site (GitHub Pages) e as dependências do Posit
+```
 
-1. gera os dados fictícios da semana (`python -m gerador.gerar_tudo`);
-2. monta o ramo **`posit`** (`python -m publicar.ramo_posit`): o repositório com os dados gerados e o
-   `manifest.json` de cada app em R, num commit único, regravado a cada execução. É desse ramo que o Posit
-   Connect Cloud publica, com a republicação automática a cada push ligada;
-3. monta o site (`python -m publicar.montar_site`): a vitrine na raiz e, pelo Shinylive, os apps sem endereço
-   no Posit.
+Cada app é independente e roda sozinho (`shiny run python/Comercial/app.py`,
+`shiny::runApp("r/Comercial")`).
 
-No Posit Connect Cloud, cada app é um conteúdo publicado do GitHub: repositório
-`biuspoly/Shiny-Python-Portifolio`, ramo `posit`, arquivo principal `Comercial/app.py` (ou
-`R/Logistico/app.R`). Para os apps em Python o Posit instala o `requirements.txt` da pasta do app, com as
-mesmas versões do Shinylive (Shiny 1.9, Polars 1.18, pyarrow 18.1, pandas 2.2.3, DuckDB 1.1.2). Depois de
-publicar, o endereço do app entra em `Vitrine/enderecos.json`, e a vitrine passa a apontar para ele.
+## Onde roda
 
-### Os apps unificados (Acompanhamentos)
+- **GitHub Pages**: a vitrine (`python/Vitrine/`, exportada pelo
+  [Shinylive](https://shiny.posit.co/py/docs/shinylive.html)) e, pelo Shinylive, cada app que ainda não
+  tem endereço no Posit: roda no próprio navegador, e a primeira abertura baixa o ambiente (de 15 a 60
+  segundos). O workflow `.github/workflows/publicar.yml` refaz os dados e o site a cada push na `main` e toda
+  segunda de manhã.
+- **[Posit Connect Cloud](https://connect.posit.cloud/)**: dois conteúdos publicados direto da `main`, um por
+  linguagem, com todos os apps dentro.
 
-Em vez de um conteúdo por app, o Posit pode receber dois: um por linguagem, com todos os acompanhamentos
-dentro, cada um no seu endereço.
-
-| | Arquivo principal (ramo `posit`) | Endereços |
+| | Arquivo principal | Endereços |
 |---|---|---|
-| Python | `Acompanhamentos/app.py` | `/` (página principal), `/comercial/`, `/logistico/`, `/financeiro/`, `/fiscal/`, `/monitoramento/`, `/acessos/` |
-| R | `R/Acompanhamentos/app.R` | `/` (página principal), `/?painel=comercial`, `/?painel=logistico`, `/?painel=acessos` (aceita também `&REVENDA=`) |
+| Python | `python/app.py` | `/` (página principal), `/comercial/`, `/logistico/`, `/financeiro/`, `/fiscal/`, `/monitoramento/`, `/acessos/` |
+| R | `r/app.R` | `/` (página principal), `/?painel=comercial`, `/?painel=logistico`, `/?painel=acessos` (aceita também `&REVENDA=`) |
 
-- **Os apps não mudam.** Cada um continua na sua pasta e roda sozinho (`shiny run Comercial/app.py`,
-  `shiny::runApp("R/Comercial")`); o Shinylive continua exportando cada um.
+Como funcionam os dois apps unificados:
+
 - **Python:** um app Starlette monta cada app Shiny na sua rota e só o carrega no primeiro acesso. Como os
   apps têm pacotes com o mesmo nome (`core`, `pages`) e conteúdo diferente, cada um é importado como um
   pacote próprio (`acomp_comercial`...), e um gancho no `import` manda o `from core...` de cada arquivo
   para o `core` do próprio app, inclusive os imports feitos dentro de funções.
 - **R:** o painel vem da URL, como no portal do sistema original. O `app.R` de cada app é avaliado num
   ambiente próprio, com `diretorio` apontando para a pasta dele, e só no primeiro acesso.
-- **No ramo `posit`**, o `publicar/ramo_posit.py` copia os apps para `apps/` dentro de cada unificado (o
-  Posit publica só a pasta do arquivo principal), gera o `manifest.json` do R e o `requirements.txt` do
-  Python (a união dos `requirements.txt` dos apps).
-- **Depois de publicar**, o endereço vai em `acompanhamentos` no `Vitrine/enderecos.json`. A vitrine passa
-  a abrir cada app pelo unificado, o site deixa de exportar esses apps pelo Shinylive, e cada subpasta antiga
-  (`site/comercial/`, `site/r/comercial/`...) vira uma página que redireciona para o endereço novo. Os links
-  antigos continuam funcionando.
+- **Dependências:** `python/requirements.txt` e `r/manifest.json` são gerados por
+  `python -m publicar.preparar_posit`. Rode depois de mudar as dependências de um app ou de criar/apagar
+  arquivo num app em R, e faça commit dos dois; o workflow falha se eles estiverem desatualizados.
+- **Dados:** o Posit usa os que estão commitados na `main`. Para atualizá-los, rode
+  `python -m gerador.gerar_tudo`, depois `python -m publicar.preparar_posit`, e faça commit.
+- **Depois de publicar**, o endereço vai em `acompanhamentos` no `python/Vitrine/enderecos.json`. A vitrine
+  passa a abrir cada app pelo Posit, o site deixa de exportá-los pelo Shinylive, e cada subpasta antiga
+  (`site/comercial/`, `site/r/comercial/`...) vira uma página que redireciona para o endereço novo.
 
-Para rodar localmente: `shiny run Acompanhamentos/app.py` e `shiny::runApp("R/Acompanhamentos")`.
+Para rodar localmente: `shiny run python/app.py` e `shiny::runApp("r")`.
 
 ## Os apps
 
@@ -81,10 +84,9 @@ nem precisou de adaptação: o código de produção já tem um caminho para qua
 
 ## A versão original em R
 
-Antes do Python, o sistema existiu em R Shiny (bs4Dash, reactable, DuckDB). Em `R/` estão três desses apps
+Antes do Python, o sistema existiu em R Shiny (bs4Dash, reactable, DuckDB). Em `r/` estão três desses apps
 com o código original: **Comercial** (Diário de Venda e Mapa Comercial), **Logístico** (Frota, Planilha de
-Entregas, Devoluções e Comodato) e **Acessos**. Eles são publicados no Posit Connect Cloud (o mesmo ramo
-`posit`) e, enquanto não estão lá, rodam no navegador pelo
+Entregas, Devoluções e Comodato) e **Acessos**. Eles são publicados no Posit Connect Cloud (o `r/app.R`) e, enquanto não estão lá, rodam no navegador pelo
 [Shinylive para R](https://posit-dev.github.io/r-shinylive/) (webR), em `site/r/`.
 
 A ideia foi mexer o mínimo: as telas são as originais e mudam só as conexões.
@@ -100,7 +102,7 @@ A ideia foi mexer o mínimo: as telas são as originais e mudam só as conexões
 - **Parquet no navegador**: o `read_parquet` do DuckDB é extensão, indisponível no webR; os arquivos são lidos
   pelo `nanoparquet` e registrados no DuckDB.
 
-Para rodar localmente: `shiny::runApp("R/Logistico")` (com os pacotes instalados e os dados copiados por
+Para rodar localmente: `shiny::runApp("r/Logistico")` (com os pacotes instalados e os dados copiados por
 `python -m gerador.gerar_tudo`).
 
 ## Do sistema real para o portfólio
@@ -141,7 +143,7 @@ Dados públicos, com cópia em `gerador/cache/` para rodar sem internet:
 - **Coordenadas dos municípios**: [kelvins/municipios-brasileiros](https://github.com/kelvins/municipios-brasileiros) (MIT).
 
 As datas acompanham o dia em que o gerador roda; toda segunda o GitHub Actions gera tudo de novo e republica
-o site e o ramo `posit`.
+o site. No Posit ficam os dados commitados na `main`.
 
 ## Rodar localmente
 
@@ -151,7 +153,7 @@ python -m venv .venv
 pip install -r requirements.txt
 
 python -m gerador.gerar_tudo    # refaz os dados (opcional: eles já vêm no repositório)
-shiny run Comercial/app.py       # ou Vitrine/app.py, a página de entrada
+shiny run python/Comercial/app.py   # ou python/app.py (todos) ou python/Vitrine/app.py (a vitrine)
 ```
 
 Para montar o site do Shinylive: `python -m publicar.montar_site` e

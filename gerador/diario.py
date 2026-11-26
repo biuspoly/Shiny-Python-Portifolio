@@ -15,7 +15,7 @@ import polars as pl
 
 from gerador import base as b
 
-sys.path.insert(0, str(b.RAIZ / "Financeiro"))
+sys.path.insert(0, str(b.PY / "Financeiro"))
 from core import composicao_manual as cm  # noqa: E402
 
 # Contas de cada revenda (o rótulo é o do catálogo da Composição) e o código de compensação.

@@ -7,7 +7,7 @@ import polars as pl
 
 from gerador import base as b
 
-PASTA = b.RAIZ / "Acessos" / "data" / "bd_acessos"
+PASTA = b.PY / "Acessos" / "data" / "bd_acessos"
 DIAS_LOG = 60
 
 REVENDAS = [

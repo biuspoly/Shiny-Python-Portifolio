@@ -1,5 +1,5 @@
 """Monta o site estático em site/: a vitrine (app Shiny) na raiz e, na sua subpasta, cada app que
-ainda não tem endereço no Posit Connect Cloud (Vitrine/enderecos.json). Tudo pelo Shinylive.
+ainda não tem endereço no Posit Connect Cloud (python/Vitrine/enderecos.json). Tudo pelo Shinylive.
 
 Uso (da raiz do repositório): python -m publicar.montar_site
 Para ver: python -m http.server --directory site 8008
@@ -15,6 +15,8 @@ sys.stdout.reconfigure(encoding="utf-8")
 sys.stderr.reconfigure(encoding="utf-8")
 
 RAIZ = Path(__file__).resolve().parent.parent
+PY = RAIZ / "python"  # os apps em Shiny for Python
+R_APPS = RAIZ / "r"  # os apps originais em R Shiny
 SITE = RAIZ / "site"
 APPS = {
     "Comercial": "comercial",
@@ -30,7 +32,7 @@ APPS = {
 # (a Vitrine chegou a baixar 164 MB, com sf, terra, duckdb e plotly, que ela não usa).
 APPS_R = {"Acessos": "acessos", "Logistico": "logistico", "Comercial": "comercial", "Vitrine": "vitrine"}
 ANEXOS_EXEMPLO = ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf")
-ENDERECOS = json.loads((RAIZ / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
+ENDERECOS = json.loads((PY / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
 
 
 def endereco_posit(linguagem: str, pasta: str) -> str | None:
@@ -87,8 +89,8 @@ def _exportar_r() -> None:
     biblioteca = RAIZ / ".rlib"  # a biblioteca local de R do portfólio, quando existe (no CI não)
     prefixo = f'.libPaths(c("{biblioteca.as_posix()}", .libPaths())); ' if biblioteca.exists() else ""
     for pasta, caminho in _sem_posit(APPS_R, "r").items():
-        print(f"exportando R/{pasta} -> site/r/{caminho}/")
-        origem, destino = (RAIZ / "R" / pasta).as_posix(), (SITE / "r" / caminho).as_posix()
+        print(f"exportando r/{pasta} -> site/r/{caminho}/")
+        origem, destino = (R_APPS / pasta).as_posix(), (SITE / "r" / caminho).as_posix()
         subprocess.run(
             [rscript, "-e", f'{prefixo}shinylive::export("{origem}", "{destino}")'],
             check=True,
@@ -101,21 +103,21 @@ def montar() -> None:
         shutil.rmtree(SITE)
     # O que a tela grava rodando local não vai para o site: lá cada visitante começa do zero.
     for sobra in ("Financeiro/data/manual", "Financeiro/data/leituras", "Financeiro/uploads"):
-        shutil.rmtree(RAIZ / sobra, ignore_errors=True)
-    for anexo in (RAIZ / "Logistico" / "uploads").rglob("*"):
+        shutil.rmtree(PY / sobra, ignore_errors=True)
+    for anexo in (PY / "Logistico" / "uploads").rglob("*"):
         if anexo.is_file() and anexo.name not in ANEXOS_EXEMPLO:
             anexo.unlink()
-    for anexo in (RAIZ / "R" / "Logistico" / "Anexos_Comodato").glob("*"):
+    for anexo in (R_APPS / "Logistico" / "Anexos_Comodato").glob("*"):
         if anexo.name not in ANEXOS_EXEMPLO:
             anexo.unlink()
-    for pdf in (RAIZ / "R" / "Logistico" / "pages" / "Comodatos" / "Dados").glob("*.[pP][dD][fF]"):
+    for pdf in (R_APPS / "Logistico" / "pages" / "Comodatos" / "Dados").glob("*.[pP][dD][fF]"):
         pdf.unlink()
     print("exportando Vitrine -> site/")
-    subprocess.run([_shinylive(), "export", str(RAIZ / "Vitrine"), str(SITE)], check=True, stdout=subprocess.DEVNULL)
+    subprocess.run([_shinylive(), "export", str(PY / "Vitrine"), str(SITE)], check=True, stdout=subprocess.DEVNULL)
     for pasta, caminho in _sem_posit(APPS, "python").items():
         print(f"exportando {pasta} -> site/{caminho}/")
         subprocess.run(
-            [_shinylive(), "export", str(RAIZ / pasta), str(SITE), "--subdir", caminho],
+            [_shinylive(), "export", str(PY / pasta), str(SITE), "--subdir", caminho],
             check=True,
             stdout=subprocess.DEVNULL,
         )

@@ -19,6 +19,8 @@ from faker import Faker
 from gerador.publicos import municipios
 
 RAIZ = Path(__file__).resolve().parent.parent
+PY = RAIZ / "python"  # os apps em Shiny for Python
+R_APPS = RAIZ / "r"  # os apps originais em R Shiny
 SEMENTE = 2026
 
 # DATA_BASE=2026-11-20 no ambiente fixa o "hoje" (útil para comparar duas gerações).
@@ -69,7 +71,7 @@ def login_de(nome: str) -> str:
 
 
 def gravar(df: pl.DataFrame, app: str, nome: str) -> None:
-    pasta = RAIZ / app / "data"
+    pasta = PY / app / "data"
     pasta.mkdir(parents=True, exist_ok=True)
     df.write_parquet(pasta / f"{nome}.parquet", compression="zstd")
     print(f"  {app}/data/{nome}.parquet: {df.height:,} linhas".replace(",", "."))

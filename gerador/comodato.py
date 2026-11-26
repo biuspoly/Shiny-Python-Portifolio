@@ -9,8 +9,8 @@ import polars as pl
 from gerador import base as b
 from gerador.logistico import REVENDAS
 
-PASTA = b.RAIZ / "Logistico" / "data" / "bd_comodato"
-UPLOADS = b.RAIZ / "Logistico" / "uploads" / "comodatos"
+PASTA = b.PY / "Logistico" / "data" / "bd_comodato"
+UPLOADS = b.PY / "Logistico" / "uploads" / "comodatos"
 CEVS_POR_REVENDA = 170
 DIAS_PRAZO_ENVIO = 10
 # Data de corte do bloqueio por prazo de material (config/excecoes_comodato.json): CEV de material

@@ -1,4 +1,4 @@
-"""Dados dos apps em R (pasta R/): os mesmos .parquet fictícios dos apps em Python, copiados para a
+"""Dados dos apps em R (pasta r/): os mesmos .parquet fictícios dos apps em Python, copiados para a
 pasta de cada app (o Shinylive só publica o que está dentro dela), mais o que só o R usa."""
 
 import shutil
@@ -7,11 +7,11 @@ import polars as pl
 
 from gerador import base as b
 
-R = b.RAIZ / "R"
+R = b.R_APPS
 
 
 def _acessos() -> None:
-    origem = b.RAIZ / "Acessos" / "data" / "bd_acessos"
+    origem = b.PY / "Acessos" / "data" / "bd_acessos"
     destino = R / "Acessos" / "data" / "bd_acessos"
     destino.mkdir(parents=True, exist_ok=True)
     for arquivo in origem.glob("*.parquet"):
@@ -28,18 +28,18 @@ def _acessos() -> None:
         escolhidas = {propria} | ({r.choice(todas)} if r.random() < 0.35 else set())
         linhas += [{"licenca": lic, "login": login} for lic in sorted(escolhidas)]
     pl.DataFrame(linhas).write_parquet(destino / "user_revenda.parquet")
-    print(f"  R/Acessos: {len(list(destino.glob('*.parquet')))} tabelas")
+    print(f"  r/Acessos: {len(list(destino.glob('*.parquet')))} tabelas")
 
 
 def _copiar_pasta(app_py: str, app_r: str, *pastas: str) -> None:
     """Copia os .parquet (e o que mais houver) das pastas de dados do app em Python para o app em R."""
     for pasta in pastas:
-        origem = b.RAIZ / app_py / "data" / pasta
+        origem = b.PY / app_py / "data" / pasta
         destino = R / app_r / "data" / pasta
         if destino.exists():
             shutil.rmtree(destino)
         shutil.copytree(origem, destino)
-    print(f"  R/{app_r}: {', '.join(pastas)}")
+    print(f"  r/{app_r}: {', '.join(pastas)}")
 
 
 def gerar() -> None:

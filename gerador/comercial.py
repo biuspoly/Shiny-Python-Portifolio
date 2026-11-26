@@ -1704,7 +1704,7 @@ def gerar() -> None:
     clientes = _clientes(equipe)
     compras = _compras(clientes, catalogo)
     diario = _diario_venda(compras, catalogo)
-    pasta = b.RAIZ / "Comercial" / "data" / "bd_comercial"
+    pasta = b.PY / "Comercial" / "data" / "bd_comercial"
     pasta.mkdir(parents=True, exist_ok=True)
     for antigo in pasta.glob("*.parquet"):
         antigo.unlink()

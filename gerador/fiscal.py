@@ -9,7 +9,7 @@ import polars as pl
 from gerador import base as b
 from gerador import comercial
 
-PASTA = b.RAIZ / "Fiscal" / "data" / "bd_fiscal"
+PASTA = b.PY / "Fiscal" / "data" / "bd_fiscal"
 MESES = 24
 
 # (nome, CNPJ, porte relativo). Os CNPJs batem com Fiscal/config/empresas.json.

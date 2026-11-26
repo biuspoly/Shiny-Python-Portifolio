@@ -9,7 +9,7 @@ import polars as pl
 
 from gerador import base as b
 
-PASTA = b.RAIZ / "Monitoramento" / "data"
+PASTA = b.PY / "Monitoramento" / "data"
 PASTA_LOGS = PASTA / "logs"
 DIAS_HISTORICO = 29
 

@@ -6,7 +6,7 @@ trocar a versão do Shiny.
 
 from shiny import ui
 
-from gerador.base import RAIZ
+from gerador.base import PY
 
 APPS = ["Comercial", "Logistico", "Financeiro", "Fiscal", "Monitoramento", "Acessos"]
 
@@ -14,7 +14,7 @@ APPS = ["Comercial", "Logistico", "Financeiro", "Fiscal", "Monitoramento", "Aces
 def gerar() -> None:
     css = ui.Theme("flatly").to_css()
     for app in APPS:
-        pasta = RAIZ / app / "www" / "css"
+        pasta = PY / app / "www" / "css"
         if pasta.exists():
             (pasta / "flatly.min.css").write_text(css, encoding="utf-8")
             print(f"  {app}/www/css/flatly.min.css")

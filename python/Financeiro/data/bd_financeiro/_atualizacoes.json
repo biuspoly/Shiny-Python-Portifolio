@@ -1,0 +1,23 @@
+{
+  "contas_pagar": "2026-11-26T07:48:00",
+  "titulos_pagos": "2026-11-26T07:48:00",
+  "titulos_pagos_emprestimos": "2026-11-26T07:48:00",
+  "emprestimos_configuracoes": "2026-11-26T07:48:00",
+  "extratos_fabricas_totais": "2026-11-26T07:48:00",
+  "extratos_fabricas_tabela": "2026-11-26T07:48:00",
+  "emprestimos_revendas": "2026-11-26T07:48:00",
+  "extratos_bancos": "2026-11-26T07:48:00",
+  "saldo_banco_999": "2026-11-26T07:48:00",
+  "extrato_banco": "2026-11-26T07:48:00",
+  "batida_diaria": "2026-11-26T07:48:00",
+  "vales_provisorios": "2026-11-26T07:48:00",
+  "dados_manuais": "2026-11-26T07:48:00",
+  "pagamentos": "2026-11-26T07:48:00",
+  "pagamentos_snapshot": "2026-11-26T07:48:00",
+  "composicao": "2026-11-26T07:48:00",
+  "composicao_snapshot": "2026-11-26T07:48:00",
+  "contas_pagar_snapshot": "2026-11-26T07:48:00",
+  "verificacao_diaria": "2026-11-26T07:48:00",
+  "justificativas_contas_pagar": "2026-11-26T07:48:00",
+  "cod_despesa": "2026-11-26T07:48:00"
+}

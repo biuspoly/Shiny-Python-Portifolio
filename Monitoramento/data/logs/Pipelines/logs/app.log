@@ -1,8 +1,0 @@
-2026-11-22 01:00:00.000 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:00:00.000", "tipo": "pipeline", "nome": "atualiza_diario_venda", "duracao_ms": 85148, "status": "OK"}
-2026-11-22 01:01:27.672 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:01:27.672", "tipo": "pipeline", "nome": "atualiza_curva_abc", "duracao_ms": 101760, "status": "OK"}
-2026-11-22 01:03:14.977 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:03:14.977", "tipo": "pipeline", "nome": "atualiza_frota", "duracao_ms": 333282, "status": "OK"}
-2026-11-22 01:08:57.247 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:08:57.247", "tipo": "pipeline", "nome": "atualiza_devolucao", "duracao_ms": 59079, "status": "OK"}
-2026-11-22 01:10:15.619 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:10:15.619", "tipo": "pipeline", "nome": "atualiza_pde", "duracao_ms": 35184, "status": "OK"}
-2026-11-22 01:11:00.004 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:11:00.004", "tipo": "pipeline", "nome": "atualiza_financeiro", "duracao_ms": 440624, "status": "OK"}
-2026-11-22 01:18:38.065 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:18:38.065", "tipo": "pipeline", "nome": "atualiza_fiscal", "duracao_ms": 393330, "status": "OK"}
-2026-11-22 01:25:15.703 | INFO     | core.telemetria:exportar:48 - OTEL {"inicio": "2026-11-22 01:25:15.703", "tipo": "pipeline", "nome": "atualiza_mapa_comercial", "duracao_ms": 252605, "status": "OK"}

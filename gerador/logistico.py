@@ -12,7 +12,7 @@ import polars as pl
 from gerador import base as b
 from gerador import comercial
 
-PASTA = b.RAIZ / "Logistico" / "data"
+PASTA = b.PY / "Logistico" / "data"
 
 # Filial -> (nome da revenda, CNPJ fictício, licença). Os CNPJs batem com Logistico/core/config.py.
 REVENDAS = {

@@ -12,7 +12,7 @@ import polars as pl
 from gerador import base as b
 from gerador import diario
 
-PASTA = b.RAIZ / "Financeiro" / "data" / "bd_financeiro"
+PASTA = b.PY / "Financeiro" / "data" / "bd_financeiro"
 
 # (nome, CNPJ fictício, licença, código da revenda na fábrica). Os CNPJs batem com Financeiro/core/config.py.
 REVENDAS = [
@@ -342,7 +342,7 @@ def _emprestimos_revendas(r) -> pl.DataFrame:
     return pl.DataFrame(linhas, infer_schema_length=None)
 
 
-PASTA_EXTRATO = b.RAIZ / "Financeiro" / "data" / "bd_extrato"
+PASTA_EXTRATO = b.PY / "Financeiro" / "data" / "bd_extrato"
 MESES_EXTRATO = 6
 BANCOS_DA_REVENDA = [
     (1, "BANCO ALFA", "0451", "000123456"),
@@ -468,6 +468,6 @@ def gerar() -> None:
     )
     # Retratos do Fluxo: o próprio app monta a tabela de cada dia passado.
     subprocess.run(
-        [sys.executable, str(b.RAIZ / "Financeiro" / "scripts" / "retratos_fluxo.py"), str(DIAS_LEITURAS - 15)],
+        [sys.executable, str(b.PY / "Financeiro" / "scripts" / "retratos_fluxo.py"), str(DIAS_LEITURAS - 15)],
         check=True,
     )
