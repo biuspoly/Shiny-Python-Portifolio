@@ -13,6 +13,20 @@ ciencia_dados = function(){
   # Um bloco por projeto
   projetos = rbind(
 
+    # TCC: gráficos de controle no TRF5 -------------------------------------
+    data.frame(
+      id        = "rmd_tcc",
+      titulo    = "Aplicação de gráficos de controle para o monitoramento de indicadores de eficiência do Tribunal Regional Federal da 5ª Região",
+      descricao = "Meu trabalho de conclusão de curso na UFPE: gráficos de controle estatístico aplicados aos indicadores de eficiência do TRF5.",
+      detalhes  = "TCC defendido na UFPE e publicado no Repositório Institucional da universidade (Attena).",
+      logo      = "r.svg",
+      cor       = "info",
+      print     = "prints/ufpe.png",
+      link      = "https://repositorio.ufpe.br/handle/123456789/47526",
+      rotulo    = "Ver no repositório",
+      modo      = "externo"
+    ),
+
     # Congestionamento no TRF5 ----------------------------------------------
     data.frame(
       id        = "rmd_trf5",
@@ -34,6 +48,7 @@ ciencia_dados = function(){
   fluidPage(
     h2("Ciência de Dados"),
     faixa_etapas(etapas, "Etapas de um estudo"),
+    fluidRow(card_projeto(projetos, "rmd_tcc")),
     fluidRow(card_projeto(projetos, "rmd_trf5"))
   )
 
