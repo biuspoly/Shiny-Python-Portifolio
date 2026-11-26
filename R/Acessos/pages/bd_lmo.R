@@ -7,7 +7,8 @@ library(dplyr)
 if (!exists(".bd_lmo", envir = globalenv())) {
   assign(".bd_lmo", new.env(), envir = globalenv())
   for (tabela in c("usuario", "dashboard", "revenda", "logacesso", "dash_group", "user_revenda")) {
-    caminho <- file.path("data", "bd_acessos", paste0(tabela, ".parquet"))
+    # Pelo `diretorio`, como o resto do app: no app unificado (R/Acompanhamentos) a pasta atual é outra.
+    caminho <- file.path(paste0(get0("diretorio", ifnotfound = ""), "data"), "bd_acessos", paste0(tabela, ".parquet"))
     assign(tabela, as.data.frame(nanoparquet::read_parquet(caminho)), envir = .bd_lmo)
   }
 }

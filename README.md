@@ -35,6 +35,34 @@ No Posit Connect Cloud, cada app é um conteúdo publicado do GitHub: repositór
 mesmas versões do Shinylive (Shiny 1.9, Polars 1.18, pyarrow 18.1, pandas 2.2.3, DuckDB 1.1.2). Depois de
 publicar, o endereço do app entra em `Vitrine/enderecos.json`, e a vitrine passa a apontar para ele.
 
+### Os apps unificados (Acompanhamentos)
+
+Em vez de um conteúdo por app, o Posit pode receber dois: um por linguagem, com todos os acompanhamentos
+dentro, cada um no seu endereço.
+
+| | Arquivo principal (ramo `posit`) | Endereços |
+|---|---|---|
+| Python | `Acompanhamentos/app.py` | `/` (página principal), `/comercial/`, `/logistico/`, `/financeiro/`, `/fiscal/`, `/monitoramento/`, `/acessos/` |
+| R | `R/Acompanhamentos/app.R` | `/` (página principal), `/?painel=comercial`, `/?painel=logistico`, `/?painel=acessos` (aceita também `&REVENDA=`) |
+
+- **Os apps não mudam.** Cada um continua na sua pasta e roda sozinho (`shiny run Comercial/app.py`,
+  `shiny::runApp("R/Comercial")`); o Shinylive continua exportando cada um.
+- **Python:** um app Starlette monta cada app Shiny na sua rota e só o carrega no primeiro acesso. Como os
+  apps têm pacotes com o mesmo nome (`core`, `pages`) e conteúdo diferente, cada um é importado como um
+  pacote próprio (`acomp_comercial`...), e um gancho no `import` manda o `from core...` de cada arquivo
+  para o `core` do próprio app, inclusive os imports feitos dentro de funções.
+- **R:** o painel vem da URL, como no portal do sistema original. O `app.R` de cada app é avaliado num
+  ambiente próprio, com `diretorio` apontando para a pasta dele, e só no primeiro acesso.
+- **No ramo `posit`**, o `publicar/ramo_posit.py` copia os apps para `apps/` dentro de cada unificado (o
+  Posit publica só a pasta do arquivo principal), gera o `manifest.json` do R e o `requirements.txt` do
+  Python (a união dos `requirements.txt` dos apps).
+- **Depois de publicar**, o endereço vai em `acompanhamentos` no `Vitrine/enderecos.json`. A vitrine passa
+  a abrir cada app pelo unificado, o site deixa de exportar esses apps pelo Shinylive, e cada subpasta antiga
+  (`site/comercial/`, `site/r/comercial/`...) vira uma página que redireciona para o endereço novo. Os links
+  antigos continuam funcionando.
+
+Para rodar localmente: `shiny run Acompanhamentos/app.py` e `shiny::runApp("R/Acompanhamentos")`.
+
 ## Os apps
 
 | App | Telas |

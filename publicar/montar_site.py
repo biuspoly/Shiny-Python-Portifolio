@@ -33,9 +33,44 @@ ANEXOS_EXEMPLO = ("PDV_exemplo.pdf", "CEV_exemplo.pdf", "CANHOTO_exemplo.pdf")
 ENDERECOS = json.loads((RAIZ / "Vitrine" / "enderecos.json").read_text(encoding="utf-8"))
 
 
+def endereco_posit(linguagem: str, pasta: str) -> str | None:
+    """O endereço do app no Posit: o próprio, ou a rota dele no app unificado da linguagem."""
+    proprio = ENDERECOS[linguagem].get(pasta)
+    if proprio:
+        return proprio
+    unificado = (ENDERECOS.get("acompanhamentos") or {}).get(linguagem)
+    if not unificado or pasta not in ENDERECOS[linguagem]:  # a Vitrine em R não faz parte do unificado
+        return None
+    base = unificado.rstrip("/")
+    return f"{base}/{pasta.lower()}/" if linguagem == "python" else f"{base}/?painel={pasta.lower()}"
+
+
 def _sem_posit(apps: dict[str, str], linguagem: str) -> dict[str, str]:
     """Só os apps sem endereço no Posit: esses continuam no Shinylive."""
-    return {pasta: caminho for pasta, caminho in apps.items() if not ENDERECOS[linguagem].get(pasta)}
+    return {pasta: caminho for pasta, caminho in apps.items() if not endereco_posit(linguagem, pasta)}
+
+
+def _redirecionamentos() -> None:
+    """Na subpasta de cada app que foi para o Posit, uma página que leva até lá: os links antigos
+    (vitrine em R, currículo, LinkedIn) continuam funcionando."""
+    for linguagem, apps, prefixo in (("python", APPS, ""), ("r", APPS_R, "r/")):
+        for pasta, caminho in apps.items():
+            destino = endereco_posit(linguagem, pasta)
+            if not destino:
+                continue
+            arquivo = SITE / f"{prefixo}{caminho}" / "index.html"
+            arquivo.parent.mkdir(parents=True, exist_ok=True)
+            arquivo.write_text(
+                '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">'
+                f'<meta http-equiv="refresh" content="0; url={destino}"><link rel="canonical" href="{destino}">'
+                f"<title>Abrindo {pasta}…</title></head>"
+                f'<body><p>Este app agora roda no Posit Connect Cloud: <a href="{destino}">{destino}</a></p>'
+                f"<script>location.replace({json.dumps(destino)} + location.search.replace(/^\\?/, "
+                f"{json.dumps('&' if '?' in destino else '?')}).replace(/[?&]$/, ''));</script>"
+                "</body></html>",
+                encoding="utf-8",
+            )
+            print(f"redireciona site/{prefixo}{caminho}/ -> {destino}")
 
 
 def _shinylive() -> str:
@@ -85,6 +120,7 @@ def montar() -> None:
             stdout=subprocess.DEVNULL,
         )
     _exportar_r()
+    _redirecionamentos()
     # Sem isto o GitHub Pages passa o site pelo Jekyll, que esconde pastas com "_".
     (SITE / ".nojekyll").write_text("", encoding="utf-8")
     tamanho = sum(p.stat().st_size for p in SITE.rglob("*") if p.is_file()) / 1024**2

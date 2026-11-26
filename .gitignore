@@ -24,3 +24,8 @@ R/*/manifest.json
 
 # Gerado pelo R/Vitrine/core/gerar_tema.R (no CI, antes de publicar)
 R/Vitrine/www/tema.css
+
+# Cópias dos apps dentro dos unificados: só existem no ramo posit (publicar/ramo_posit.py).
+Acompanhamentos/apps/
+R/Acompanhamentos/apps/
+R/Acompanhamentos/manifest.json

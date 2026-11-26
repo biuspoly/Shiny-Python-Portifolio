@@ -164,16 +164,29 @@ COMO_FOI_FEITO = [
 ]
 
 
+def endereco_posit(linguagem: str, pasta: str) -> str | None:
+    """O endereço do app no Posit: o próprio, ou a rota dele no app unificado (Acompanhamentos).
+    Mesma regra do publicar/montar_site.py (a vitrine roda sozinha no Shinylive e não importa de lá)."""
+    proprio = ENDERECOS[linguagem].get(pasta)
+    if proprio:
+        return proprio
+    unificado = (ENDERECOS.get("acompanhamentos") or {}).get(linguagem)
+    if not unificado:
+        return None
+    base = unificado.rstrip("/")
+    return f"{base}/{pasta.lower()}/" if linguagem == "python" else f"{base}/?painel={pasta.lower()}"
+
+
 def endereco(linguagem: str, pasta: str) -> str:
     """Endereço do Posit, ou o do Shinylive (absoluto: a vitrine roda num iframe do Shinylive)."""
-    posit = ENDERECOS[linguagem].get(pasta)
+    posit = endereco_posit(linguagem, pasta)
     if posit:
         return posit
     return f"{SITE}{'r/' if linguagem == 'r' else ''}{pasta.lower()}/"
 
 
 def cartao(app: dict, linguagem: str):
-    no_posit = bool(ENDERECOS[linguagem].get(app["pasta"]))
+    no_posit = bool(endereco_posit(linguagem, app["pasta"]))
     return ui.card(
         ui.tags.img(src=f"img/{app['imagem']}", alt=f"Tela do {app['nome']}", class_="app-foto"),
         ui.card_body(
