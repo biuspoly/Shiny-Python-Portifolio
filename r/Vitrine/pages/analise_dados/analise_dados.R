@@ -13,6 +13,11 @@ analise_dados = function(item){
   site_portfolio = "https://biuspoly.github.io/shiny-portfolio/"
   powerbi        = "https://app.powerbi.com/view?r="
 
+  # Apps no Posit Connect Cloud (um servidor por linguagem, com todos os painéis dentro).
+  # R: o painel vem pela URL (?painel=comercial). Python: cada painel tem a sua rota (comercial/).
+  posit_r  = "https://01a2190a-f130-f119-72e4-d16f0322add0.share.connect.posit.cloud/"
+  posit_py = "https://01a2190b-b942-a96c-d03c-a67adef5d830.share.connect.posit.cloud/"
+
   # Painéis de gestão: o sistema da distribuidora, com as versões de cada painel
   # (Power BI, Shiny R e Shiny Python). Um bloco por projeto; os valores de cada
   # versão (logo, link, rotulo, modo) ficam separados por ";".
@@ -31,8 +36,8 @@ analise_dados = function(item){
         powerbi, "eyJrIjoiMDg4YzVmMjctY2Q0YS00NDBlLTg3YzgtOTFjY2UzMGEyMDk4IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9;",
         powerbi, "eyJrIjoiZjAxNzM5MjEtODY1MS00ZWU3LWFmODctZThmNWMxYzc5YTA2IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9;",
         powerbi, "eyJrIjoiODEwYjBmMGYtYzQ1OC00ZTA3LTg0YzMtMTNkNDYzNzJkZjQzIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9;",
-        site_portfolio, "r/logistico/;",
-        site_portfolio, "logistico/"
+        posit_r,  "?painel=logistico;",
+        posit_py, "logistico/"
       ),
       rotulo    = "Frotas (Power BI);Custos (Power BI);Devoluções (Power BI);Shiny R;Shiny Python",
       modo      = "externo;externo;externo;app;app"
@@ -47,7 +52,7 @@ analise_dados = function(item){
       logo      = "r.svg;python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_comercial.webp",
-      link      = paste0(site_portfolio, "r/comercial/;", site_portfolio, "comercial/"),
+      link      = paste0(posit_r, "?painel=comercial;", posit_py, "comercial/"),
       rotulo    = "Shiny R;Shiny Python",
       modo      = "app"
     ),
@@ -61,7 +66,7 @@ analise_dados = function(item){
       logo      = "python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_financeiro.webp",
-      link      = paste0(site_portfolio, "financeiro/"),
+      link      = paste0(posit_py, "financeiro/"),
       rotulo    = "Shiny Python",
       modo      = "app"
     ),
@@ -75,7 +80,7 @@ analise_dados = function(item){
       logo      = "python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_fiscal.webp",
-      link      = paste0(site_portfolio, "fiscal/"),
+      link      = paste0(posit_py, "fiscal/"),
       rotulo    = "Shiny Python",
       modo      = "app"
     ),
@@ -89,7 +94,7 @@ analise_dados = function(item){
       logo      = "python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_monitoramento.webp",
-      link      = paste0(site_portfolio, "monitoramento/"),
+      link      = paste0(posit_py, "monitoramento/"),
       rotulo    = "Shiny Python",
       modo      = "app"
     ),
@@ -103,7 +108,7 @@ analise_dados = function(item){
       logo      = "r.svg;python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_acessos.webp",
-      link      = paste0(site_portfolio, "r/acessos/;", site_portfolio, "acessos/"),
+      link      = paste0(posit_r, "?painel=acessos;", posit_py, "acessos/"),
       rotulo    = "Shiny R;Shiny Python",
       modo      = "app"
     )
