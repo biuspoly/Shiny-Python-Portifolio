@@ -6,20 +6,26 @@ from dataclasses import dataclass
 
 import pandas as pd
 import polars as pl
+from shiny import ui
 from shiny.ui import HTML
 
 from core.compat import para_pandas
 
 from .cores_diario_venda import (
+    COLUNAS_CHAVE,
     COR_META,
     COR_META_ABP_GRUPO,
     COR_META_BOLD,
     COR_META_DIFERENCA_NEGATIVA,
     COR_META_REV,
     COR_META_TITULO,
+    FUNDO_COLUNA_CHAVE,
+    SEPARADOR_SECAO,
     cor_cabecalho_dv,
     cor_categoria_dv,
     label_mes_str,
+    marcador_categoria_dv,
+    secao_dv,
 )
 from .dados_diario_venda import _mes_offset
 from .ordenacao_diario_venda import (
@@ -72,6 +78,80 @@ def _moeda(valor) -> str:
     except (TypeError, ValueError):
         return ""
     return _numero(num, 2)
+
+
+def _num_ou_none(valor):
+    if _vazio(valor):
+        return None
+    try:
+        return float(valor)
+    except (TypeError, ValueError):
+        return None
+
+
+def _delta(texto: str, positivo: bool | None):
+    classe = "kpi-delta-neutro" if positivo is None else ("kpi-delta-pos" if positivo else "kpi-delta-neg")
+    return ui.span(texto, class_=f"kpi-delta {classe}")
+
+
+def _variacao(atual, base, rotulo: str):
+    if atual is None or not base:
+        return _delta(f"sem {rotulo}", None)
+    variacao = atual / base - 1
+    seta = "▲" if variacao >= 0 else "▼"
+    return _delta(f"{seta} {_numero(abs(variacao) * 100, 1)}% {rotulo}", variacao >= 0)
+
+
+def cartoes_resumo_dv(total: dict, mes: str):
+    """Faixa de indicadores do topo, lida da linha VOLUME TOTAL (os mesmos números da tabela)."""
+    real = _num_ou_none(total.get("VOL_MES_ATUAL"))
+    tend = _num_ou_none(total.get("TEND"))
+    meta = _num_ou_none(total.get("META_REV"))
+    ano_ant = _num_ou_none(total.get("VOL_ANO_ANT2"))
+    cob = _num_ou_none(total.get("COB_MES_ATUAL"))
+    cob_ano_ant = _num_ou_none(total.get("COB_ANO_ANT"))
+    fat = _num_ou_none(total.get("FAT"))
+    venda_hl = _num_ou_none(total.get("VENDA_HL"))
+    rot_mes = label_mes_str(mes)
+
+    if tend is not None and meta:
+        perc = tend / meta
+        sub_tend = _delta(f"{_numero(perc * 100, 1)}% da meta", perc >= 1)
+    else:
+        sub_tend = _delta("sem meta", None)
+
+    if meta and real is not None:
+        falta = meta - real
+        sub_meta = _delta("meta batida", True) if falta <= 0 else _delta(f"faltam {_numero(falta)} HL", None)
+    else:
+        sub_meta = _delta("sem meta", None)
+
+    def cartao(titulo, valor, sub, destaque=False):
+        return ui.div(
+            ui.div(titulo, class_="dv-kpi-titulo"),
+            ui.div(valor, class_="dv-kpi-valor"),
+            sub,
+            class_="dv-kpi dv-kpi-destaque" if destaque else "dv-kpi",
+        )
+
+    return ui.div(
+        cartao(
+            f"Realizado {rot_mes}",
+            f"{_numero(real)} HL" if real is not None else "–",
+            _variacao(real, ano_ant, "vs ano anterior"),
+        ),
+        cartao("Tendência do mês", f"{_numero(tend)} HL" if tend is not None else "–", sub_tend, destaque=True),
+        cartao("Meta revenda", f"{_numero(meta)} HL" if meta is not None else "–", sub_meta),
+        cartao(
+            "Cobertura (PDVs)", _numero(cob) if cob is not None else "–", _variacao(cob, cob_ano_ant, "vs ano anterior")
+        ),
+        cartao(
+            "Faturamento",
+            f"R$ {_numero(fat)}" if fat is not None else "–",
+            _delta(f"R$ {_moeda(venda_hl)} por HL", None) if venda_hl else _delta("", None),
+        ),
+        class_="dv-kpis",
+    )
 
 
 _COLUNAS_COR_SEMPRE = {
@@ -150,6 +230,11 @@ def _gerar_css_cabecalho(seletor_base: str, coldefs: list[ColDef]) -> str:
     for (fundo, texto), posicoes in grupos.items():
         seletores = ", ".join(f"{seletor_base} table thead th:nth-child({p})" for p in posicoes)
         linhas.append(f"{seletores} {{ background-color: {fundo}; color: {texto}; }}")
+    # Colunas-chave (tendência e cobertura do mês): fundo leve no corpo da coluna.
+    chave = [p for p, cd in enumerate(coldefs, start=1) if (cd.cor or cd.coluna) in COLUNAS_CHAVE]
+    if chave:
+        seletores = ", ".join(f"{seletor_base} table tbody td:nth-child({p})" for p in chave)
+        linhas.append(f"{seletores} {{ background-color: {FUNDO_COLUNA_CHAVE}; }}")
     return "\n".join(linhas)
 
 
@@ -178,8 +263,8 @@ def _gerar_css_distintivo_cabecalho(seletor_base: str, coldefs: list[ColDef]) ->
         linhas.append(
             f"{seletor_base} table thead th:nth-child({posicao})::after {{"
             f' content: "{cd.distintivo}"; display: block; width: fit-content; margin: 2px auto 0;'
-            " background-color: #CFF7D4; color: #000000; padding: 1px 5px; border-radius: 2px;"
-            " font-weight: normal; }"
+            " background-color: transparent; color: #64748B; border: 1px solid #CBD5E1;"
+            " padding: 0 5px; border-radius: 8px; font-size: 0.9em; font-weight: normal; }"
         )
     return "\n".join(linhas)
 
@@ -246,6 +331,11 @@ def construir_categorias_df(
     for linha in range(len(pandas_df)):
         nivel = niveis[linha]
         categoria = categorias[linha]
+
+        if linha > 0 and secao_dv(nivel) != secao_dv(niveis[linha - 1]):
+            for coluna in colunas:
+                _adiciona_estilo(estilos, linha, coluna, SEPARADOR_SECAO)
+        _adiciona_estilo(estilos, linha, "CATEGORIA", marcador_categoria_dv(categoria, nivel))
 
         cor_linha = cor_categoria_dv(categoria, nivel)
         if cor_linha:
@@ -403,7 +493,7 @@ _COLDEFS_FAMILIA_EXTRA: list[ColDef] = [
 ]
 
 
-_COR_LINHA_AGREGADA = {"font-weight": "bold"}
+_COR_LINHA_AGREGADA = {"font-weight": "bold", "background-color": "#F1F5F9", "color": "#0F172A"}
 
 
 _BASES_ADITIVAS = [

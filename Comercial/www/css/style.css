@@ -2990,3 +2990,151 @@ shiny-data-frame table thead {
   padding: 0.45rem 0.6rem;
 }
 
+
+
+/* ==========================================================================
+   Diário de Vendas: layout enxuto
+   Indicadores no topo, tabelas em abas, cores só onde têm sentido.
+   ========================================================================== */
+
+.dv-modulo .card {
+  border: 1px solid #E2E8F0;
+  border-top: 1px solid #E2E8F0;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+/* Faixa de indicadores */
+.dv-modulo .dv-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.dv-modulo .dv-kpi {
+  background: #fff;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-width: 0;
+}
+.dv-modulo .dv-kpi-destaque {
+  border-color: #BFD7EF;
+  background: #F5F9FD;
+}
+.dv-modulo .dv-kpi-titulo {
+  font-size: 0.72rem;
+  color: #64748B;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.dv-modulo .dv-kpi-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0F172A;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dv-modulo .dv-kpi .kpi-delta {
+  font-size: 0.72rem;
+}
+
+/* Abas */
+.dv-modulo .card > .card-header:has(.nav-underline) {
+  background: #fff;
+  border-bottom: 1px solid #E2E8F0;
+  padding-bottom: 0;
+}
+.dv-modulo .nav-underline {
+  align-items: center;
+  flex-wrap: wrap;
+  row-gap: 6px;
+}
+.dv-modulo .nav-underline .nav-link {
+  color: #64748B;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 6px 2px 10px;
+}
+.dv-modulo .nav-underline .nav-link.active {
+  color: #0F172A;
+  border-bottom-color: var(--cor-sidebar, #06825d);
+}
+
+.dv-modulo .dv-card-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 6px;
+}
+
+.btn-historico-inativo {
+  background-color: #fff !important;
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+}
+.btn-historico-ativo {
+  background-color: #0B4A85 !important;
+  border-color: #0B4A85 !important;
+  color: #fff !important;
+}
+.dv-modulo .btn-outline-primary {
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+}
+
+/* Tabelas */
+.dv-modulo .dv-tabela shiny-data-frame .shiny-data-grid {
+  border: 1px solid #E2E8F0;
+}
+.dv-modulo .dv-tabela shiny-data-frame table {
+  font-size: 72%;
+  font-variant-numeric: tabular-nums;
+}
+.dv-modulo .dv-tabela shiny-data-frame table thead th {
+  background-color: #F8FAFC;
+  color: #334155;
+  font-weight: 600;
+  border-bottom: 1px solid #CBD5E1 !important;
+  vertical-align: bottom;
+}
+.dv-modulo .dv-tabela shiny-data-frame table tbody td {
+  border-bottom: 1px solid #F1F5F9;
+  padding: 4px 6px;
+}
+.dv-modulo .dv-tabela shiny-data-frame table tbody tr:hover td {
+  background-color: #F8FAFC;
+}
+
+/* Legenda das cores */
+.dv-modulo .dv-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: #64748B;
+}
+.dv-modulo .dv-legenda-alerta,
+.dv-modulo .dv-legenda-chave {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.dv-modulo .dv-legenda-alerta {
+  background: #B3262D;
+}
+.dv-modulo .dv-legenda-chave {
+  background: #E6F0FA;
+  border: 1px solid #BFD7EF;
+  margin-left: 10px;
+}
+.dv-modulo .dv-legenda-dica {
+  margin-left: auto;
+  font-style: italic;
+}

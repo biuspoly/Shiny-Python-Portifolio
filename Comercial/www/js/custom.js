@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
       if (outputs.length === 0) return false;
       for (var i = 0; i < outputs.length; i++) {
         var el = outputs[i];
+        // Saída numa aba fechada só renderiza quando a aba abre: não segura o carregamento.
+        if (el.closest(".tab-pane:not(.active)")) continue;
         if (el.classList.contains("recalculating")) return false;
         if (!valoresRecebidos.has(el)) return false;
       }

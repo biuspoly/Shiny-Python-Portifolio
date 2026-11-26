@@ -1156,3 +1156,100 @@ table.dataTable thead input[type='search'] {
   border-color:     #083458 !important;
 }
 
+
+/* ==========================================================================
+   Diário de Vendas: layout enxuto (mesmo desenho da versão em Python)
+   Indicadores no topo, tabelas em abas, cores só onde têm sentido.
+   ========================================================================== */
+
+.btn-historico-inativo,
+.btn-historico-inativo:hover,
+.btn-historico-inativo:focus {
+  background-color: #FFFFFF !important;
+  border-color:     #CBD5E1 !important;
+  color:            #334155 !important;
+}
+.btn-historico-ativo,
+.btn-historico-ativo:hover,
+.btn-historico-ativo:focus {
+  background-color: #0B4A85 !important;
+  border-color:     #0B4A85 !important;
+  color:            #FFFFFF !important;
+}
+
+/* Faixa de indicadores */
+.dv-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 10px;
+  margin-bottom: 1rem;
+}
+.dv-kpi {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-width: 0;
+}
+.dv-kpi-destaque {
+  border-color: #BFD7EF;
+  background: #F5F9FD;
+}
+.dv-kpi-titulo {
+  font-size: 0.72rem;
+  color: #64748B;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.dv-kpi-valor {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0F172A;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kpi-delta { display: block; font-size: 0.72rem; font-weight: 600; margin-top: 2px; white-space: nowrap; }
+.kpi-delta-pos    { color: #087F5B; }
+.kpi-delta-neg    { color: #B3262D; }
+.kpi-delta-neutro { color: #6B7C87; }
+
+/* Caixa com abas */
+#abas_dv .nav-link { color: #64748B; font-weight: 600; font-size: 0.85rem; }
+#abas_dv .nav-link.active { color: #0F172A; }
+.card:has(#abas_dv) { border-top: 1px solid #E2E8F0 !important; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
+.card:has(#abas_dv) > .card-header { background: #FFFFFF; border-bottom: 1px solid #E2E8F0; }
+.dv-card-toolbar {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.dv-card-toolbar .form-group { margin-bottom: 0; }
+.dv-card-toolbar .btn { padding: 1px 8px; font-size: 0.75rem; }
+
+/* Colunas-chave (tendência e cobertura do mês): fundo leve no corpo da coluna */
+.rt-td.dv-col-chave { background-color: #F5F9FD; }
+
+/* Legenda das cores */
+.dv-legenda {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: #64748B;
+}
+.dv-legenda-alerta,
+.dv-legenda-chave {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.dv-legenda-alerta { background: #B3262D; }
+.dv-legenda-chave  { background: #E6F0FA; border: 1px solid #BFD7EF; margin-left: 10px; }
+.dv-legenda-dica   { margin-left: auto; font-style: italic; }

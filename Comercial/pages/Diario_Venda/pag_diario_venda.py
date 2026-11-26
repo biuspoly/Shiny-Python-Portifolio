@@ -59,27 +59,45 @@ def diario_venda_ui():
                 class_="filtros-dv",
             ),
         ),
-        ui.card(
-            ui.card_header(
+        ui.output_ui("kpis_dv"),
+        ui.navset_card_underline(
+            ui.nav_panel(
+                "Categorias",
+                ui.output_ui("tabela_categorias_wrap"),
+                ui.output_ui("css_cabecalho_categorias"),
                 ui.div(
-                    ui.span("Diário de Vendas - Categorias"),
-                    ui.div(
-                        ui.output_ui("bt_meta_abp_ui"),
-                        ui.output_ui("bt_meta_ano_ui"),
-                        ui.output_ui("bt_toggle_historico_ui"),
-                        class_="dv-card-toolbar",
-                        style="display:flex; gap:6px;",
-                    ),
-                    style="display:flex; justify-content:space-between; align-items:center; width:100%;",
-                )
+                    ui.span(class_="dv-legenda-alerta"),
+                    "abaixo do ano anterior ou da meta",
+                    ui.span(class_="dv-legenda-chave"),
+                    "colunas principais do mês",
+                    ui.span("passe o mouse com o histórico ativo para ver a evolução", class_="dv-legenda-dica"),
+                    class_="dv-legenda",
+                ),
+                value="categorias",
             ),
-            ui.output_ui("tabela_categorias_wrap"),
-            ui.output_ui("css_cabecalho_categorias"),
-        ),
-        ui.card(
-            ui.card_header(
+            ui.nav_panel(
+                "Produto / Família",
                 ui.div(
-                    ui.span("Diário de Vendas - Produto/Família"),
+                    ui.div(ui.output_data_frame("tabela_familia"), class_="dv-tabela-corpo"),
+                    ui.div(ui.output_data_frame("tabela_familia_total"), class_="dv-tabela-rodape"),
+                    class_="dv-tabela dv-tabela-com-rodape",
+                ),
+                ui.output_ui("css_cabecalho_familia"),
+                value="familia",
+            ),
+            ui.nav_panel(
+                "Outros volumes",
+                ui.div(
+                    ui.div(ui.output_data_frame("tabela_outros"), class_="dv-tabela-corpo"),
+                    ui.div(ui.output_data_frame("tabela_outros_total"), class_="dv-tabela-rodape"),
+                    class_="dv-tabela dv-tabela-com-rodape",
+                ),
+                ui.output_ui("css_cabecalho_outros"),
+                value="outros",
+            ),
+            ui.nav_spacer(),
+            ui.nav_control(
+                ui.div(
                     ui.div(
                         ui.input_switch(
                             "familia_modo",
@@ -87,25 +105,16 @@ def diario_venda_ui():
                             value=False,
                         ),
                         class_="dv-switch-hl",
+                        title="Unidade das tabelas de produto: UMB ou hectolitro",
                     ),
-                    style="display:flex; justify-content:space-between; align-items:center; width:100%;",
+                    ui.output_ui("bt_meta_abp_ui"),
+                    ui.output_ui("bt_meta_ano_ui"),
+                    ui.output_ui("bt_toggle_historico_ui"),
+                    class_="dv-card-toolbar",
                 )
             ),
-            ui.div(
-                ui.div(ui.output_data_frame("tabela_familia"), class_="dv-tabela-corpo"),
-                ui.div(ui.output_data_frame("tabela_familia_total"), class_="dv-tabela-rodape"),
-                class_="dv-tabela dv-tabela-com-rodape",
-            ),
-            ui.output_ui("css_cabecalho_familia"),
-        ),
-        ui.card(
-            ui.card_header("Diário de Vendas - Outros Volumes"),
-            ui.div(
-                ui.div(ui.output_data_frame("tabela_outros"), class_="dv-tabela-corpo"),
-                ui.div(ui.output_data_frame("tabela_outros_total"), class_="dv-tabela-rodape"),
-                class_="dv-tabela dv-tabela-com-rodape",
-            ),
-            ui.output_ui("css_cabecalho_outros"),
+            id="aba_dv",
+            selected="categorias",
         ),
         ui.div(
             ui.output_ui("painel_tooltip_grafico"),
@@ -323,6 +332,16 @@ def diario_venda_server(input, output, session, versao_cache=None, resumo_cabeca
         resumo_cabecalho_dias.set(resumo_dias("ven", info.get("DIAS_UTEIS"), info.get("DIAS_UTEIS_ATUAL")))
 
     @render.ui
+    async def kpis_dv():
+        tabela = await dados_rv()
+        if tabela is None or tabela.height == 0:
+            return None
+        total = tabela.filter(pl.col("CATEGORIA") == "VOLUME TOTAL")
+        if total.height == 0:
+            return None
+        return t.cartoes_resumo_dv(total.row(0, named=True), input.mes_dv())
+
+    @render.ui
     def tabela_categorias_wrap():
         return ui.div(ui.output_data_frame("tabela_categorias"), class_="dv-tabela dv-tabela-inteira")
 
@@ -364,12 +383,12 @@ def diario_venda_server(input, output, session, versao_cache=None, resumo_cabeca
     @render.data_frame
     async def tabela_familia():
         pandas_df, estilos, _, _, _ = await tabela_familia_construida()
-        return render.DataTable(pandas_df, styles=estilos, height="500px", summary=False, filters=False)
+        return render.DataTable(pandas_df, styles=estilos, height="560px", summary=False, filters=False)
 
     @render.data_frame
     async def tabela_familia_total():
         _, _, pandas_total_df, estilos_total, _ = await tabela_familia_construida()
-        return render.DataTable(pandas_total_df, styles=estilos_total, height="6vh", summary=False, filters=False)
+        return render.DataTable(pandas_total_df, styles=estilos_total, height=None, summary=False, filters=False)
 
     @render.ui
     async def css_cabecalho_familia():
@@ -394,12 +413,14 @@ def diario_venda_server(input, output, session, versao_cache=None, resumo_cabeca
     @render.data_frame
     async def tabela_outros():
         pandas_df, estilos, _, _, _ = await tabela_outros_construida()
-        return render.DataTable(pandas_df, styles=estilos, height="400px", summary=False, filters=False)
+        # Altura só a necessária: com poucos produtos a tabela não deixa um vazio embaixo.
+        altura = None if len(pandas_df) <= 15 else "480px"
+        return render.DataTable(pandas_df, styles=estilos, height=altura, summary=False, filters=False)
 
     @render.data_frame
     async def tabela_outros_total():
         _, _, pandas_total_df, estilos_total, _ = await tabela_outros_construida()
-        return render.DataTable(pandas_total_df, styles=estilos_total, height="6vh", summary=False, filters=False)
+        return render.DataTable(pandas_total_df, styles=estilos_total, height=None, summary=False, filters=False)
 
     @render.ui
     async def css_cabecalho_outros():
@@ -422,9 +443,10 @@ def diario_venda_server(input, output, session, versao_cache=None, resumo_cabeca
         ativo = historico_ativado()
         return ui.input_action_button(
             "bt_toggle_historico",
-            "Desativar histórico" if ativo else "Ativar histórico",
+            "Histórico ligado" if ativo else "Histórico",
             icon=icon_svg("chart-line"),
             class_="btn-sm btn-historico-ativo" if ativo else "btn-sm btn-historico-inativo",
+            title="Mostra a evolução ao passar o mouse na tendência e na cobertura",
         )
 
     @render.ui

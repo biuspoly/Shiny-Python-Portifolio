@@ -705,10 +705,59 @@ pag_diario_vendas <- function() {
     ativo <- historico_ativado()
     actionButton(
       "bt_toggle_tooltip",
-      label  = if (ativo) "Desativar histórico" else "Ativar histórico",
+      label  = if (ativo) "Histórico ligado" else "Histórico",
       icon   = icon("chart-line"),
       class  = if (ativo) "btn-historico-ativo" else "btn-historico-inativo",
       size   = "sm"
+    ) %>% tagAppendAttributes(title = "Mostra a evolução ao passar o mouse na tendência e na cobertura")
+  })
+
+  ## Indicadores do topo (linha VOLUME TOTAL: os mesmos números da tabela) ----
+
+  output$kpis_dv <- renderUI({
+    req(dados_rv(), input$mes_dv)
+    total <- dados_rv() %>% filter(CATEGORIA == "VOLUME TOTAL")
+    req(nrow(total) > 0)
+    total <- total[1, ]
+
+    num <- function(x) {
+      x <- suppressWarnings(as.numeric(x))
+      if (length(x) == 0 || is.na(x) || x == 0) NA_real_ else x
+    }
+    fmt <- function(x, casas = 0) {
+      if (is.na(x)) return("–")
+      trimws(format(round(x, casas), nsmall = casas, big.mark = ".", decimal.mark = ",", scientific = FALSE))
+    }
+    delta <- function(texto, positivo = NA) {
+      classe <- if (is.na(positivo)) "kpi-delta-neutro" else if (positivo) "kpi-delta-pos" else "kpi-delta-neg"
+      span(class = paste("kpi-delta", classe), texto)
+    }
+    variacao <- function(atual, base) {
+      if (is.na(atual) || is.na(base)) return(delta("sem ano anterior"))
+      v <- atual / base - 1
+      delta(paste0(if (v >= 0) "▲ " else "▼ ", fmt(abs(v) * 100, 1), "% vs ano anterior"), v >= 0)
+    }
+    cartao <- function(titulo, valor, sub, destaque = FALSE) {
+      div(class = if (destaque) "dv-kpi dv-kpi-destaque" else "dv-kpi",
+          div(class = "dv-kpi-titulo", titulo),
+          div(class = "dv-kpi-valor", valor),
+          sub)
+    }
+
+    real  <- num(total$VOL_MES_ATUAL); tend <- num(total$TEND); meta <- num(total$META_REV)
+    ano   <- num(total$VOL_ANO_ANT2);  cob  <- num(total$COB_MES_ATUAL); cob_aa <- num(total$COB_ANO_ANT)
+    fat   <- num(total$FAT);           r_hl <- num(total$VENDA_HL)
+
+    sub_tend <- if (!is.na(tend) && !is.na(meta)) delta(paste0(fmt(tend / meta * 100, 1), "% da meta"), tend >= meta) else delta("sem meta")
+    sub_meta <- if (is.na(meta) || is.na(real)) delta("sem meta") else if (real >= meta) delta("meta batida", TRUE) else delta(paste0("faltam ", fmt(meta - real), " HL"))
+    rot_mes  <- label_mes(as.Date(paste0(input$mes_dv, "01"), format = "%Y%m%d"))
+
+    div(class = "dv-kpis",
+      cartao(paste("Realizado", rot_mes), paste(fmt(real), "HL"), variacao(real, ano)),
+      cartao("Tendência do mês", paste(fmt(tend), "HL"), sub_tend, destaque = TRUE),
+      cartao("Meta revenda", paste(fmt(meta), "HL"), sub_meta),
+      cartao("Cobertura (PDVs)", fmt(cob), variacao(cob, cob_aa)),
+      cartao("Faturamento", paste("R$", fmt(fat)), if (!is.na(r_hl)) delta(paste0("R$ ", fmt(r_hl, 2), " por HL")) else NULL)
     )
   })
   
@@ -1056,10 +1105,10 @@ pag_diario_vendas <- function() {
           headerStyle = cor_cabecalho_dv("CATEGORIA", align = "left"),
           cell        = function(value) formatar_categoria_visual_dv(as.character(value)),
           style = function(value, index) {
-            cor_categoria_dv(
-              categoria = as.character(categorias$CATEGORIA[index]),
-              nivel     = if (!is.na(categorias$NIVEL[index])) categorias$NIVEL[index] else ""
-            )
+            categoria <- as.character(categorias$CATEGORIA[index])
+            nivel     <- if (!is.na(categorias$NIVEL[index])) categorias$NIVEL[index] else ""
+            c(cor_categoria_dv(categoria = categoria, nivel = nivel),
+              marcador_categoria_dv(categoria, nivel))
           }
         ),
         
@@ -1193,6 +1242,7 @@ pag_diario_vendas <- function() {
           html        = TRUE,
           format      = colFormat(separators = TRUE, digits = 0),
           headerStyle = cor_cabecalho_dv("TEND"),
+          class       = "dv-col-chave",
           cell = function(value, index) {
             nivel     <- as.character(categorias$NIVEL[index])
             categoria <- as.character(categorias$CATEGORIA[index])
@@ -1264,7 +1314,7 @@ pag_diario_vendas <- function() {
         ),
         
         PERC_VOL_LN = colDef(
-          name        = "Sell in<br/><span style='background:#CFF7D4;color:#000000;padding:1px 5px;border-radius:2px;font-weight:normal;'>Vol/ LN</span>",
+          name        = paste0("Sell in<br/>", selo_cabecalho_dv("Vol/ LN")),
           html        = TRUE,
           headerStyle = cor_cabecalho_dv("PERC_VOL_LN"),
           cell = function(value, index) {
@@ -1284,7 +1334,7 @@ pag_diario_vendas <- function() {
         ),
 
         PERC_COB_LN = colDef(
-          name        = "Diferença<br/><span style='background:#CFF7D4;color:#000000;padding:1px 5px;border-radius:2px;font-weight:normal;'>% Cob/LN</span>",
+          name        = paste0("Diferença<br/>", selo_cabecalho_dv("% Cob/LN")),
           html        = TRUE,
           headerStyle = cor_cabecalho_dv("PERC_COB_LN"),
           cell = function(value, index) {
@@ -1346,6 +1396,7 @@ pag_diario_vendas <- function() {
             }
           },
           headerStyle = cor_cabecalho_dv("COB_MES_ATUAL"),
+          class       = "dv-col-chave",
           style = function(value, index){
             nivel <- if (!is.na(categorias$NIVEL[index])) categorias$NIVEL[index] else ""
             meta  <- categorias$COB_ANO_ANT[index]
@@ -1388,15 +1439,15 @@ pag_diario_vendas <- function() {
       #     )
       #   )
       # ),
-      bordered   = TRUE,
+      rowStyle   = estilo_row_categorias_dv(categorias$NIVEL, categorias$CATEGORIA),
+      bordered   = FALSE,
       highlight  = TRUE,
       striped    = FALSE,
       compact    = TRUE,
       fullWidth  = TRUE,
       resizable  = TRUE,
       wrap       = FALSE,
-      pagination = FALSE,
-      height     = "80vh"
+      pagination = FALSE
     )
   })
   
@@ -1582,8 +1633,10 @@ pag_diario_vendas <- function() {
           html        = TRUE,
           show        = !modo_hl,
           aggregate   = "sum",
+          aggregated  = JS("function(cellInfo) { return cellInfo.value == null ? '' : Math.round(cellInfo.value).toLocaleString('pt-BR'); }"),
           footer      = footer_vol,
           headerStyle = cor_cabecalho_dv("TEND"),
+          class       = "dv-col-chave",
           cell = function(value, index) {
             if (is.null(value) || is.na(value)) return("")
             tags$span(
@@ -1679,8 +1732,10 @@ pag_diario_vendas <- function() {
           html        = TRUE,
           show        = modo_hl,
           aggregate   = "sum",
+          aggregated  = JS("function(cellInfo) { return cellInfo.value == null ? '' : Math.round(cellInfo.value).toLocaleString('pt-BR'); }"),
           footer      = footer_vol,
           headerStyle = cor_cabecalho_dv("TEND"),
+          class       = "dv-col-chave",
           cell = function(value, index) {
             if (is.null(value) || is.na(value)) return("")
             tags$span(
@@ -1756,6 +1811,7 @@ pag_diario_vendas <- function() {
           },
           footer      = footer_vol,
           headerStyle = cor_cabecalho_dv("COB_MES_ATUAL"),
+          class       = "dv-col-chave",
           style = function(value, index) {
             meta <- familia$COB_ANO_ANT[index]
             if (!is.na(value) && !is.na(meta) && value <= meta) return(cor_meta())
@@ -1788,7 +1844,7 @@ pag_diario_vendas <- function() {
       resizable  = TRUE,
       wrap       = FALSE,
       pagination = FALSE,
-      height     = "70vh"
+      height     = "600px"
     )
   })
   
@@ -2175,6 +2231,7 @@ pag_diario_vendas <- function() {
           html        = TRUE,
           show        = !modo_hl,
           headerStyle = cor_cabecalho_dv("TEND"),
+          class       = "dv-col-chave",
           cell = function(value, index) {
             if (is.null(value) || is.na(value)) return("")
             tags$span(
@@ -2256,6 +2313,7 @@ pag_diario_vendas <- function() {
           html        = TRUE,
           show        = modo_hl,
           headerStyle = cor_cabecalho_dv("TEND"),
+          class       = "dv-col-chave",
           cell = function(value, index) {
             if (is.null(value) || is.na(value)) return("")
             tags$span(
@@ -2325,6 +2383,7 @@ pag_diario_vendas <- function() {
             )
           },
           headerStyle = cor_cabecalho_dv("COB_MES_ATUAL"),
+          class       = "dv-col-chave",
           style = function(value, index) {
             meta <- outros$COB_ANO_ANT[index]
             if (!is.na(value) && !is.na(meta) && value <= meta) return(cor_meta())
@@ -2351,7 +2410,7 @@ pag_diario_vendas <- function() {
       resizable  = TRUE,
       wrap       = FALSE,
       pagination = FALSE,
-      height     = "35vh"
+      height     = if (nrow(outros) > 15) "480px" else "auto"
     )
   })
   
@@ -2565,39 +2624,46 @@ pag_diario_vendas <- function() {
         status      = "primary",
         collapsible = FALSE
       ),
-      box(
-        id    = "box_dv_tabela",
-        title = tagList(
-          "Diário de Vendas - Categorias",
-          uiOutput("bt_toggle_tooltip_ui"),
-          uiOutput("bt_meta_ano_ui"),
-          uiOutput("bt_meta_abp_ui")
+      column(12, uiOutput("kpis_dv")),
+      # As três tabelas numa caixa só, em abas (antes eram três caixas empilhadas).
+      tabBox(
+        id          = "abas_dv",
+        width       = 12,
+        side        = "left",
+        collapsible = FALSE,
+        status      = "primary",
+        title       = div(
+          class = "dv-card-toolbar",
+          div(class = "dv-switch-hl", title = "Unidade das tabelas de produto: UMB ou hectolitro",
+              switchInput(
+                inputId  = "familia_modo",
+                label    = NULL,
+                value    = FALSE,
+                onLabel  = "HL",
+                offLabel = "UMB",
+                size     = "mini",
+                inline   = TRUE
+              )),
+          uiOutput("bt_meta_abp_ui", inline = TRUE),
+          uiOutput("bt_meta_ano_ui", inline = TRUE),
+          uiOutput("bt_toggle_tooltip_ui", inline = TRUE)
         ),
-        width = 12,
-        withSpinner(reactableOutput("tabela_dv_novo"), type = 4, color = cores_reativo()[2])
-      ),
-      box(
-        id    = "box_dv_familia",
-        title = fluidRow(
-          column(5, "Diário de Vendas - Produto/Família"),
-          column(7, switchInput(
-            inputId  = "familia_modo",
-            label    = NULL,
-            value    = FALSE,
-            onLabel  = "HL",
-            offLabel = "UMB",
-            size     = "mini",
-            inline   = TRUE
-          ))
+        tabPanel(
+          "Categorias",
+          withSpinner(reactableOutput("tabela_dv_novo"), type = 4, color = cores_reativo()[2]),
+          div(class = "dv-legenda",
+              span(class = "dv-legenda-alerta"), "abaixo do ano anterior ou da meta",
+              span(class = "dv-legenda-chave"), "colunas principais do mês",
+              span(class = "dv-legenda-dica", "passe o mouse com o histórico ativo para ver a evolução"))
         ),
-        width = 12,
-        withSpinner(reactableOutput("tabela_dv_familia"), type = 4, color = cores_reativo()[2])
-      ),
-      box(
-        id    = "box_dv_outros",
-        title = "Diário de Vendas - Outros Volumes",
-        width = 12,
-        withSpinner(reactableOutput("tabela_dv_outros"), type = 4, color = cores_reativo()[2])
+        tabPanel(
+          "Produto / Família",
+          withSpinner(reactableOutput("tabela_dv_familia"), type = 4, color = cores_reativo()[2])
+        ),
+        tabPanel(
+          "Outros volumes",
+          withSpinner(reactableOutput("tabela_dv_outros"), type = 4, color = cores_reativo()[2])
+        )
       )
     )
   )
