@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+<!-- Entradas da Apuracao: a cedula com a seta descendo para ela (desenho proprio, 25/11/2026). -->
+<g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+<rect x="2.5" y="11" width="19" height="10.5" rx="2"/>
+<circle cx="12" cy="16.25" r="2.1"/>
+<path d="M5.8 13.8v4.9M18.2 13.8v4.9"/>
+<path d="M12 1.8v6.6M8.9 5.6l3.1 3.1 3.1-3.1"/>
+</g>
+</svg>

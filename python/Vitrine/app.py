@@ -62,9 +62,10 @@ APPS_PYTHON = [
         "imagem": "apuracao.webp",
         "resumo": "Apuração dos livros fiscais e relatórios.",
         "telas": [
-            "Apuração do ICMS por CFOP e por operação",
-            "Livro fiscal item a item, com filtros e exportação",
-            "Receita bruta e PIS/COFINS mês a mês",
+            "Resumo do ICMS em cartões, com o detalhe de cada um num balão",
+            "Entradas e Saídas por CFOP; o clique no CFOP abre as notas do dia",
+            "Gráficos de 12 meses: ICMS, bonificações, receita bruta, PIS/COFINS e CMV",
+            "Livro fiscal item a item, PIS/COFINS e despesas pagas",
             "Demonstrativo de Faturamento em PDF",
         ],
     },

@@ -1,30 +1,377 @@
 {
   "_o_que_e": "Como a Apuração agrupa os CFOPs (versão do portfólio).",
   "cfops": {
-    "1102": {"resumo": "Compra para comercialização", "operacao": "Compras"},
-    "2102": {"resumo": "Compra para comercialização (interestadual)", "operacao": "Compras"},
-    "1403": {"resumo": "Compra para comercialização com ST", "operacao": "Compras com ST"},
-    "2403": {"resumo": "Compra para comercialização com ST (interestadual)", "operacao": "Compras com ST"},
-    "1202": {"resumo": "Devolução de venda", "operacao": "Devoluções de venda"},
-    "1411": {"resumo": "Devolução de venda com ST", "operacao": "Devoluções de venda"},
-    "2202": {"resumo": "Devolução de venda (interestadual)", "operacao": "Devoluções de venda"},
-    "1556": {"resumo": "Compra de material para uso e consumo", "operacao": "Uso e consumo"},
-    "5102": {"resumo": "Venda de mercadoria adquirida de terceiros", "operacao": "Vendas"},
-    "5405": {"resumo": "Venda de mercadoria com ST", "operacao": "Vendas com ST"},
-    "6102": {"resumo": "Venda de mercadoria (interestadual)", "operacao": "Vendas"},
-    "5910": {"resumo": "Remessa em bonificação", "operacao": "Bonificações"},
-    "5927": {"resumo": "Baixa de estoque por perda", "operacao": "Perdas"},
-    "5949": {"resumo": "Outra saída não especificada", "operacao": "Outras saídas"}
+    "1102": {
+      "resumo": "Compra de Mercadoria para Revenda D.E",
+      "operacao": "Compra para revenda D.E"
+    },
+    "2102": {
+      "resumo": "Compra de Mercadoria para Revenda F.E",
+      "operacao": "Compra para revenda F.E"
+    },
+    "1403": {
+      "resumo": "Compra de Mercadoria para Revenda com ST D.E",
+      "operacao": "Compra para Revenda com ST D.E"
+    },
+    "2403": {
+      "resumo": "Compra de Mercadoria para Revenda com ST F.E",
+      "operacao": "Compra para Revenda com ST F.E"
+    },
+    "1202": {
+      "resumo": "Devolução de venda de terceiros",
+      "operacao": "Devolução de venda de terceiros"
+    },
+    "1411": {
+      "resumo": "Devolução de venda com ST",
+      "operacao": "Devolução de venda com ST"
+    },
+    "2202": {
+      "resumo": "Devolução de venda (interestadual)",
+      "operacao": "Devoluções de venda"
+    },
+    "1556": {
+      "resumo": "Compra de material de consumo D.E",
+      "operacao": "Compra para consumo D.E"
+    },
+    "5102": {
+      "resumo": "Venda de mercadoria",
+      "operacao": "Vendas"
+    },
+    "5405": {
+      "resumo": "Venda com substituição tributária",
+      "operacao": "Vendas"
+    },
+    "6102": {
+      "resumo": "Venda de mercadoria (interestadual)",
+      "operacao": "Vendas"
+    },
+    "5910": {
+      "resumo": "Remessa em bonificação",
+      "operacao": "Remessa Bonificações"
+    },
+    "5927": {
+      "resumo": "Baixa de estoque por perda ou roubo",
+      "operacao": "Baixa Perda ou Roubo"
+    },
+    "5949": {
+      "resumo": "Outra saída não especificada D.E",
+      "operacao": "Outras saídas D.E"
+    },
+    "1152": {
+      "resumo": "Transferência para comercialização",
+      "operacao": "Transferência para comercialização"
+    },
+    "1409": {
+      "resumo": "Transferência para comercialização S.T",
+      "operacao": "Transferência para comercialização S.T"
+    },
+    "1415": {
+      "resumo": "Retorno de mercadoria para venda fora do estabelecimento com ST",
+      "operacao": "Retorno de mercadoria"
+    },
+    "1551": {
+      "resumo": "Compra de bem para o ativo",
+      "operacao": "Compra - imobilizado"
+    },
+    "1552": {
+      "resumo": "Transferência de Imobilizado",
+      "operacao": "Transferência de Imobilizado"
+    },
+    "1553": {
+      "resumo": "Devolução de venda de bem do ativo",
+      "operacao": "Devolução de venda de Imobilizado"
+    },
+    "1653": {
+      "resumo": "Compra de combustível ou lubrificante D.E",
+      "operacao": "Compra de Combustível D.E"
+    },
+    "1906": {
+      "resumo": "Retorno de mercadoria para depósito fechado",
+      "operacao": "Retorno de mercadoria para depósito fechado"
+    },
+    "1907": {
+      "resumo": "Retorno simbólico de mercadoria para depósito fechado",
+      "operacao": "Retorno simbólico de mercadoria para depósito fechado"
+    },
+    "1908": {
+      "resumo": "Entrada de bem por comodato",
+      "operacao": "Entrada de Comodato D.E"
+    },
+    "1909": {
+      "resumo": "Retorno de bem por comodato",
+      "operacao": "Retorno comodato D.E"
+    },
+    "1910": {
+      "resumo": "Entrada de bonificação ou brinde D.E",
+      "operacao": "Entrada Bonificações D.E"
+    },
+    "1916": {
+      "resumo": "Retorno de mercadoria para conserto",
+      "operacao": "Retorno de mercadoria para conserto"
+    },
+    "1917": {
+      "resumo": "Entrada de mercadoria em consignação",
+      "operacao": "Entrada de consignação"
+    },
+    "1918": {
+      "resumo": "Devolução de mercadoria em consignação D.E",
+      "operacao": "Devolução consignação D.E"
+    },
+    "1920": {
+      "resumo": "Entrada de vasilhame D.E",
+      "operacao": "Entrada de vasilhame D.E"
+    },
+    "1921": {
+      "resumo": "Retorno de vasilhame D.E",
+      "operacao": "Retorno de vasilhame D.E"
+    },
+    "1922": {
+      "resumo": "Simples faturamento por compra futura D.E",
+      "operacao": "simples faturamento por compra futura D.E"
+    },
+    "1923": {
+      "resumo": "Entrada de mercadoria em venda à ordem D.E",
+      "operacao": "Entrada de mercadoria em venda a ordem D.E"
+    },
+    "1949": {
+      "resumo": "Outra entrada não especificada D.E",
+      "operacao": "Outras entradas D.E"
+    },
+    "2152": {
+      "resumo": "Transferência para comercialização F.E",
+      "operacao": "Transferência para comercialização F.E"
+    },
+    "2551": {
+      "resumo": "Compra de bem para o ativo",
+      "operacao": "Compra - imobilizado"
+    },
+    "2552": {
+      "resumo": "Transferência de bem do ativo",
+      "operacao": "Transferência de bem do ativo"
+    },
+    "2556": {
+      "resumo": "Compra de material de consumo F.E",
+      "operacao": "Compra para consumo F.E"
+    },
+    "2653": {
+      "resumo": "Compra de combustível ou lubrificante F.E",
+      "operacao": "Compra de Combustível F.E"
+    },
+    "2908": {
+      "resumo": "Entrada de bem por comodato",
+      "operacao": "Entrada de Comodato F.E"
+    },
+    "2909": {
+      "resumo": "Retorno de Comodato",
+      "operacao": "Retorno de Comodato"
+    },
+    "2910": {
+      "resumo": "Entrada de bonificação ou brinde F.E",
+      "operacao": "Entrada Bonificações F.E"
+    },
+    "2915": {
+      "resumo": "Entrada de mercadoria ou bem recebido para conserto ou reparo",
+      "operacao": "Bem recebido para conserto ou reparo"
+    },
+    "2916": {
+      "resumo": "Retorno de mercadoria para conserto",
+      "operacao": "Retorno mercadoria para conserto"
+    },
+    "2920": {
+      "resumo": "Entrada de vasilhame F.E",
+      "operacao": "Entrada de vasilhame F.E"
+    },
+    "2921": {
+      "resumo": "Retorno de vasilhame F.E",
+      "operacao": "Retorno de vasilhame F.E"
+    },
+    "2922": {
+      "resumo": "Simples faturamento por compra futura F.E",
+      "operacao": "Simples faturamento por compra futura F.E"
+    },
+    "2923": {
+      "resumo": "Entrada de mercadoria em venda à ordem F.E",
+      "operacao": "Entrada de mercadoria em venda a ordem F.E"
+    },
+    "2949": {
+      "resumo": "Outra entrada não especificada F.E",
+      "operacao": "Outras entradas F.E"
+    },
+    "5152": {
+      "resumo": "Transferência de mercadoria D.E",
+      "operacao": "Transferência de mercadoria D.E"
+    },
+    "5202": {
+      "resumo": "Devolução de compra para comercialização",
+      "operacao": "Devolução de compra"
+    },
+    "5209": {
+      "resumo": "Devolução de mercadoria recebida",
+      "operacao": "Devolução de mercadoria recebida"
+    },
+    "5409": {
+      "resumo": "Transferência de mercadoria S.T",
+      "operacao": "Transferência de mercadoria S.T"
+    },
+    "5411": {
+      "resumo": "Devolução de compra com substituição tributária",
+      "operacao": "Devolução de compra"
+    },
+    "5551": {
+      "resumo": "Venda de bem do ativo imobilizado D.E",
+      "operacao": "Venda de imobilizado D.E"
+    },
+    "5552": {
+      "resumo": "Transferência de bem do ativo imobilizado",
+      "operacao": "Transferência de Imobilizado"
+    },
+    "5556": {
+      "resumo": "Devolução de compra de material",
+      "operacao": "Devolução de compra imobilizado"
+    },
+    "5905": {
+      "resumo": "Remessa para depósito fechado ou armazém geral",
+      "operacao": "Remessa para depósito fechado"
+    },
+    "5908": {
+      "resumo": "Remessa de bem por comodato D.E",
+      "operacao": "Remessa de comodato D.E"
+    },
+    "5909": {
+      "resumo": "Retorno de bem por comodato D.E",
+      "operacao": "Retorno de Comodato D.E"
+    },
+    "5911": {
+      "resumo": "Remessa de amostra grátis",
+      "operacao": "Remessa de amostra grátis"
+    },
+    "5917": {
+      "resumo": "Remessa em consignação",
+      "operacao": "Remessa consignação D.E"
+    },
+    "5918": {
+      "resumo": "Devolução de mercadoria em consignação F.E",
+      "operacao": "Devolução consignação F.E"
+    },
+    "5920": {
+      "resumo": "Remessa de vasilhame",
+      "operacao": "Remessa de vasilhame D.E"
+    },
+    "5921": {
+      "resumo": "Devolução de vasilhame D.E",
+      "operacao": "Devolução de vasilhame D.E"
+    },
+    "6152": {
+      "resumo": "Transferência de mercadoria F.E",
+      "operacao": "Transferência de mercadoria F.E"
+    },
+    "6404": {
+      "resumo": "Venda Mercadoria S.T",
+      "operacao": "Venda Mercadoria S.T"
+    },
+    "6411": {
+      "resumo": "Devolução de compra para comercialização",
+      "operacao": "Devolução de compra F.E"
+    },
+    "6413": {
+      "resumo": "Devolução de mercadoria destinada ao uso ou consumo",
+      "operacao": "Devolução de mercadoria"
+    },
+    "6551": {
+      "resumo": "Venda de bem do ativo imobilizado F.E",
+      "operacao": "Venda de imobilizado F.E"
+    },
+    "6556": {
+      "resumo": "Devolução de compra de material",
+      "operacao": "Devolução de compra de material"
+    },
+    "6901": {
+      "resumo": "Remessa para industrialização",
+      "operacao": "Remessa para industrialização"
+    },
+    "6908": {
+      "resumo": "Remessa de bem por comodato F.E",
+      "operacao": "Remessa de comodato F.E"
+    },
+    "6909": {
+      "resumo": "Retorno de bem por comodato F.E",
+      "operacao": "Retorno de comodato F.E"
+    },
+    "6911": {
+      "resumo": "Remessa de amostra",
+      "operacao": "Remessa de amostra"
+    },
+    "6915": {
+      "resumo": "Remessa para conserto",
+      "operacao": "Remessa para conserto"
+    },
+    "6917": {
+      "resumo": "Remessa em consignação",
+      "operacao": "Remessa em consignação"
+    },
+    "6920": {
+      "resumo": "Remessa de vasilhame",
+      "operacao": "Remessa de vasilhame F.E"
+    },
+    "6921": {
+      "resumo": "Devolução de vasilhame F.E",
+      "operacao": "Devolução de vasilhame F.E"
+    },
+    "6949": {
+      "resumo": "Outra saída não especificada F.E",
+      "operacao": "Outras saídas F.E"
+    }
   },
   "receita_bruta": {
-    "vendas": ["5102", "5405", "6102"],
-    "devolucao_de_compra": ["5202", "5411", "6202", "6411"],
-    "devolucao_de_venda": ["1202", "1411", "2202"],
-    "compras": ["1102", "1403", "2102", "2403"],
-    "combustiveis": ["1653"]
+    "vendas": [
+      "5102",
+      "5405",
+      "6102"
+    ],
+    "devolucao_de_compra": [
+      "5202",
+      "5411",
+      "6202",
+      "6411"
+    ],
+    "devolucao_de_venda": [
+      "1202",
+      "1411",
+      "2202"
+    ],
+    "compras": [
+      "1102",
+      "1403",
+      "2102",
+      "2403"
+    ],
+    "combustiveis": [
+      "1653"
+    ]
   },
-  "bonificacoes": {"entrada": ["1910", "2910"], "saida": ["5910", "6910"]},
-  "deducoes_por_despesa": {"alugueis_pj": [], "energia_eletrica": []},
-  "aliquotas_dos_outros_creditos": {"pis": 1.65, "cofins": 7.6},
-  "antecipado_por_despesa": []
+  "bonificacoes": {
+    "entrada": [
+      "1910",
+      "2910"
+    ],
+    "saida": [
+      "5910",
+      "6910"
+    ]
+  },
+  "deducoes_por_despesa": {
+    "alugueis_pj": [
+      53
+    ],
+    "energia_eletrica": [
+      29
+    ]
+  },
+  "aliquotas_dos_outros_creditos": {
+    "pis": 1.65,
+    "cofins": 7.6
+  },
+  "antecipado_por_despesa": [
+    94
+  ]
 }

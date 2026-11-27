@@ -13,6 +13,11 @@ PASTA = Path(__file__).resolve().parents[1] / "data" / "bd_fiscal"
 _lidos: dict[str, tuple[int, pl.DataFrame]] = {}
 
 
+def pasta_de(nome: str) -> Path:
+    """No original, a tabela fica na pasta deste app ou na do Fiscal; no portfólio, tudo na deste."""
+    return PASTA
+
+
 def momento(nome: str) -> int:
     try:
         return (PASTA / f"{nome}.parquet").stat().st_mtime_ns

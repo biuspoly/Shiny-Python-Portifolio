@@ -1,25 +1,50 @@
+/* Fonte -- mesma fonte padrao que o shiny/R usa (shinydashboard::
+   dashboardPage, tema AdminLTE 2): "Source Sans Pro", com fallback pro
+   stack de fontes de sistema. Pedido do usuario pra deixar com a mesma
+   cara do R nos 4 apps (ver CLAUDE.md, "mudanca geral vale pros quatro
+   apps") -- mesmo bloco replicado em Acompanhamento Comercial/TI/
+   Assessment. */
 body {
   font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
 }
 
+/* A cobertura da abertura ("body:not(.pronto)::before") mudou de arquivo:
+   agora mora em www/css/inicial.css, que o app.py serve no <head>. Aqui
+   ela so passaria a valer depois de o navegador ler estes mais de 100 KB
+   -- tarde demais pra cobrir o instante em que a pagina crua chegava a
+   aparecer. O arquivo novo explica o porque de so ela ter mudado. */
+
+/* Fundo: o tom mais claro da paleta, sem imagem. O body fica transparente porque o
+   --bs-body-bg do app.py o deixaria opaco. */
 body {
   background-color: var(--cor-fundo, #F6F6FB) !important;
 }
 
+/* !important aqui e necessario: o proprio bslib tem uma regra
+   ".bslib-sidebar-layout>.sidebar" com mais especificidade (2 classes)
+   que uma simples ".sidebar" (1 classe), entao sem forcar, a cor dele
+   sempre venceria a nossa, independente da ordem de carregamento do CSS */
 .bslib-sidebar-layout .sidebar {
   background-color: var(--cor-sidebar) !important;
   color: var(--cor-texto-sidebar) !important;
   box-shadow: 1px 0 4px rgba(0, 0, 0, 0.6);
   border: none !important;
-
+  /* Barra de rolagem discreta (Firefox): fina e sem "trilho" visivel,
+     pra parecer parte do sidebar em vez da barra cinza padrao do navegador */
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 
+/* O bslib adiciona uma margem extra embaixo do accordion (~1rem), alem
+   do "gap" que ja configuramos no sidebar -- por isso o espaco entre o
+   accordion e o proximo botao ficava maior que entre os outros itens.
+   Zerando aqui pra usar so o gap, igual o resto do menu */
 .sidebar .accordion {
   margin-bottom: 0 !important;
 }
 
+/* Mesma ideia acima, mas pro Chrome/Edge (Firefox usa scrollbar-width/
+   scrollbar-color, que ja definimos junto com o resto do .sidebar) */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
@@ -37,6 +62,13 @@ body {
   background-color: rgba(255, 255, 255, 0.4);
 }
 
+/* Sombra do cabecalho: pra baixo, ja que ele fica no topo da tela.
+   border:none remove a linha escura que o tema desenhava embaixo dele.
+   position+z-index garantem que ele desenhe por cima do sidebar (o
+   .bslib-sidebar-layout cria seu proprio "grupo de camadas" por causa do
+   container-type que o bslib usa, entao sem isso o sidebar as vezes
+   aparecia por cima da sombra do cabecalho, na regiao onde os dois se
+   encontram) */
 .navbar.navbar-static-top {
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
   border: none !important;
@@ -44,29 +76,60 @@ body {
   z-index: 1200;
 }
 
+/* Cabecalho do app (logo + mini value box "Atualizado em") -- o
+   page_sidebar so aceita um unico elemento em "title=", entao os dois
+   ficam dentro do mesmo container, empurrados pras pontas opostas
+   (logo na esquerda, value box na direita). O .navbar-brand do
+   Bootstrap normalmente centraliza o conteudo verticalmente mas nao
+   estica na largura toda -- w-100 forca isso aqui. */
 .navbar-brand:has(.cabecalho-app) {
   width: 100%;
 }
 .cabecalho-app {
   align-items: center;
   display: flex;
-
+  /* "flex-start", nao "space-between": o cabecalho tinha DOIS filhos (marca |
+     controles) e o space-between resolvia; com o terceiro (o "Atualizado em")
+     ele passou a espalhar os tres e o do meio caiu no CENTRO da faixa. Quem
+     empurra pra direita agora e' o `margin-left: auto` do bloco de controles --
+     e com ele o space-between so' atrapalharia. */
   justify-content: flex-start;
   gap: 12px;
   width: 100%;
 }
+/* Os controles do Diário (importadores + Histórico) ficam À DIREITA, colados no
+   "Atualizado em" -- não centralizados.
 
+   O `justify-content: space-between` funcionava enquanto o cabeçalho tinha DOIS
+   filhos (marca | controles). Com o terceiro (o cartão "Atualizado em" e o
+   botão de atualizar), o do meio passou a cair no centro da faixa, e o usuário
+   apontou em 21/09/2026: *"não quero esses botões centralizados"*. O
+   `margin-left: auto` empurra o bloco do meio pro fim, e o "Atualizado em"
+   fica logo depois dele. */
+/* Tudo o que nao e' a marca fica num invólucro so' (app.py), empurrado pro fim
+   da faixa. Tentar empurrar os blocos soltos com `margin-left: auto` nao
+   funcionou: o `.tab-content` do navset ocupa a largura que sobra, e aí nao ha'
+   folga pra margem automatica consumir. */
 .cabecalho-app-direita {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-left: auto;
 }
-
+/* O `<ul class="nav nav-hidden">` do navset_hidden nao tem largura, mas ocupa
+   lugar no flex. */
 .cabecalho-app-direita > .nav-hidden {
   display: none;
 }
-
+/* Revenda sem logo (ASTI LOCADORA) -- nome escrito no lugar da imagem, ver
+   app.py::marca_cabecalho. Mesma aparencia do txt_brand() do R (branco,
+   negrito, numa linha so). */
+/* Logo de uma das empresas um pouco maior (pedido do usuario, 2026-08-06: "pode deixar maior
+   pra ser um pouco melhor de visualizar"). Ela e' a unica QUADRADA (272x272; as
+   outras sao retangulares largas, ~1200x300), entao com a mesma altura de 40px
+   ocupava 40x40 -- um quarto da area da logo das outras empresas (149x40)
+   (174x40), e por isso parecia pequena. A margem negativa consome parte da folga
+   de 16px da barra, pra os 56px de altura nao empurrarem o cabecalho pra baixo. */
 .cabecalho-app img[src*="pna_"] {
   height: 56px !important;
   margin-top: -8px;
@@ -78,31 +141,62 @@ body {
   white-space: nowrap;
 }
 
+/* O Bootstrap sempre preenche o corpo aberto do accordion com um
+   espacamento lateral proprio (uns 20px de cada lado), independente do
+   padding do sidebar -- era isso que fazia os botoes parecerem mais
+   estreitos que o sidebar, com um respiro visivel dos dois lados */
 .sidebar .accordion-body {
   padding-left: 0;
   padding-right: 0;
   padding-bottom: 0;
 }
 
+/* Botoes dentro do accordion (Geral/Entrada/Saida, Detalhes/Caixas/...)
+   ficam empilhados sem nenhum espaco entre um e outro (".accordion-body"
+   e um flex-column com "gap: normal" = 0) -- a distancia que sobra vem
+   so do padding vertical de cada botao (0.375rem padrao do Bootstrap
+   ".btn"), encolhido aqui pra deixar a lista mais compacta. */
 .sidebar .accordion-body .action-button {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
 }
 
+/* O cabecalho do accordion (".accordion-button") usa um padding lateral
+   proprio do Bootstrap (1.25rem), maior que o dos botoes normais
+   (0.75rem) -- por isso "Diario de Vendas" comecava mais pra direita
+   que os outros botoes do menu, e os itens de dentro do accordion
+   (que usam o padding normal) pareciam desalinhados com o cabecalho
+   do proprio grupo. Igualando os dois valores */
 .sidebar .accordion-button {
   padding-left: 0.75rem !important;
   padding-right: 0.75rem !important;
 }
 
+/* O ".accordion" em si (nao o botao) tem uma margem negativa embutida
+   pelo bslib (pensada pra ele esticar ate a borda quando o sidebar tem
+   padding lateral) -- ja tinhamos zerado isso so pro modo mini; no
+   sidebar sempre aberto essa margem negativa continuava empurrando o
+   accordion inteiro pra esquerda, desalinhado com os outros botoes */
 .sidebar .accordion {
   margin-left: 0 !important;
   margin-right: 0 !important;
 }
 
+/* A seta do accordion (o "v" que indica abrir/fechar) e uma imagem SVG
+   com a cor gravada dentro dela mesma (nao e texto, entao "color:" nao
+   funciona nela). O filtro abaixo forca ela a ficar branca, no lugar da
+   cor escura original do tema */
 .sidebar .accordion-button::after {
   filter: brightness(0) invert(1);
 }
-
+/* Botao "<"/">" que abre/fecha o sidebar inteiro (".collapse-toggle",
+   nativo do bslib) -- mesmo problema da seta do accordion acima:
+   medido com Playwright, o icone (".bi-chevron-left", <svg> do
+   bootstrap-icons) renderizava ESCURO (#1a1a1a), baixo contraste
+   contra o fundo colorido/escuro do sidebar. Mesma tecnica (filter),
+   aplicada aqui tambem -- comportamento GERAL do app (ver CLAUDE.md
+   "mudanca geral vale pros varios apps"), replicado em todos os apps
+   que tem este mesmo sidebar colapsavel. */
 .collapse-toggle svg {
   filter: brightness(0) invert(1);
 }
@@ -117,11 +211,31 @@ body {
   color: var(--cor-texto-sidebar) !important;
 }
 
+/* -- Os icones do menu sao os .svg do proprio app de origem ---------------
+   Eles foram desenhados pra uma sidebar CLARA e sao pretos; a nossa e' roxo
+   escuro, entao eles sumiriam no fundo. `brightness(0) invert(1)` pinta o
+   desenho inteiro de branco -- a mesma cor do texto do botao ao lado --, e vale
+   pra qualquer arquivo novo sem precisar editar SVG.
+
+   `inline-block` + `vertical-align`, e nao `display:block`: em bloco o icone
+   quebra a linha e cai ACIMA do rotulo, que foi o que aconteceu na primeira
+   tentativa. Inline puro tambem nao serve -- <img> inline se apoia na linha de
+   base e o descendente da fonte o empurra uns 3px pra baixo (a mesma armadilha
+   que cortava o logo dos cartoes de banco). O -0.125em e' a convencao do
+   proprio Font Awesome, que e' com quem estes icones dividem o menu. */
+
+/* O Bootstrap centraliza o texto do botao por padrao (".btn" tem
+   "text-align:center"). Isso so deve valer com o sidebar aberto de
+   verdade -- no modo mini (so icone), o texto some e queremos o icone
+   centralizado mesmo, entao essa regra e sobrescrita de volta pra
+   "center" nas regras do modo mini, mais abaixo no arquivo */
 .sidebar .action-button,
 .sidebar .accordion-button {
   text-align: left;
 }
 
+/* Sem isso, o botao (fundo cinza-escuro do tema) ainda apareceria com a
+   cor do tema, mesmo com o texto ja corrigido acima */
 .sidebar .action-button,
 .sidebar .accordion-button {
   background-color: transparent !important;
@@ -130,6 +244,18 @@ body {
   box-shadow: none !important;
 }
 
+/* Hover e clique (tanto no botao quanto no cabecalho do accordion) usam
+   a cor de destaque, pra dar feedback visual de interacao. O
+   box-shadow aqui sobrescreve o "box-shadow: none" da regra anterior
+   (esta vem depois no arquivo, entao ganha).
+   Importante: o destaque do cabecalho do accordion NAO depende mais de
+   ":not(.collapsed)" (ou seja, NAO depende de estar aberto/fechado) --
+   antes, como o accordion de uma das revendas comeca aberto e so fecha se o
+   usuario clicar de novo nele, o cabecalho ficava destacado pra sempre,
+   mesmo depois de navegar pra outro botao do menu. Agora o destaque do
+   cabecalho segue a mesma classe ".selecionado" dos botoes normais,
+   controlada pelo JS (www/js/sidebar.js) -- so fica destacado se a
+   pagina atual for uma das de dentro desse grupo */
 .sidebar .accordion-button.selecionado,
 .sidebar .accordion-button:hover,
 .sidebar .accordion-button:active,
@@ -141,6 +267,8 @@ body {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.5) !important;
 }
 
+/* Cabecalho (header) e accordion usam a mesma cor de fundo do sidebar,
+   pra parecerem parte do mesmo bloco visual */
 .navbar.navbar-static-top,
 .sidebar .accordion-button,
 .sidebar .accordion-item {
@@ -148,17 +276,66 @@ body {
   color: var(--cor-texto-sidebar);
 }
 
+/* Tema flatly (claro) desenha uma borda propria no accordion
+   (var(--bs-accordion-border-color), quase branca) -- invisivel no
+   tema escuro anterior (superhero), mas aparecia como um contorno
+   branco em volta do accordion do sidebar depois da troca pra flatly.
+   "border-color" (nao "border: none") pra nao mexer na largura/
+   espacamento que o Bootstrap ja calcula com base na borda. */
 .sidebar .accordion-item {
   border-color: transparent !important;
 }
 
-.sidebar .accordion-button:not(.collapsed) {
+/* Padrao AdminLTE (a pedido do usuario): cabecalho do accordion (o item
+   "principal" -- ex: "Devoluções", "Comodatos") ganha um contorno de
+   sombra quando o grupo dele esta ABERTO, mesmo antes de clicar em
+   algum item de dentro -- sinal visual de "isto esta expandido",
+   independente de qual pagina esta selecionada no momento (a classe
+   ".selecionado" acima já destaca o cabecalho quando a pagina atual é
+   uma daquelas dentro do grupo; esta regra é sobre o estado
+   aberto/fechado em si, não sobre qual página está ativa).
 
+   Achado testando com o usuário, 4 rodadas: 1ª versão usava "inset"
+   (sombra pra DENTRO) no ".accordion-item" (cabeçalho + itens juntos)
+   -- mas o cabeçalho (".accordion-button") tem fundo opaco próprio,
+   desenhado por cima, então a sombra "inset" ficava escondida atrás
+   dele, só aparecendo como uma linha estranha bem na junção entre
+   cabeçalho e itens, não como contorno nenhum. 2ª versão trocou pra
+   sombra pra FORA (sem "inset", ainda preta) ainda no ".accordion-item"
+   inteiro. 3ª versão: usuário esclareceu que só queria a sombra no item
+   PRINCIPAL (o cabeçalho clicável em si, tipo "Devoluções"), não
+   espalhada por cima dos itens de dentro do grupo também ("eu falei do
+   principal em si") -- selector trocado de ".accordion-item" pra
+   ".accordion-button" diretamente (só o cabeçalho); nessa mesma rodada
+   a sombra tinha sido trocada pra clara/branca (achando que preta não
+   teria contraste nenhum contra o fundo escuro do sidebar), mas o
+   usuário pediu de volta a sombra ESCURA mesmo ("coloque a sombra
+   escura mesmo") -- opacidade mais alta que a 2ª tentativa compensa o
+   fundo escuro por trás. */
+.sidebar .accordion-button:not(.collapsed) {
+  /* !important necessario -- ".sidebar .action-button, .sidebar
+     .accordion-button { box-shadow: none !important }" mais acima
+     (zera a sombra padrao do Bootstrap) venceria sem isso. */
   box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.7) !important;
   position: relative;
   z-index: 1;
 }
 
+/* overflow-x:hidden (nao overflow:hidden) e proposital -- overflow:hidden
+   sozinho tambem cortava a rolagem vertical, escondendo os botoes de
+   baixo quando a tela e pequena e o menu nao cabe inteiro na altura.
+   "z-index" com atraso de 0.2s (mesma duracao do "width" abaixo) --
+   sem isso, tirar o mouse do sidebar expandido (".mini-sidebar
+   .sidebar:hover" mais abaixo) fazia o z-index alto voltar ao normal
+   NA HORA, enquanto o "width" ainda estava animando de volta pro
+   tamanho mini -- nessa fresta de 0.2s o sidebar (ainda largo na tela)
+   ficava atras do card ao lado por baixo dele. Com o atraso, o
+   z-index so volta ao normal quando a largura ja terminou de encolher
+   de verdade. IMPORTANTE: precisa de um numero de verdade aqui (nao
+   "z-index: auto", o padrao) -- o navegador so respeita o atraso de
+   "transition" entre dois numeros; testado direto, indo pra "auto" o
+   atraso e ignorado e o valor troca na hora, do mesmo jeito que sem
+   essa regra. */
 .bslib-sidebar-layout .sidebar {
   z-index: 1;
   transition: width 0.2s ease, z-index 0s ease 0.2s;
@@ -187,6 +364,15 @@ body {
   display: none;
 }
 
+/* Indicador de "tem itens" nos accordions fechados, no sidebar
+   colapsado (so icone) -- sem isso, um accordion fechado (Frota/
+   Devoluções/Romaneios/Comodatos) ficava visualmente identico a um
+   botao comum, sem nenhuma pista de que esconde sub-itens. So aparece
+   com o accordion FECHADO (".collapsed") -- some sozinho ao abrir,
+   mesma logica do chevron normal do Bootstrap (que fica escondido no
+   modo mini, regra logo acima). "background-image: none" tira o SVG
+   do proprio Bootstrap (o mesmo "::after" que a regra acima esconde),
+   sem isso ele ficaria atras do "›" escrito abaixo. */
 .bslib-sidebar-layout.mini-sidebar .accordion-button.collapsed::after {
   display: block;
   position: absolute;
@@ -208,11 +394,22 @@ body {
   min-width: 4.5rem !important;
 }
 
+/* Escopado a ".sidebar" -- sem isso, esta regra esconderia o texto de
+   qualquer input_action_button com rotulo (".action-label" existe em
+   qualquer botao com texto, dentro ou fora do sidebar), nao so os do
+   menu. Bug latente encontrado no Acompanhamento Comercial (botoes
+   "Ativar histórico"/"Meta ABP", fora do sidebar) -- corrigido aqui
+   tambem por seguranca, mesmo sem nenhum botao de main-content afetado
+   neste app ainda (ver CLAUDE.md, "mudanca geral vale pros quatro apps"). */
 .bslib-sidebar-layout.mini-sidebar .sidebar .action-label,
 .bslib-sidebar-layout.mini-sidebar .sidebar .accordion-title {
   display: none;
 }
 
+/* Mesmo escopo, pelo mesmo motivo -- e aqui a armadilha chegou a
+   acontecer: sem ".sidebar", com o menu no modo mini este padding valia
+   pra qualquer botao da pagina. O "Documentos" de Custos Ticketlog ficava
+   20x55px em vez de 40x39 (2026-08-25). */
 .bslib-sidebar-layout.mini-sidebar .sidebar .action-button,
 .bslib-sidebar-layout.mini-sidebar .sidebar .accordion-button {
   justify-content: center;
@@ -237,6 +434,11 @@ body {
   display: none !important;
 }
 
+/* Hover no mini-sidebar: expande por cima do conteudo, sem mudar o grid (continua "fechado") */
+
+/* A largura aqui (200px) deve ser igual ao "width" que usamos no
+   ui.sidebar(...) no app.py, senao o sidebar aberto por hover fica com
+   uma largura diferente do sidebar aberto "de verdade" */
 .bslib-sidebar-layout.mini-sidebar .sidebar:hover {
   position: absolute;
   top: 0;
@@ -244,7 +446,9 @@ body {
   height: 100%;
   width: 200px !important;
   z-index: 1050;
-
+  /* Sem atraso pra ENTRAR no hover (precisa ficar na frente na hora) --
+     o atraso de 0.2s (ver comentario na regra base ".sidebar" acima) so
+     deve valer pra SAIR do hover. */
   transition: width 0.2s ease, z-index 0s;
   box-shadow: 2px 0 12px rgba(0, 0, 0, 0.35);
 }
@@ -263,6 +467,12 @@ body {
   flex-shrink: 0;
 }
 
+/* No modo mini (sem hover), zeramos o padding horizontal do botao
+   (regra la em cima, "padding: 0.75rem 0") pra caber so o icone. Aqui,
+   com o mouse em cima, o sidebar volta a largura normal, entao o botao
+   tambem precisa voltar a ter o padding horizontal padrao do Bootstrap
+   (0.75rem) -- senao o conteudo do botao fica mais apertado do que
+   fica quando o sidebar esta aberto de verdade */
 .bslib-sidebar-layout.mini-sidebar .sidebar:hover .action-button,
 .bslib-sidebar-layout.mini-sidebar .sidebar:hover .accordion-button {
   justify-content: flex-start !important;
@@ -283,6 +493,18 @@ body {
   white-space: nowrap;
 }
 
+/* As tabelas itables (Frotas/Devolucoes) tem fundo branco, mas o tema
+   shinyswatch "superhero" forca --bs-body-color branco pra caber no
+   resto do app (fundo escuro) -- sem isso, cabecalho e celulas ficam
+   com texto branco sobre fundo branco, ilegivel (so aparece o que tem
+   cor propria, como as setas de tendencia e o realce de placa/linha).
+   Fonte um pouco menor, igual ao "table.dataTable { font-size: 11px }"
+   do style_geral.css do app em R. Nowrap evita que valores (ex: "R$
+   1.234,56") quebrem em duas linhas -- junto com scrollX (ver
+   Dados/tabela_itables.py), cada coluna cresce pro tamanho do proprio
+   conteudo em vez de espremer tudo; se nao couber tudo na largura do
+   card, a tabela ganha sua propria rolagem lateral (contida, sem
+   estourar o layout da pagina). */
 table.dataTable {
   color: var(--tabela-texto-escuro, #1a1a1a);
   font-size: 11px;
@@ -292,24 +514,71 @@ table.dataTable th {
   white-space: nowrap;
 }
 
+/* A tabela consolidada fica ao lado dos 4 cards de classe de veiculo
+   (ui.layout_columns) -- por padrao o CSS Grid estica as duas colunas
+   pra mesma altura (align-items:stretch), mas so a tabela tem conteudo
+   suficiente pra preencher isso (rola por dentro); os cards ficam com
+   espaco em branco sobrando embaixo. "align-items: start" desliga esse
+   esticamento -- cada coluna fica do tamanho do seu proprio conteudo,
+   e "altura dos 4 cards" (Dados/tabela_itables.py, scrollY="290px" em
+   construir_consolidada) e ajustada pra bater com a altura real deles. */
+
+/* Cabecalho das tabelas com a cor de destaque do app, texto branco em
+   negrito e centralizado -- igual ao "table.dataTable thead th" do CSS
+   do app em R (style_geral.css). Usa a variavel --cor-destaque (vem de
+   core/cores.py::DESTAQUE) em vez de um hex solto -- estava com
+   "#255f91" hardcoded aqui, diferente do "#3874AB" do resto do tema. */
 table.dataTable thead th {
   background-color: var(--cor-destaque, #3874AB);
   color: #fff;
   font-weight: bold;
   text-align: center;
 }
-
+/* Mesma regra, pro render.data_frame nativo do Shiny (ver CLAUDE.md
+   "Tabelas usam @render.data_frame") -- o componente ("<shiny-data-
+   frame>") tem suas proprias variaveis CSS de tema, mas elas so valem
+   pro modo "grid" (selecao tipo planilha); no modo "table" (o que
+   pedimos, DataTable(...)) o cabecalho fica sem cor nenhuma por
+   padrao, so a borda inferior. Selector global (nao escopado a um
+   modulo) de proposito -- toda tabela do app deve ficar igual, nao
+   soo o time de por-classe (ver "Regra fixa: padrão visual/estrutural/
+   UX único entre os quatro apps" no CLAUDE.md). */
 shiny-data-frame table thead th {
   background-color: var(--cor-destaque, #3874AB) !important;
   color: #fff !important;
   font-weight: bold;
   text-align: center !important;
 }
-
+/* z-index explicito no CABECALHO (o "thead", que e' o elemento "sticky" -- no
+   "th" nao adianta, porque ali o valor so' vale dentro da camada do proprio
+   cabecalho). "sticky" ja' cria camada propria, mas com z-index "auto" ela
+   empata com qualquer celula que tambem tenha criado a sua -- e nesse empate
+   ganha quem vem DEPOIS no HTML, que e' sempre a celula. Qualquer "opacity"
+   menor que 1, "filter" ou "transform" numa celula cria essa camada: e' o caso
+   do icone apagado de "Reenviar Email" e, ao passar o mouse, do proprio efeito
+   de aumentar do botao -- os dois passavam POR CIMA do cabecalho ao rolar
+   (achado pelo usuario). Com um valor explicito aqui o cabecalho ganha de
+   todos, inclusive dos que vierem depois. */
 shiny-data-frame table thead {
   z-index: 3;
 }
+/* O "!important" acima em "text-align" (nao so em background-color/
+   color) foi um achado deste ajuste: a celula do cabecalho ("th")
+   embrulha o texto num "<div>" proprio do componente, e o CSS interno
+   do proprio Shiny (carregado DEPOIS do style.css deste app) tambem
+   fixa o alinhamento desse "<div>" -- sem "!important", nossa regra
+   perdia o empate de especificidade/ordem, e o cabecalho continuava
+   alinhado a esquerda na pratica, apesar do comentario acima dizer que
+   já vinha centralizado (nunca conferido de verdade contra o navegador
+   até agora).
 
+   Regra fixa (a pedido do usuario): cabecalho e valores de TODA tabela
+   do app ficam centralizados, exceto a 1a coluna (geralmente um
+   identificador/nome -- mais legivel alinhada a esquerda), tanto no
+   cabecalho quanto no corpo. Selector global de proposito, mesmo
+   motivo do "shiny-data-frame table thead th" acima -- vale pras
+   tabelas de Frotas/Romaneios/Devolucoes/Comodatos, nao so uma pagina.
+   "!important" em tudo abaixo, mesmo motivo do paragrafo acima. */
 shiny-data-frame table tbody td {
   text-align: center !important;
 }
@@ -318,6 +587,17 @@ shiny-data-frame table tbody td:first-child {
   text-align: left !important;
 }
 
+/* Regra fixa (a pedido do usuario, "as tabelas tem que seguir um
+   padrao"): fonte um pouco menor, cantos arredondados, sem quebra de
+   linha nas celulas do corpo (o cabecalho pode quebrar se precisar, o
+   texto costuma ser curto). Selector global, mesmo motivo das regras
+   de cabecalho/centralizacao acima -- vale pra toda tabela do app.
+   Achado (mesma categoria do bug de text-align): boa parte das tabelas
+   fora de Devolucoes vinham SEM nenhum desses estilos de verdade --
+   cada modulo (Frotas/Romaneios/Comodatos) tinha uma copia dessas
+   regras escrita pra ".dataTable" (classe do itables/DataTables, ver
+   CLAUDE.md "Tabelas usam @render.data_frame") -- CSS morto desde a
+   troca pra render.DataTable, nunca alcancava a tabela de verdade. */
 shiny-data-frame table {
   font-size: 12px !important;
 }
@@ -326,41 +606,139 @@ shiny-data-frame table tbody td {
   text-overflow: ellipsis;
   white-space: nowrap !important;
 }
-
+/* ".shiny-data-grid": div que envolve a <table> (com a rolagem, quando
+   tem) -- arredondar ali, nao na table em si, senao os cantos do
+   cabecalho colorido ficam quadrados por baixo da rolagem cobrindo
+   eles. Sombra sutil (mais leve que a dos cards, ".card" mais abaixo --
+   a tabela normalmente já mora dentro de um card com sombra própria,
+   uma sombra igualmente forte aqui ficaria pesada demais, duas sombras
+   fortes empilhadas) pra dar profundidade também, a pedido do usuário. */
 shiny-data-frame .shiny-data-grid {
   border-radius: 8px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.18);
   overflow: hidden;
-
+  /* A caixa da rolagem também encolhia junto com a tabela (medido: 1160px
+     dentro de um espaço de 1562px), e aí o "min-width: 100%" da tabela
+     abaixo não tinha o que preencher. "!important" é obrigatório: o próprio
+     componente grava "width: fit-content" no style= do elemento, que vence
+     qualquer regra sem isso. A rolagem horizontal continua funcionando
+     (overflow: auto), agora numa caixa da largura da página. */
   width: 100% !important;
 }
-
+/* Tabela sempre preenchendo a largura disponível (pedido do usuário: tabela
+   com poucas colunas deixava um vão branco à direita -- medido em Frotas,
+   1160px de tabela num espaço de 1562px). "min-width" e não "width": quando
+   as colunas somam MAIS que a tela (ex. a de CEVs, 19 colunas), a tabela
+   continua esticando além e a rolagem horizontal faz o trabalho, em vez de
+   espremer coluna. Com "table-layout: fixed" (regras mais abaixo), a sobra é
+   distribuída entre as colunas mantendo a proporção pedida por
+   core/largura_tabela.py. */
 shiny-data-frame table {
   min-width: 100%;
 }
 
+/* Cantos arredondados na tabela tambem (nao so nos cards) -- o
+   arredondamento fica na caixa que envolve cabecalho+corpo com rolagem
+   (".dt-scroll"), que e quem realmente precisa do "overflow: hidden"
+   pra cortar os cantos do cabecalho colorido no formato certo. */
+
+/* scrollX (Dados/tabela_itables.py) faz o DataTables calcular a largura
+   da tabela pelo conteudo (autoWidth), que pode ficar menor que o
+   card quando tem poucas colunas -- sobrando espaco em branco do lado
+   direito. Forcando 100% aqui: quando o conteudo cabe, a tabela
+   preenche o card inteiro; quando nao cabe (nowrap com muita coisa),
+   o navegador ainda estica pra caber o conteudo e o scrollX cuida da
+   rolagem, sem quebrar linha. */
+
+/* Fundo solido branco na tabela (antes ficava transparente, deixando
+   ver o que estivesse atras -- inconsistente com o resto do card, que
+   ja e branco solido). Cobre tanto o cabecalho/corpo (table.dataTable)
+   quanto a caixa com rolagem em volta (.dt-scroll), que e quem sobra
+   visivel nas bordas quando a tabela e menor que o card. */
+
+/* Linha clicavel (ver www/js/frota.js): selecionar filtra o resto da
+   pagina por aquela data, entao precisa parecer clicavel de longe.
+   Cursor e proprio nosso -- a extensao Select do DataTables (ligada em
+   construir_consolidada()) nao adiciona esse estilo sozinha. */
+
+/* A cor de selecao de linha (--dt-row-selected) era a variavel da
+   extensao "Select" do DataTables (itables) -- ficou orfa desde que
+   esta tabela migrou pra "render.DataTable" nativo do Shiny (ver
+   CLAUDE.md, "Tabelas usam render.data_frame"); a tabela nao tem mais
+   classe "dataTable" nenhuma, entao essa regra nunca mais bateu com
+   nada. A cor de selecao de verdade agora vem de
+   "--shiny-datagrid-grid-body-selected-bgcolor" (variavel propria do
+   componente nativo, ver ":root" logo abaixo). */
+/* Cor de selecao de linha do "render.DataTable" nativo (substitui o
+   "--dt-row-selected" morto de cima) -- variavel unica, definida uma
+   vez em ":root", vale pra QUALQUER tabela do app com selection_mode=
+   "row" (hoje: Frotas Geral/Entrada/Saida -- tabela consolidada -- e
+   Romaneios Pendentes -- "Romaneios"/"Pedidos"). Sem essa regra, a
+   cor de selecao cai no padrao do tema (shinyswatch "superhero"),
+   derivado de "--bs-primary" (que E' laranja no tema, ver comentario
+   de ".btn-limpar-frota" mais abaixo) -- pedido do usuario pra trocar
+   pela cor secundaria do app ("DESTAQUE"/--cor-destaque). */
 :root {
   --shiny-datagrid-grid-body-selected-bgcolor: var(--cor-destaque, #3874AB);
   --shiny-datagrid-grid-body-selected-color: #fff;
   --shiny-datagrid-grid-header-selected-bgcolor: var(--cor-destaque, #3874AB);
 }
 
+/* Altura minima reservada pro card nao "encolher" visivelmente enquanto
+   a tabela/cards recalculam (o output e recriado do zero a cada
+   filtro/aba, entao tem um instante vazio antes do conteudo novo
+   entrar) -- os valores batem com o scrollY usado em
+   Dados/tabela_itables.py (_opcoes_scroll), mais um respiro pro
+   cabecalho da tabela. */
 .cards-classe-veiculo{
   min-height: 285px;
 }
+/* A tabela consolidada fica da altura da coluna de cards ao lado. A conta mora
+   aqui porque a altura do card e' de CONTEUDO (fonte em rem + padding), nao da
+   tela: sao 5 cards (as 4 classes + o total) de 63px, cada um com 8px de margem
+   embaixo -- medido no navegador. Altura em porcentagem nao serve: a celula do
+   grid cresce junto da tabela, e o valor vira o conteudo inteiro (medido:
+   1340px). Mudou a quantidade de cards? E' aqui que se ajusta. */
 
+/* Enquanto o Shiny recalcula um output (classe "recalculating", que o
+   proprio shiny.js liga/desliga sozinho), o conteudo antigo fica
+   visivel mas meio apagado, em vez de sumir de repente e reaparecer
+   (o "pulo feio" que motivou isso) -- funciona como um fade discreto
+   de carregamento. Nas tabelas, o proprio spinner giratorio do Shiny
+   (ver "busy_indicators.options" em app.py) aparece por cima assim
+   que a demora passa do atraso padrao dele (1s). Escuta ".pagina-modulo"
+   (www/js/custom.js), nao mais so ".frota-modulo" -- vale pra qualquer
+   pagina do menu agora, ver CLAUDE.md "mudanca geral vale pros quatro
+   apps". */
 .pagina-modulo .recalculating {
   opacity: 0.35;
-
+  /* So' apaga se o recalculo passar de meio segundo: o redesenho rapido (a
+     conferencia dos arquivos durante o Atualizar, o fim dele) piscava a tabela
+     inteira por ~300 ms, mesmo com o conteudo igual (06/10/2026). */
   transition: opacity 0.15s ease-in-out 0.5s;
   pointer-events: none;
 }
-
+/* O apagado estendido depois que o valor chega (www/js/custom.js), so' quando ele
+   chegou a aparecer. */
 .pagina-modulo .recalculando-fim {
   opacity: 0.35;
   pointer-events: none;
 }
+/* Aviso do Detran fica vazio (0px) na maior parte do tempo -- sem
+   isso, o espaco minimo que o spinner do Shiny reserva pra qualquer
+   output "recalculating" (--shiny-spinner-size, 32px por padrao)
+   empurrava o resto da pagina pra baixo por uma fracao de segundo a
+   cada filtro trocado, mesmo esse continuando vazio. */
 
+/* Tela de carregamento inicial (spinner + fundo solido) cobrindo a
+   pagina inteira (cards, filtros ainda vazios, tabelas) enquanto os
+   primeiros dados nao chegam -- diferente do fade acima (so existe pra
+   trocar conteudo JA carregado por outro), aqui nao ha nada antigo pra
+   mostrar apagado, entao cobre tudo ate o 1o dado real aparecer (ver
+   www/js/custom.js e core/carregamento.py::com_carregamento). Cada
+   pagina do menu (app.py monta uma ".pagina-modulo" por nav_panel) tem a
+   sua propria copia, escondida na hora certa dela -- existia so em
+   Frotas antes (".frota-carregando-*"), generalizada pra toda pagina. */
 .pagina-modulo {
   position: relative;
 }
@@ -371,14 +749,22 @@ shiny-data-frame table {
   pointer-events: auto;
   position: absolute;
   transition: opacity 0.35s ease-in-out;
-
+  /* Tem que ficar acima do cartao de filtro de cada pagina (".card:first-
+     child" de ".frota-modulo/.rom-modulo/.dev-modulo/.comod-modulo",
+     z-index:40, e ".filtros-*"/".selectize-control" dentro dele,
+     z-index:45/46) -- com z-index:30 (menor que 40), o cartao de filtro
+     furava a tela de carregamento e aparecia por cima dela, fazendo o
+     spinner parecer que estava atras da caixa de filtro. */
   z-index: 100;
 }
 .pagina-carregando-inicial.pagina-carregando-escondido {
   opacity: 0;
   pointer-events: none;
 }
-
+/* "position: fixed" (nao relativo ao .pagina-modulo, que cresce de
+   altura conforme o conteudo por tras vai renderizando de verdade) --
+   centralizado na janela inteira, pra nao ficar "descendo" junto com o
+   crescimento do modulo atras dele. */
 .pagina-carregando-conteudo {
   align-items: center;
   display: flex;
@@ -398,14 +784,44 @@ shiny-data-frame table {
   color: var(--tabela-texto-escuro, #1a1a1a);
   font-weight: bold;
 }
+/* O "carregando" da troca do Historico do Diario (www/js/ppf.js): o fundo e a
+   caixa branca dos modais do app, com o mesmo giro de cima. */
 
+/* Frotas: os 3 cards/boxes (filtros, "Dados consolidados",
+   "Detalhamento") ganham fundo claro, borda visivel e cantos
+   arredondados -- pra ficar claro onde cada caixa comeca e termina (o
+   valor branco de cada filtro precisa de um contorno pra "sobressair
+   contra", nao só contra a cor da pagina). A faixa colorida no topo
+   reproduz o "status = primary" do box() do R (uma borda colorida no
+   topo da caixa) -- sempre a cor de destaque (--cor-destaque), mesmo
+   que o fundo do card_header (FROTA_CABECALHO_BG, ver regra logo
+   abaixo) seja outra cor -- sao duas cores deliberadamente separadas,
+   nao a mesma variavel. No card de filtros (que no R usa a propria
+   linha de filtros como "title" da caixa, sem texto) essa faixa e o
+   unico indicio visual de cabecalho. */
+
+/* Botao de minimizar (ver pag_frotas.py: toggle_consolidados/
+   toggle_detalhamento) -- so o icone, discreto, dentro do cabecalho
+   colorido. Usa a cor de texto do cabecalho (FROTA_CABECALHO_TEXTO),
+   nao branco fixo, pra continuar legivel se o fundo do cabecalho for
+   claro. */
+
+/* Frotas (pag_frotas.py/pag_frotas_entrada.py/pag_frotas_saida.py):
+   seletor de aba (Geral/Rest Adm/Renajud/
+   Detran/Custos) em estilo de botao segmentado -- continua sendo um
+   ui.input_radio_buttons normal por baixo (mesma reatividade de sempre,
+   input.aba()), so que esse CSS esconde a bolinha do radio e transforma
+   cada label num botao, usando :has() pra destacar a aba selecionada. */
 .abas-frota {
   min-width: 560px;
   max-width: 760px;
 }
 .abas-frota .shiny-options-group {
   display: flex;
-
+  /* Botoes separados (com "respiro" entre eles), nao uma barra fundida --
+     igual ao radioGroupButtons(individual = TRUE) do R, que da um
+     margin-right de 10px entre cada botao (".btn-group:not(:last-child)"
+     em style_geral.css). */
   gap: 8px;
   margin: 0;
 }
@@ -429,7 +845,9 @@ shiny-data-frame table {
   color: #fff;
   font-size: 0.85rem;
 }
-
+/* Aba selecionada fica branca com texto azul -- igual ao
+   ".btn-primary:not(:disabled):not(.disabled).active" do app em R
+   (background-color: #fff; color: #254D71;). */
 .abas-frota .radio-inline:has(input:checked) {
   background: #fff;
 }
@@ -438,6 +856,11 @@ shiny-data-frame table {
   font-weight: bold;
 }
 
+/* Linha com o botao de exportar Excel numa ponta e o seletor de abas
+   centralizado no meio -- igual ao fluidRow(column(2, downloadBttn(...)),
+   column(8, radioGroupButtons(...)), column(2)) do R (a 3ª coluna,
+   vazia, e o que deixa o meio centralizado em vez de "abas coladas no
+   botao"). Grid de 3 colunas [botao | abas centralizadas | vazio]. */
 .linha-abas-frota {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -448,13 +871,17 @@ shiny-data-frame table {
   grid-column: 2;
   justify-self: center;
 }
-
+/* .btn-primary do tema shinyswatch "superhero" e laranja (cor fixa
+   compilada no CSS do tema, nao segue --bs-primary em tempo real) --
+   forcando a cor azul da marca deste app aqui. */
 .btn-limpar-frota {
   height: 38px;
   background-color: var(--cor-sidebar, #254D71) !important;
   border-color: var(--cor-sidebar, #254D71) !important;
 }
-
+/* Exportar em Excel: so o icone, sem caixa colorida chamativa -- um
+   botao "fantasma" (sem fundo/borda propria), so ganha destaque no
+   hover. */
 .btn-exportar-frota {
   background: transparent !important;
   border: none !important;
@@ -467,8 +894,13 @@ shiny-data-frame table {
   color: var(--cor-destaque, #3874AB) !important;
 }
 
+/* Frotas: card de resumo de cada classe de veiculo (Cavalo/Caminhao/
+   Carro/Moto), dentro do card "Dados consolidados" -- icone (imagem) +
+   4 colunas divididas por uma linha vertical (contagem/Rest Adm/
+   Renajud/Debito), igual ao infoBox(value = fluidRow(column(3, ...) x4))
+   do app em R. */
 .card-classe-veiculo {
-
+  /* Leve gradiente -- igual ao "gradient = TRUE" do infoBox() no R. */
   background: linear-gradient(135deg, var(--cor-destaque, #3874AB), var(--cor-sidebar, #254D71));
   color: #fff;
   border-radius: 8px;
@@ -485,7 +917,9 @@ shiny-data-frame table {
   margin-right: 8px;
   flex-shrink: 0;
 }
-
+/* Card do total (o ultimo da coluna): mesma cara dos outros, com uma borda
+   clara pra separar a soma das parcelas -- sem cor propria, senao seria um
+   padrao visual novo. */
 .card-classe-veiculo.card-classe-total {
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
 }
@@ -505,31 +939,68 @@ shiny-data-frame table {
   flex: 1;
 }
 
+/* Frotas: barra de filtros numa grade de 12 colunas (igual ao
+   fluidRow(column(1, ...) x12) do R) -- em vez do flex-wrap antigo, que
+   distribuia os campos em largura igual e quebrava de forma desalinhada
+   quando havia mais campos do que cabia na linha. Cada filtro ocupa 1
+   coluna; o botao de limpar fica sempre fixo na 12ª. */
+/* Cards de resumo de Devoluções (Vendas/Devolução/Tx retorno, ou só Tx
+   retorno em Detalhes) lado a lado com o "Atualizado em" no cabeçalho
+   -- mesma posição do value box de Frotas, só que com mais de uma
+   caixinha (ver app.py::valuebox_atualizacao/core/cabecalho_dev.py). */
 .cabecalho-resumo-dev {
   align-items: center;
   display: flex;
   gap: 8px;
 }
 
+/* ui.value_box() "Atualizado em" no cabecalho do app -- por padrao ele
+   vem no tamanho pensado pra um grid de KPIs no corpo da pagina (bem
+   maior que precisa aqui, encostado na logo). Encolhendo so o
+   necessario pra caber numa barra de topo, sem tocar no componente em
+   si (continua sendo o ui.value_box de verdade do bslib). */
 .valuebox-atualizacao {
-
+  /* Sem largura fixa, o value box some (encolhe a 2px): dentro do
+     .cabecalho-app (flex), os elementos internos do bslib usam
+     "flex-basis: 0" pensado pra um container que ja diz a largura
+     (um grid de KPIs) -- aqui ninguem "empurra" essa largura, entao
+     ele colapsa. Uma largura fixa resolve sem precisar mexer no CSS
+     interno do componente. Alargada de 108px pra 128px (e a fonte do
+     valor reduzida logo abaixo) pra caber "dd/mm/aaaa hh:mm" -- antes
+     so tinha a data. */
   flex-shrink: 0;
   width: 128px;
   border-radius: 8px !important;
   overflow: hidden;
-
+  /* ".bslib-mb-spacing" da um margin-bottom de 16px por padrao (pensa
+     em varios value_box empilhados na pagina, com respiro entre eles)
+     -- aqui e um unico box na barra de topo, nao precisa desse respiro. */
   margin: 0 !important;
 }
-
+/* Dado desatualizado (data diferente de hoje, ou momento desconhecido): o
+   FUNDO do cartao fica vermelho e o texto continua branco -- vem do tema do
+   `value_box` (core/atualizacao.py), nao daqui. Ate' 28/09/2026 era a fonte
+   em #ff8080, que sobre o roxo claro do Financeiro ficava ilegivel. */
 .valuebox-atualizacao .card-body {
   gap: 0 !important;
   padding: 2px 6px !important;
 }
-
+/* O padding grande (24px/16px por padrao, pensado pro layout de KPI)
+   mora no ".value-box-area" -- nao no ".card-body" acima -- e sozinho
+   ja bastava pra explicar boa parte da altura extra. */
 .valuebox-atualizacao .value-box-area {
   padding: 0 !important;
 }
-
+/* Mesmo problema do "flex-basis: 0" acima, agora na vertical: o
+   titulo e o valor (".value-box-title"/".value-box-value") sao
+   "html-fill-item" tambem, pensados pra dividir a altura de um value
+   box grande (~120px, layout de KPI) -- aqui os dois colapsavam a
+   menos de 2px de altura cada, com o texto vazando por cima um do
+   outro. "flex: none" faz cada um ocupar so a altura natural do
+   proprio texto, em vez de tentar dividir um espaco que nao foi
+   pensado pra ser tao pequeno. Cada um tambem vinha com 8px de
+   margin-bottom propria (~16px juntando os dois), de novo pensada pro
+   card grande -- zerada aqui tambem. */
 .valuebox-atualizacao .value-box-area,
 .valuebox-atualizacao .value-box-title,
 .valuebox-atualizacao .value-box-value {
@@ -538,7 +1009,11 @@ shiny-data-frame table {
   margin: 0 !important;
   text-align: center;
 }
-
+/* O texto de titulo/valor vem dentro de um <p> (ver outerHTML gerado
+   pelo bslib) -- zerar a margem so na div de fora (acima) nao e
+   suficiente, o <p> continua com a margem padrao do Bootstrap
+   (~1rem embaixo), que sozinha ja explicava o value box ficando alto
+   demais mesmo com "flex: none" corrigido. */
 .valuebox-atualizacao .value-box-title p,
 .valuebox-atualizacao .value-box-value p {
   margin: 0;
@@ -549,10 +1024,17 @@ shiny-data-frame table {
   text-transform: uppercase;
 }
 .valuebox-atualizacao .value-box-value {
-
+  /* Reduzida de 0.78rem -- o valor passou a incluir hora ("dd/mm/aaaa
+     hh:mm"), mais largo que so a data que cabia antes. */
   font-size: 0.66rem;
 }
 
+/* Card "Atualizando -- X%" (sincronia sob demanda de Comodatos, botao
+   "Atualizar" do cabecalho) -- substitui o .valuebox-atualizacao
+   normal so' enquanto uma sincronizacao esta' rodando (ver
+   app.py::valuebox_atualizacao/core/sincronia_comodato.py). Mesma
+   largura/raio/cor de destaque do value box normal, pra nao "pular" o
+   layout do cabecalho na troca. */
 .cabecalho-progresso-comod {
   flex-shrink: 0;
   width: 128px;
@@ -585,6 +1067,13 @@ shiny-data-frame table {
   transition: width 0.4s ease;
 }
 
+/* Botao "Atualizar" (icone so', fundo transparente) ao lado do card
+   "Atualizado em"/progresso, no cabecalho -- mesmo padrao "icone so',
+   sem fundo" de .btn-exportar-comod, mas cor branca (nao a cor escura
+   usada la): .btn-exportar-comod fica dentro de um card branco, aqui o
+   botao fica direto em cima do fundo escuro do cabecalho
+   (.cabecalho-app) -- a cor escura ficava com o mesmo tom do fundo,
+   invisivel (achado testando com Playwright, screenshot real). */
 .btn-atualizar-comod {
   background: transparent !important;
   border: none !important;
@@ -601,7 +1090,9 @@ shiny-data-frame table {
   opacity: 0.55;
   cursor: default;
 }
-
+/* Gira o icone enquanto a sincronizacao esta' rodando -- unico
+   sinalizador "vivo" no botao em si (o card ao lado ja mostra
+   etapa/percentual). */
 .btn-atualizar-comod.btn-atualizar-comod-girando svg {
   animation: girar-atualizar-comod 1s linear infinite;
 }
@@ -614,32 +1105,138 @@ shiny-data-frame table {
   }
 }
 
+/* Rotulo de cada filtro (Proprietário, Unidade, ...) menor e em negrito
+   -- se destaca da caixa do valor logo abaixo sem competir com ela. */
+
+/* Caixa do valor selecionado com fundo branco solido, borda visivel e
+   cantos levemente arredondados -- sombra mais forte (nao so um
+   contorno fino) pra parecer "flutuando" por cima do card, em vez de
+   encaixada dentro dele. */
+
+/* O tema escuro do app (shinyswatch.superhero) deixa o "chip" de cada
+   valor ja selecionado (multi=True) e o dropdown de opcoes escuros por
+   padrao -- sem essas regras, so a caixa fechada (.selectize-input
+   acima) ficava branca, mas os chips e a lista aberta continuavam no
+   estilo escuro do tema. dropdownParent="body" (ver pag_frotas.py)
+   faz o dropdown nascer fora de .filtros-padrao, direto no <body> --
+   por isso .frota-selectize-dropdown (a classe propria dele) tambem
+   precisa ser alvo aqui, nao so ".filtros-padrao .selectize-dropdown". */
+
+/* Fundo/borda proprios do "item" (virando um cartao/chip) so fazem
+   sentido em filtro MULTI-select com 2+ tags -- num select de valor
+   UNICO, essa borda/fundo duplicava a MESMA borda/fundo que
+   ".selectize-input" (pai) ja tem, criando um "quadrado dentro do
+   quadrado" -- so ficava escondido com o tema escuro (superhero),
+   ficou visivel trocando pro tema claro (flatly). Mesmo bug/correcao
+   ja feita no Acompanhamento Comercial. */
+
+/* Selecao/hover de uma opcao na lista aberta -- mesma cor do cabecalho
+   das tabelas (--cor-destaque), pra ficar consistente com o resto da
+   pagina em vez do destaque padrao (laranja) do tema escuro. */
+
 .btn-limpar-frota {
   grid-column: 13;
-
+  /* Centralizado com a altura toda do filtro (rotulo + caixa), nao so
+     alinhado embaixo com a caixa. */
   align-self: center !important;
   border-radius: 6px;
 }
+/* Saida de veiculos tem 2 filtros a mais que Geral/Entrada ("Motivo Saída" e
+   "Tipo Saída", que nao existem no R) -- na aba Geral sao 14 filtros
+   visiveis, que enchiam as 13 colunas de ".filtros-padrao" e empurravam o
+   botao de limpar pra uma segunda linha (mesmo caso ja documentado quando
+   "Motivo Saída" entrou sozinho). 2 colunas a mais so nesta pagina mantem
+   tudo numa linha, sem tocar nas outras duas. */
 
+/* Filtros que so aparecem em determinadas abas (Rest Adm/Gravame/
+   Gravame Pendente/Renajud/Debito) -- igual aos conditionalPanel(
+   "input.bt_check_frota == '...'") do R. Cada filtro declara suas abas
+   em data-abas (separadas por virgula); a regra abaixo mostra ele so
+   quando a aba selecionada aparece nessa lista. */
+
+/* Frotas: o switch "Ver detalhado" so faz sentido nas abas Renajud/
+   Detran -- igual ao uiOutput("switch_renajud_renainf") do R, que so
+   aparece nesses dois casos (visibility:hidden nas demais, pra nao
+   perder o estado do input trocando de aba). */
 .switch-detalhado {
   visibility: hidden;
 }
 
+/* Contorno leve no proprio switch -- sem isso, a trilha dele (cinza bem
+   claro por padrao do Bootstrap) quase nao aparecia em cima do fundo
+   branco do card. */
 .switch-detalhado .form-check-input {
   border: 1px solid rgba(0, 0, 0, 0.35) !important;
 }
 
+/* Esconde a tela cinza que o Shiny mostra sozinho quando perde a
+   conexao com o servidor (ex: servico reiniciando) -- o sidebar.js
+   assume a reconexao (fica testando o servidor e recarrega a pagina
+   quando ele voltar), entao essa tela nao chega a ser necessaria. Sem
+   isso, a pessoa veria um cinza cobrindo a tela toda ate a pagina
+   recarregar sozinha. */
 #shiny-disconnected-overlay {
   display: none !important;
 }
 
+/* Frotas: botoes dentro das celulas das tabelas Geral (Transferencia
+   manual, Anexo) e Saida (Informar motivo, Anexo) -- ver
+   Dados/tabela_itables.py::_botao_*() e www/js/frota.js (o clique em
+   si). Sem fundo/borda proprios, so o emoji mesmo -- cursor de mao e
+   leve destaque ao passar o mouse indicam que da pra clicar. */
+
+/* Campos de contexto (placa, unidade atual, proprietario) dentro dos
+   modais de Transferencia manual/Informar motivo -- so texto, sem
+   nenhum <input> por tras (ver pag_frotas.py::_campo_leitura),
+   entao o "form-control" sozinho já bastaria; o fundo cinza-claro e so
+   pra parecer visualmente "travado", como o pointer-events:none do R. */
+
+/* Modal de Transferencia manual (pag_frotas.py)/Informar motivo (pag_frotas_saida.py):
+   sem nenhuma classe propria, o modal herdava direto o visual do tema
+   shinyswatch "superhero" (fundo escuro, botao "Enviar" laranja) --
+   diferente do resto de Frotas, que ja tem essa correcao (cards,
+   filtros). ":has(.frota-campo-leitura)" identifica os dois modais
+   dessa area sem precisar de um ID/classe propria no <div> do modal
+   (o Shiny nao da como passar class_ pro proprio ui.modal()). */
+/* Cantos arredondados, mesmo raio das tabelas (".frota-modulo .dt-scroll",
+   ver acima) -- "overflow: hidden" pra cortar o cabecalho colorido no
+   formato certo (senao ele fica quadrado por baixo do canto arredondado
+   do .modal-content, do mesmo jeito que ".dt-scroll" precisa disso pro
+   cabecalho da tabela). */
+
+/* O "x" de fechar do tema superhero ja nasce claro (pensado pra um
+   cabecalho escuro) -- sem isso, ficava proximo de invisivel em cima
+   do cabecalho claro do proprio tema de Frotas. */
+
+/* Selectize (Nova unidade) e input de arquivo dentro do modal -- mesma
+   correcao ja aplicada aos filtros da pagina (".filtros-padrao"), so que
+   aqui escopada pro modal em vez de fundo/texto escuro do tema. */
+
+/* Botao "Enviar": .btn-primary do tema superhero e laranja (cor fixa
+   do tema, ver mesmo comentario em ".btn-limpar-frota" mais acima). */
+
+/* Nome do arquivo escolhido em "Selecionar arquivo" (ui.input_file):
+   o Shiny/Bootstrap poe o nome num <input readonly> de largura fixa,
+   com "overflow: hidden" cortando o final do nome (ex: "baixados
+   (2).pn...") -- a coluna estreita do modal (5/12) so piora isso.
+   Deixando quebrar linha em vez de cortar. */
+
+/* O cabecalho do app (".navbar.navbar-static-top") tem z-index:1200
+   (ver regra no topo deste arquivo) -- maior que o z-index padrao do
+   Bootstrap pra modal (1055) e seu fundo escurecido (1050), entao
+   qualquer modal (nao so os de Frotas) nascia visualmente ATRAS do
+   cabecalho, cortado por cima. Nao existe hoje nenhum motivo pra um
+   modal ficar atras do cabecalho, entao a correcao vale pro app
+   inteiro, nao so pra Frotas. */
 .modal-backdrop {
   z-index: 1250;
 }
 .modal {
   z-index: 1300;
 }
-
+/* O balao (o "i" das filas, os menus de Colunas e Relatorio) e a dica tambem nasciam atras do cabecalho: o padrao
+   do Bootstrap e' 1070/1080. Acima do cabecalho e da janela (pedido do usuario, 04/11/2026: "ta' embaixo do
+   header / coloque na frente"). */
 .popover {
   z-index: 1400;
 }
@@ -647,11 +1244,66 @@ shiny-data-frame table {
   z-index: 1410;
 }
 
+/* Botoes "neutros" dentro de modal (".btn-default": modalButton
+   "Cancelar", label do input_file) saiam com o cinza generico do tema
+   (flatly) em vez da cor de destaque do proprio app -- pedido do
+   usuario ("os botoes aqui dentro devem ficar nas cores que eu decidi
+   pra cada acompanhamento"). Nao mexe em ".btn-success"/".btn-danger"
+   -- essas cores semanticas continuam como estao, so o cinza sem
+   significado nenhum e' trocado. Mesmo ajuste feito no Acompanhamento
+   Comercial. */
 .modal .btn-default {
   background-color: var(--cor-destaque, #3874ab) !important;
   border-color: var(--cor-destaque, #3874ab) !important;
   color: #fff !important;
 }
+
+/* Frotas: colunas de botao/link das tabelas (Transferencia manual,
+   Anexo, Informar motivo) -- o cabecalho ja vem centralizado (regra
+   "table.dataTable thead th" mais acima), mas o valor da celula
+   seguia o alinhamento padrao (esquerda) do <td>, ficando desalinhado
+   com o cabecalho. ":has()" pega tanto o botao/link (".frota-btn-cel")
+   quanto o "ja informado" (".frota-motivo-ok"), sem precisar saber a
+   posicao da coluna (que muda conforme "pode_transferir"). */
+
+/* Romaneios Pendentes (pag_rom_abertos.py) -- mesmas variaveis globais
+   ja injetadas no :root de app.py (fundo claro/texto escuro/cor de
+   destaque), mas com classes proprias (".rom-*") em vez de reaproveitar
+   as ".frota-*" -- feature diferente, nome de classe nao deveria
+   sugerir que e' Frotas (decisao deliberada, ver CLAUDE.md "padrão
+   visual/estrutural/UX único entre os quatro apps"). Cada regra abaixo
+   espelha, propositalmente, uma regra equivalente de Frotas mais acima
+   neste arquivo -- mesmo resultado visual, nomes de classe proprios.
+   Card com faixa colorida no topo + cabecalho colorido, igual ao
+   ".frota-modulo .card"/".card > .card-header" (ver comentario lá). */
+
+/* Tabelas -- mesma ideia de ".frota-modulo table.dataTable"/".dt-scroll"
+   mais acima (cor de fundo/texto, cabecalho colorido, cantos
+   arredondados, largura fixa de coluna com "..." em vez de quebrar). */
+
+/* Cor de selecao: ver ":root { --shiny-datagrid-grid-body-selected-
+   bgcolor }" perto de ".tabela-frota-consolidada" -- essa tabela
+   tambem ja migrou pra "render.DataTable" nativo, a regra antiga
+   ("--dt-row-selected", da extensao Select do DataTables/itables) era
+   morta aqui tambem. */
+
+/* Filtros -- mesmo grid de 12 colunas de ".filtros-padrao"/".filtro-frota"
+   mais acima (mesmo comentario vale aqui: cada filtro ocupa 1 coluna, o
+   botao de limpar fica fixo na 12ª). */
+
+/* "Romaneio Alt" (pag_rom_altera.py) filtra so' o card "Historico de
+   romaneios alterados" mais abaixo, NAO a tabela "Romaneios" que os
+   outros 3 filtros desta barra filtram -- a borda + margem deixam isso
+   visualmente separado, pra ninguem achar que os 4 valem pra mesma
+   tabela. */
+
+/* Fundo/borda proprios do "item" (virando um cartao/chip) so fazem
+   sentido em filtro MULTI-select com 2+ tags -- num select de valor
+   UNICO, essa borda/fundo duplicava a MESMA borda/fundo que
+   ".selectize-input" (pai) ja tem, criando um "quadrado dentro do
+   quadrado" -- so ficava escondido com o tema escuro (superhero),
+   ficou visivel trocando pro tema claro (flatly). Mesmo bug/correcao
+   ja feita no Acompanhamento Comercial. */
 
 .btn-limpar-rom {
   height: 38px;
@@ -673,6 +1325,54 @@ shiny-data-frame table {
   color: var(--cor-destaque, #3874AB) !important;
 }
 
+/* Cards de resumo (Romaneios/Pedidos) -- mesma ideia do
+   ".card-classe-veiculo" de Frotas mais acima (icone + gradiente),
+   simplificado pra um unico numero em vez dos 4 sub-valores (aqui nao
+   ha' "Rest Adm/Renajud/Débito" por card, so a contagem). */
+
+/* Alterar Romaneio (pag_rom_altera.py): o "Romaneio" de cada linha
+   continua clicavel (abre o modal de alteracao), mas nao deve PARECER um
+   link -- mesma cor de texto do resto da tabela (nao a cor de destaque)
+   e sem sublinhado (que o navegador poe sozinho em qualquer <a>, por
+   padrao). Decisao explicita do usuario. */
+
+/* Todos os valores centralizados nesta tabela especificamente (nao as
+   outras de Romaneios Pendentes -- Cliente/Motorista lá continuam a
+   esquerda, mais facil de ler um nome comprido). */
+
+/* Modal de "Alterar romaneio" (pag_rom_altera.py) -- mesma correcao de
+   contraste do modal de Transferencia manual/Informar motivo de Frotas
+   (".modal:has(.frota-campo-leitura)" mais acima), so que mirada na
+   classe propria desta pagina ("rom-campo-leitura" em vez de
+   "frota-campo-leitura"). */
+
+/* Modal "Alterar romaneio" -- os campos de valor (Crédito/Débito/
+   Dinheiro/Pix/Boleto) recebem width="50%" no Python (ver
+   pag_rom_altera.py) pra caixa parar de ocupar a coluna inteira; só
+   isso ainda deixava a caixa colada na esquerda, porque o wrapper do
+   Shiny (".shiny-input-container", que recebe o "width:50%" inline) é
+   um elemento de bloco -- "text-align: center" no pai só centraliza
+   conteúdo inline, não um bloco com largura própria. margin:auto
+   resolve, centralizando o bloco em si dentro da coluna. */
+
+/* Devoluções (pages/Devolucoes/) -- mesmas variaveis globais de sempre
+   (fundo claro/texto escuro/cor de destaque), classes proprias
+   (".dev-*"), espelhando Frotas/Romaneios regra por regra (ver CLAUDE.md
+   "padrão visual/estrutural/UX único entre os quatro apps"). Card com
+   faixa colorida no topo + cabecalho colorido. */
+
+/* Filtros -- grade de 12 colunas, mesma ideia de ".filtros-padrao"/
+   ".filtros-rom" (cada filtro ocupa 1 coluna, botão de limpar fixo na
+   última coluna ocupada). */
+
+/* Fundo/borda proprios do "item" (virando um cartao/chip) so fazem
+   sentido em filtro MULTI-select com 2+ tags -- num select de valor
+   UNICO, essa borda/fundo duplicava a MESMA borda/fundo que
+   ".selectize-input" (pai) ja tem, criando um "quadrado dentro do
+   quadrado" -- so ficava escondido com o tema escuro (superhero),
+   ficou visivel trocando pro tema claro (flatly). Mesmo bug/correcao
+   ja feita no Acompanhamento Comercial. */
+
 .btn-limpar-dev {
   height: 38px;
   grid-column: 12;
@@ -681,6 +1381,14 @@ shiny-data-frame table {
   background-color: var(--cor-sidebar, #254D71) !important;
   border-color: var(--cor-sidebar, #254D71) !important;
 }
+/* Detalhes tem filtros a mais que as outras tres paginas de Devolucoes
+   ("Cidade", que nao existe no R, e "Ult compra") -- eram 11 filtros + botao
+   enchendo as 12 colunas exatas, entao cada filtro novo empurraria o botao de
+   limpar pra uma segunda linha (mesmo caso ja resolvido em
+   ".frota-modulo-saida"). Sao 13 filtros hoje (o 13o e' "Data do romaneio").
+   A coluna extra e' "auto" em vez de mais um "1fr": o botao e' so' um icone e
+   nao precisa de uma coluna inteira -- assim ele encolhe pro tamanho dele e
+   sobra mais largura pros filtros. */
 
 .btn-exportar-dev {
   background: transparent !important;
@@ -694,10 +1402,47 @@ shiny-data-frame table {
   color: var(--cor-destaque, #3874AB) !important;
 }
 
+/* Tabelas -- Devolucoes usa render.data_frame nativo (ver CLAUDE.md
+   "Tabelas usam @render.data_frame"), nao itables/DataTables -- por
+   isso "shiny-data-frame"/".shiny-data-grid", nao "table.dataTable"/
+   ".dt-scroll" (que nao existem mais no DOM desta pagina; o bloco
+   antigo, escrito pra itables, ficou parado aqui sem valer pra nada
+   depois da troca de biblioteca -- so o cabecalho continuava com estilo
+   por causa do seletor global "shiny-data-frame table thead th" mais
+   acima). Cor de fundo/texto, cantos arredondados na caixa com rolagem,
+   largura das colunas esticada pra ocupar o card todo, "..." em vez de
+   quebrar linha -- mesmo visual de quando a tabela ainda era itables. */
+
+/* Linha de grupo (data) da Consolidada, clicavel pra expandir/recolher
+   o detalhe por revenda -- ver www/js/devolucoes.js e
+   pag_dev_detalhes.py::_tabela_consolidada_agrupada. Sem sublinhado/
+   cor de link, mesma decisao ja tomada pro "Cod Pedido"/Alterar
+   Romaneio (so o cursor de mao indica que da pra clicar). */
+
+/* Contorno leve no switch "Ver dados detalhados" -- mesmo motivo/regra
+   do switch "Ver detalhado" de Frotas (ver ".switch-detalhado" acima):
+   a trilha cinza clara do Bootstrap quase nao aparecia em cima do fundo
+   branco do card. Classe propria (nao ".switch-detalhado") porque a de
+   Frotas tambem controla visibilidade condicional por aba
+   (Renajud/Detran), que nao se aplica aqui -- so o contorno importa. */
+
+/* Mesmo caso do switch de Devolucoes: o "Ver detalhado" de Veiculos
+   cadastrados (pages/Veiculos_Ticketlog/) NAO pode usar ".switch-detalhado",
+   que nasce com visibility:hidden e so' volta a aparecer dentro de
+   ".frota-modulo" nas abas Renajud/Detran/Ticketlog -- fora de Frotas ela
+   deixaria o interruptor invisivel pra sempre. Aqui so' o contorno importa. */
 .tl-switch-detalhado .form-check-input {
   border: 1px solid rgba(0, 0, 0, 0.35) !important;
 }
 
+/* A linha digitavel do boleto e a chave da nota, no modal de documentos da
+   fatura (pages/Custos_Ticketlog). Fonte monoespacada porque sao numeros que
+   a pessoa vai conferir digito a digito ou copiar; quebra em qualquer ponto
+   porque a chave tem 50 caracteres sem espaco e estouraria o modal. */
+/* Card do topo de "Veiculos cadastrados" que tambem FILTRA a tabela. O card
+   e' um input_action_button pra o teclado alcancar e o Shiny entregar o evento
+   -- aqui so' se tira a cara de botao (o visual vem de .card-resumo-comod, de
+   Comodatos) e se marca qual esta' aplicado. */
 .card-filtro {
   border: none;
   text-align: left;
@@ -706,11 +1451,17 @@ shiny-data-frame table {
 .card-filtro:hover {
   filter: brightness(1.12);
 }
-
+/* Card aplicado: contorno claro por dentro, o mesmo recurso que o card de
+   total de Frotas usa pra se distinguir sem cor nova. */
 .card-filtro-ativo {
   box-shadow: inset 0 0 0 2px #fff;
 }
 
+/* Lista de faturas do modal de documentos (pages/Custos_Ticketlog).
+   A linha, a situacao e os dois botoes de icone usam list-group, badge e
+   btn-link do Bootstrap, que ja vem com o app -- aqui fica so' o que nao tem
+   utilitario pronto: limitar a altura da lista, porque a SJM Mipibu chega a
+   dez faturas no mes e o modal cresceria alem da tela. */
 .doc-lista {
   max-height: 46vh;
   overflow-y: auto;
@@ -729,6 +1480,13 @@ shiny-data-frame table {
   user-select: all;
 }
 
+/* Controles de paginação classica por cima do render.data_frame nativo
+   (ver CLAUDE.md "Tabelas usam @render.data_frame" e
+   core/tabela_paginada.py::TabelaPaginada.controles) -- substitui o
+   bloco ".dt-*" que existia quando as tabelas eram montadas com
+   itables/DataTables (removido, classes não existem mais). Genérico
+   pros 4 apps, mesmo motivo de core/crossfilter.py: mora fora de
+   pages/ especificamente pra ser reaproveitado por qualquer tabela. */
 .paginacao-tabela {
   align-items: center;
   color: var(--tabela-texto-escuro, #1a1a1a);
@@ -745,11 +1503,19 @@ shiny-data-frame table {
   font-size: 12px;
   gap: 6px;
 }
-
+/* ui.input_select() sempre embrulha o <select> num ".form-group"
+   (label vazio + margin-bottom:1rem do Bootstrap, mesmo sem label
+   nenhum) -- sem zerar essa margem, o wrapper fica mais alto que o
+   select em si, e o "align-items: center" do .paginacao-tamanho acima
+   centraliza o WRAPPER inteiro (nao o select), deixando o dropdown
+   visualmente mais alto que o texto "Mostrar" do lado. */
 .paginacao-tamanho .form-group {
   margin-bottom: 0;
 }
-
+/* !important pra vencer o ".form-select" do Bootstrap (bem mais
+   especifico em altura/fonte/padding do que faria sentido aqui do lado
+   dos botoes de pagina, que sao pequenos -- ver ".btn-paginacao"
+   abaixo, mesmo motivo). */
 .paginacao-tamanho select {
   background-color: var(--tabela-fundo-claro, #fff) !important;
   border: 1px solid rgba(0, 0, 0, 0.2) !important;
@@ -766,7 +1532,12 @@ shiny-data-frame table {
   display: flex;
   gap: 6px;
 }
-
+/* Botoes so com icone (ver core/tabela_paginada.py::controles -- texto
+   com seta em unicode foi trocado por icon_svg porque a fonte do tema
+   nao tem esses glifos, colapsando o botao pra largura zero). Tamanho
+   fixo, igual pros 4 (".btn"/".btn-default" do Bootstrap tem padding
+   proprio maior -- !important pra garantir a mesma escala pequena da
+   barra inteira, "mesmo patamar" pedido pelo usuario). */
 .paginacao-botoes .btn-paginacao {
   align-items: center;
   background-color: var(--tabela-fundo-claro, #fff) !important;
@@ -793,6 +1564,10 @@ shiny-data-frame table {
   white-space: nowrap;
 }
 
+/* Comodatos (pages/Comodatos/) -- mesmas variaveis globais de sempre,
+   classes proprias (".comod-*"), espelhando Frotas/Romaneios/Devoluções
+   regra por regra (ver CLAUDE.md "padrão visual/estrutural/UX único
+   entre os quatro apps"). */
 .comodatos-modulo {
   position: relative;
 }
@@ -812,6 +1587,28 @@ shiny-data-frame table {
   border-radius: 9px 9px 0 0;
 }
 
+/* Filtros -- grade de 12 colunas, mesma ideia de ".filtros-padrao"/
+   ".filtros-rom"/".filtros-dev". */
+
+/* "Pesquisar CEV" é campo de digitação livre (não um filtro de escolha):
+   ocupa duas colunas da grade em vez de uma -- é onde a pessoa digita CEV,
+   nome de cliente ou fantasia (pedido do usuário: "aumente um pouco ele,
+   pois é de pesquisa") -- e usa a MESMA moldura/sombra dos filtros ao lado,
+   que ele não tinha (medido: sombra "none" contra a sombra dos filtros). */
+
+/* Fundo/borda proprios do "item" (virando um cartao/chip) so fazem
+   sentido em filtro MULTI-select com 2+ tags -- num select de valor
+   UNICO, essa borda/fundo duplicava a MESMA borda/fundo que
+   ".selectize-input" (pai) ja tem, criando um "quadrado dentro do
+   quadrado" -- so ficava escondido com o tema escuro (superhero),
+   ficou visivel trocando pro tema claro (flatly). Mesmo bug/correcao
+   ja feita no Acompanhamento Comercial. */
+
+/* Faixa "Marcar os N / Desmarcar todos" no topo da lista dos filtros de
+   Comodato (ver www/js/marcar_todos.js). Fica FORA de
+   ".selectize-dropdown-content" de proposito: aquele bloco rola com as opcoes e
+   e' refeito pelo selectize a cada letra digitada. */
+
 .btn-limpar-comod {
   height: 38px;
   grid-column: 12;
@@ -820,14 +1617,33 @@ shiny-data-frame table {
   background-color: var(--cor-sidebar, #254D71) !important;
   border-color: var(--cor-sidebar, #254D71) !important;
 }
+/* ".btn-exportar-comod" morava aqui -- removida em 2026-07-28: nenhuma das
+   3 páginas de Comodatos usa essa classe (Comodatos não tem botão de
+   exportar, ver a regra de "só página com tabela grande crua tem
+   download"). Os comentários mais acima que a citam como referência de
+   estilo continuam válidos como histórico. */
 
+/* Cartão de resumo (Comodatos: 7 indicadores) -- mesma ideia de
+   ".card-resumo-rom" (ícone + gradiente). */
+
+/* Container dos 7 cards -- flex em vez de ui.layout_columns/Bootstrap
+   12 colunas: 7 nao divide igual em 12 (12 // 7 == 1 no Python, cada
+   card ficava espremido numa fatia mínima, texto sobrepondo o número
+   -- achado testando de verdade). Cada card com o mesmo "flex: 1"
+   ocupa uma fatia igual da linha, não importa quantos sejam (3 na
+   variação de uma revenda + 5, ou 3 + 4 no padrão) -- mesma ideia de
+   ".cards-classe-veiculo" de Frotas. */
 .cards-resumo-comod-linha {
   display: flex;
-
+  /* Sem "wrap" (e com base 0 abaixo) os 7 cards encolhiam sem limite: 41px cada
+     num celular de 390px, dos quais 34 sao o icone -- sobrava nada pro numero e o
+     rotulo quebrava em 3 linhas, cada card com uma altura diferente. */
   flex-wrap: wrap;
   gap: 12px;
   margin-bottom: 16px;
 }
+
+/* Tabelas -- mesma ideia de ".dev-tabela"/".rom-tabela". */
 
 .comodatos-modulo table.dataTable {
   table-layout: fixed;
@@ -842,6 +1658,16 @@ shiny-data-frame table {
   padding: 5px 7px;
 }
 
+/* Comodatos: largura de coluna e redimensionamento manual das 4
+   tabelas (Clientes/Solicitações/CEVs/Saldo) migraram pro mecanismo
+   genérico do app -- core/largura_tabela.py (CSS por posição) +
+   www/js/tabela_resize.js (alça de arrastar), classe ".tabela-resize"
+   no wrapper de cada tabela. O que continua específico daqui é só
+   "table-layout: fixed" (o componente nativo de tabela do Shiny usa
+   "auto" por padrão, que ignora a largura pedida por CSS/JS sempre que
+   o conteúdo "precisa" de mais espaço -- testado e confirmado, mesmo
+   motivo pelo qual Frotas precisou de JS próprio antes, ver
+   www/js/frota.js) e a quebra/corte de texto no cabeçalho. */
 #comod_solic-tabela_clientes table,
 #comod_solic-tabela_solicitacoes table,
 #comod_solic-tabela_detalhes_cliente table,
@@ -849,7 +1675,10 @@ shiny-data-frame table {
 #comod_saldo-tabela_saldo table {
   table-layout: fixed;
 }
-
+/* Clientes, Solicitações e CEVs: sem quebra de linha no cabeçalho
+   (igual ao R, `wrap = FALSE`) -- corta com reticências em vez de
+   quebrar, já que as larguras foram pensadas pra caber o texto numa
+   linha só (ou perto disso). */
 #comod_solic-tabela_clientes th,
 #comod_solic-tabela_solicitacoes th,
 #comodatos-tabela_comodatos th {
@@ -857,12 +1686,23 @@ shiny-data-frame table {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+/* Saldo/Vasilhames: R usa `wrap = TRUE` -- diferente das outras 3,
+   aqui o cabeçalho quebra linha em vez de cortar (colunas como
+   "Empréstimo Mês" ficam ilegíveis cortadas nessa largura). */
 #comod_saldo-tabela_saldo th {
   position: relative;
   white-space: normal;
 }
-
+/* Cabeçalho em 2 linhas quando o rótulo tem "\n" -- mesmo mecanismo já
+   usado no Diário de Venda do Comercial (ver style.css de lá, regra
+   ".dv-tabela ... thead th"), trazido pra cá a pedido do usuário: as
+   colunas de rótulo comprido ("Intervalo (dias)", "Inad. 60 dias +",
+   "Razão Social") saíam cortadas na largura que o R usa. "pre-line"
+   quebra SÓ nos "\n" escritos no nome da coluna (ver
+   Dados/tabela_comodato.py::_RENOMEIA_COMODATOS) -- rótulo de uma linha
+   continua se comportando como antes, cortando com reticências.
+   "!important": o próprio componente põe um <div> dentro de cada <th>
+   com "white-space: nowrap", que venceria o <th> sem isso. */
 .comodatos-modulo shiny-data-frame table thead th,
 .comodatos-modulo shiny-data-frame table thead th > div,
 .tl-modulo shiny-data-frame table thead th,
@@ -871,11 +1711,287 @@ shiny-data-frame table {
 .fin-modulo shiny-data-frame table thead th > div{
   white-space: pre-line !important;
 }
+/* Redimensionar coluna com o mouse NAO existe neste app, e e' decisao, nao
+   esquecimento. O mecanismo generico do projeto (www/js/tabela_resize.js, a
+   alca de arrastar) mora no repositorio do shiny_python e nao veio junto na
+   separacao; o componente nativo do Shiny nao tem opcao equivalente
+   (render.DataTable so' aceita width/height/summary/filters/editable/
+   selection_mode/styles). Trazer o arquivo resolveria, e foi recusado pelo
+   usuario em 21/09/2026: "a ideia e' usar o menos de js possivel".
+
+   Por isso a classe ".tabela-resize" saiu das cinco tabelas desta tela: ela
+   prometia uma alca que nunca ia aparecer, e quem lesse o codigo depois ia
+   procurar o bug no lugar errado. A largura de coluna continua vindo de
+   core/largura_tabela.py (CSS por posicao), que e' server-side e nao precisa
+   de JS. */
+
+/* Botões de célula (Ação/Doc/Cev/Canhoto/Distrato/Solicitação/
+   Detalhes/Sincronizar/Enviar/Retirar) -- mesmo padrão de
+   ".frota-btn-cel" (sem fundo/borda própria, só o emoji, cursor de mão
+   e leve destaque ao passar o mouse indicam que dá pra clicar). */
+
+/* A célula que abre/fecha o grupo (CEV em Comodatos, Cliente em
+   Solicitação) é a única do conjunto que mostra TEXTO, e não um emoji: o
+   1rem herdado de ".comod-btn-cel" (16px) deixava essa coluna com a letra
+   bem maior que o resto da tabela (12px), destoando. Alinhada com a tabela. */
+
+/* Pastilha redonda dos ícones de "Reenviar Email"/"Recolha" (a cor de fundo
+   vem inline, de core/cores.py -- ver tabela_comodato.py::_icone_pastilha).
+   Desenho branco por dentro, centralizado: é o que dá contraste em qualquer
+   uma das cores e deixa as colunas de ação distinguíveis de longe. */
+
+/* Envelope com selo de "nao foi enviado" (CEV que tentou e nenhum email chegou).
+   O wrapper e' quem posiciona: a pastilha por baixo continua do mesmo tamanho das
+   outras colunas, e o selo entra por cima, no canto inferior direito.
+   "line-height: 0" evita que o selo aumente a altura da linha da tabela. */
+
+/* Coluna "Reenviar Email" (email do comodato). O envelope herda o hover de
+   ".comod-btn-cel"; o travado (limite gasto) fica apagado e com cursor de
+   "não pode" -- mas continua clicável de propósito, porque o clique é o que
+   abre a explicação de procurar o suporte. */
+
+/* Botão de WhatsApp da janela de documentos (cobrar a assinatura do contrato
+   que não chegou). Verde da marca, do tamanho do campo ao lado. */
+
+/* Razão Social + botão de WhatsApp na mesma linha: o campo ocupa o que sobra e
+   os dois terminam alinhados pela base (o campo tem rótulo em cima, o botão
+   não).
+   A margem de baixo sai do campo e vai pra LINHA: "align-items: flex-end"
+   alinha a caixa COM margem, então o 1rem que todo .shiny-input-container traz
+   empurrava o campo 16px pra cima e o botão ficava sozinho na base (medido no
+   navegador: base do botão 16px abaixo da base do campo -- foi o
+   "desalinhado" relatado pelo usuário em 2026-08-06). Com a margem na linha,
+   os dois terminam juntos e o espaço até o campo de baixo continua o mesmo. */
+
+/* Modal de reenvio: a linha que diz quantos reenvios restam, e o lembrete de
+   que o envio é cobrado (esse em destaque -- é o que torna o clique uma
+   decisão, não um teste). */
+
+/* Modal de Solicitar/Auditoria/Upload (componentes de Comodatos) --
+   mesma correção de contraste já usada em Frotas/Romaneios
+   (".frota-campo-leitura"/".rom-campo-leitura" → ".comod-campo-leitura"),
+   já que o tema escuro do app deixaria texto branco sobre fundo branco
+   sem isso. */
+/* Dois seletores porque os modais de Comodatos montam o campo só-leitura de
+   formas diferentes: nos de Auditoria/Upload a classe fica no proprio
+   .form-control (uma <div> imitando campo), e no de Solicitação ela fica no
+   CONTAINER de um ui.input_text de verdade (ver
+   pag_solicitacao.py::_campo_so_leitura) -- neste caso quem recebe o fundo é
+   o <input> de dentro, nunca o container inteiro (senão o rótulo do campo
+   ganhava faixa cinza atrás, diferente dos campos editáveis ao lado). */
+
+/* Feedback de verificação de documento (modal Solicitar Comodato) --
+   mesma ideia do shinyFeedback do R (showFeedbackSuccess/Danger em cima
+   do campo Razão Social ou CNPJ/CPF, conforme o cliente seja PJ ou PF).
+   Hoje é só a mensagem colorida embaixo do campo (as classes de borda
+   verde/vermelha saíram junto com a <div> que imitava campo -- o campo
+   agora nasce pronto com o modal, sem passar pelo servidor). Cor vem dos
+   utilitários text-success/text-danger do Bootstrap. */
+
+/* Linha que explica quando a conferência dos documentos começa (janela de
+   documentos do CEV) -- a conferência só roda com todos os campos escolhidos,
+   então sem esta explicação o "Enviar" travado não se explica sozinho. */
+
+/* Botão no canto direito do cabeçalho do card ("Adicionar exceção", na
+   aba Solicitação) -- mesmo desenho do "Ativar histórico" do Diário de
+   Venda no Acompanhamento Comercial: botão pequeno, quase do tamanho de
+   um ícone, encostado na direita. Azul fixo (não a cor de tema): é o
+   mesmo azul que o Comercial usa nesse botão, e aqui ele precisa se
+   destacar do azul do próprio cabeçalho do card. */
+
+/* Modal "Adicionar exceção" -- título e texto explicativo (o modal não
+   usa o cabeçalho padrão do ui.modal, igual aos outros de Comodatos). */
+
+/* Campo só-leitura continua cinza dentro do modal: a regra de contraste
+   logo acima pinta TODO campo de branco com !important e vence por ser mais
+   específica, então o cinza precisa vir com a mesma força e um seletor mais
+   longo (senão campo só-leitura ficava igual a campo editável). */
+
+/* Fundo de destaque na opcao ativa/sob o mouse -- faltava por completo
+   pros dropdowns de DENTRO de modal (Tipo/Item/Prazo do "Solicitar
+   comodato"), so os dropdowns de filtro (".filtros-comod") tinham essa
+   regra. Sem isso a opcao com foco/mouse em cima nao se distinguia
+   visualmente das outras (mesmo efeito do highlight azul do R). */
+
+/* A opcao ja escolhida antes (classe ".selected" do selectize.js,
+   diferente de ".active" -- essa e' so o hover/foco atual) ficava com o
+   laranja padrao do tema escuro (mesmo motivo do comentario "destaque
+   laranja" em .filtros-padrao mais acima) toda vez que o dropdown era
+   reaberto -- duas cores concorrendo (o laranja da escolha antiga +
+   o azul de active/hover). Pedido do usuario: tirar o laranja, cinza
+   claro no lugar. */
+
+/* Aviso da conferência de documento POR CIMA do formulário de Solicitação
+   (verificando / aprovado / recusado). É a única forma de ter o
+   comportamento do shinyalert do R aqui: o Shiny for Python mantém um modal
+   por vez, então mostrar o aviso como modal fecharia o formulário. */
+
+/* Lista dos produtos que serão retirados, no modal que confirma o cancelamento
+   da solicitação inteira. Altura em vh porque a solicitação pode ter muitos
+   itens -- passando disso, rola dentro da própria lista em vez de esticar o
+   modal além da tela. */
+
+/* Destinatario do reenvio de email, logo abaixo do aviso de confirmacao:
+   mesma fonte/margem da lista de produtos acima. overflow-wrap porque
+   endereco longo nao tem espaco pra quebrar e estouraria o modal "s". */
+
+/* Roda enquanto o documento está sendo lido -- ocupa o lugar do círculo com
+   ícone que os outros avisos têm (core/aviso.py::corpo_aviso). */
 
 @keyframes comod-girar {
   to { transform: rotate(360deg); }
 }
 
+/* Modal "Solicitar comodato": ocupa quase toda a largura disponivel.
+   A classe fica dentro do corpo porque ui.modal nao recebe class_ no
+   proprio dialogo; :has() permite alcançar o invólucro do Bootstrap. */
+
+/* Os tres controles da primeira linha precisam começar e terminar na
+   mesma altura. O fileInput traz alturas/margens internas diferentes
+   dos campos de leitura; esta regra iguala a caixa visivel. */
+
+/* Todo campo do modal hoje e' um input do Shiny de verdade (ate os
+   so-leitura, ver pag_solicitacao.py::_campo_so_leitura), entao todos
+   nascem com a MESMA estrutura/margem -- estas duas regras so uniformizam
+   largura e espaco entre uma linha e a de baixo, no cabecalho e na linha
+   de item (a linha de item nunca tinha a regra de margem do container:
+   os 5 inputs reais ficavam com 1rem do Bootstrap e o campo "Valor",
+   que era uma <div>, com metade disso). */
+
+/* Capa dos modais de Upload/Auditoria -- era o mesmo efeito repetido em
+   style= inline nos dois; aqui vira classe, do jeito que o modal de
+   Solicitação já fazia (.comod-solic-capa). Altura em vh (nunca px, ver
+   CLAUDE.md) e "align-items: flex-start" na .row do modal impedem que a
+   imagem estique junto quando o formulário do lado cresce. */
+
+/* Detalhes do cliente: o modal e' apenas o mecanismo de sobreposicao;
+   seu "cartao" visual some e somente a tabela permanece aparente. */
+
+/* Tabela centralizada dentro do modal, igual ao R (a tabela lá fica dentro
+   de um <div style="display:flex; justify-content:center">). O diálogo
+   ganha a largura do próprio conteúdo: o R usa size="s" (300px), estreito
+   demais aqui porque as colunas têm largura fixa (o reactable do R encolhe
+   coluna sozinho, o componente nativo não) -- com "fit-content" o modal
+   fica compacto e centralizado, do tamanho da tabela, sem transbordar. */
+
+/* Nada de "display: flex" aqui (o R usa, para centralizar o reactable):
+   testado no navegador, a tabela nativa do Shiny é um elemento sem largura
+   própria -- como item de um flex ela estourou para 1.000.000px e o modal
+   saiu da tela. O diálogo já fica centralizado pelo Bootstrap (margem
+   automática nas laterais), então a centralização não precisa de flex. */
+
+/* Capa do modal "Solicitar comodato" -- altura fixa (vh, nunca px, ver
+   CLAUDE.md "Regra fixa: altura/largura sempre em unidade relativa")
+   em vez de "height: 100%", que fazia a imagem esticar junto quando o
+   formulario a esquerda crescia (cada "Adicionar item" empurrava a
+   altura da coluna toda). Combinado com "align-items: flex-start" na
+   .row (ver pag_solicitacao.py), a imagem agora fica do mesmo tamanho
+   sempre, independente de quantos itens existem. */
+
+/* Linha de item dinamica (Tipo/Item/Id Prod/Qtd/Prazo/Valor) do modal
+   "Solicitar comodato" -- fonte reduzida na linha inteira (6 campos
+   apertados numa grade de 12) e o campo "Item" sem quebra de linha: o
+   nome do produto e' longo (ex: "394044 - Ref Amstel Pc 8Cx 220V
+   Vcfc565") e quebrava em varias linhas dentro da caixa fechada do
+   selectize, empurrando a altura da linha toda e fazendo os campos
+   vizinhos (principalmente "Valor") parecerem desalinhados. O texto
+   continua em uma linha, mas sem desenhar "..." dentro do campo. */
+
+/* Coluna "Id Prod" da linha de item: um botão que abre o painel das duas fotos
+   do material (ver pag_solicitacao.py::_campo_material). A caixa dele NÃO leva
+   ".shiny-input-container" de propósito -- essa classe nasce com 300px fixos e
+   estouraria a coluna (mesma armadilha do checkbox deste modal e do botão
+   "Distância" do Mapa Comercial); aqui a margem de baixo é a mesma dos campos
+   vizinhos, para a linha continuar alinhada. */
+
+/* Mesma caixa dos campos ao lado (altura, borda, fonte): o botão ocupa o lugar
+   de um campo de texto, então parecer um campo é o que mantém a linha regular.
+   ".modal" na frente + !important pelo mesmo motivo dos outros botões daqui --
+   o tema pinta todo botão do modal de azul. */
+
+/* Já cadastrado: o botão mostra o número de série, e a borda verde diz que
+   aquela linha tem equipamento identificado. */
+
+/* Painel das fotos: mesma moldura do aviso de conferência de documento
+   (.comod-aviso-caixa), só um pouco mais larga porque aqui dentro há dois envios
+   de arquivo e um campo de texto.
+
+   Diferente do aviso de documento, este painel é "fixed" (a tela inteira), não
+   "absolute" dentro do modal. Dois defeitos vinham daquilo, os dois relatados pelo
+   usuário: (1) o painel entra no fluxo do modal, então a barra de progresso do
+   envio de arquivo aparecendo/sumindo esticava a ALTURA do modal por um instante; e
+   (2) quando o painel cresce (um aviso a mais), ele passa da área do modal e é
+   cortado pela borda dele -- ficava com os botões pela metade. Fora do modal, o
+   painel também fica garantidamente NA FRENTE (o modal deste tema é z-index 1300).
+   A caixa rola por dentro quando o conteúdo passa da tela. */
+
+/* Andamento e resultado da leitura da etiqueta: mais uma camada, por cima do painel
+   das fotos (1400) -- é a janela que diz "lendo...", "etiqueta lida" ou o erro. */
+
+/* A barra de progresso do envio de arquivo fica FORA do fluxo dentro deste painel:
+   ela aparece e some a cada foto escolhida, e no fluxo normal empurrava a altura do
+   painel (o que o usuário viu como o modal "pulando"). O wrapper reserva o espaço
+   dela de uma vez, então nada se move. */
+
+/* Campo do número de série: quem escreve nele é a leitura da etiqueta. O cursor de
+   "não editável" e o fundo cinza dizem isso antes de a pessoa tentar. */
+
+/* O MESMO campo, aberto pra digitação -- só quando o serviço de leitura está fora
+   do ar (ver pag_solicitacao.py::campo_identificador_material). Classe separada de
+   propósito: reaproveitar ".comod-campo-serial" aqui deixava o campo inerte, porque
+   a regra de cima é justamente a que trava (bug real relatado em produção em
+   2026-09-03 -- "pede para digitar, porém continua sem permitir"). Aqui vale o
+   contrário: ponteiro normal e fundo de campo editável. */
+
+/* "Valor" + botão de apagar na última coluna da linha de item. O
+   posicionamento (lado a lado, alinhados pela base) vem de utilitários do
+   Bootstrap aplicados na própria página (d-flex/align-items-end/gap-1/
+   flex-grow-1), não de CSS próprio -- aqui fica só a cor do botão, que o
+   tema do app não deixa resolver de outra forma.
+   Seletor com ".modal" na frente de propósito: quem pinta os botões do
+   modal de azul é ".modal .btn-default" (com !important) -- uma regra mais
+   específica que ".comod-item-remover" sozinha, então o X saía igual a um
+   botão comum mesmo com !important (achado com o inspetor do navegador). */
+
+/* Confirmar/Cancelar dos modais de Comodatos com as cores do R
+   (actionBttn color="success"/"danger"): verde pra confirmar, vermelho pra
+   cancelar. ".modal" na frente + !important pelo mesmo motivo do botão de
+   apagar acima -- o tema pinta todo botão do modal de azul. */
+
+/* Cada opção da lista aberta também em uma linha só, com "..." no fim --
+   antes uma opção comprida quebrava em 2-3 linhas e a lista ficava alta. */
+
+/* Icone verde significa que a etapa ja esta concluida: aparece como
+   estado, sem cursor/efeito de botao. */
+
+/* Prazo de envio esgotado: o MESMO icone da coluna "Ação", so' que sem clique.
+   Faltava estilo proprio -- sem ele o icone herdava o tamanho do texto da tabela
+   (12px) e saia menor que o das linhas ainda clicaveis, parecendo outro simbolo
+   (achado pelo usuario). Copia o box de ".comod-btn-cel" (inclusive o "display"
+   de origem, que e' o que iguala a altura da celula); o que muda e' so' o cursor
+   e a ausencia de efeito ao passar o mouse.
+   Continua valendo depois de 2026-08-06: quem está na lista "supremo" recebe o
+   botão clicável nessas linhas, todo o resto continua vendo só o ícone. */
+
+/* ".comod-recolha-pdf" saiu em 2026-08-03 junto com a imagem externa do
+   PDF (flaticon): o ícone da Recolha agora é desenhado no próprio HTML
+   (Dados/tabela_comodato.py::_icone), já com tamanho e cor. */
+
+/* Modal "Aviso" (core/aviso.py::modal_aviso) -- mesmo visual do
+   shinyalert do R (circulo colorido + icone, titulo, texto, sem botao
+   nenhum). Cabecalho padrao do ui.modal escondido de proposito, pra
+   nao duplicar titulo (o "Aviso" já vem dentro do corpo). Selector
+   global de proposito (nao escopado a nenhuma pagina) -- o helper e'
+   compartilhado pelas 4 areas do app (Frotas/Devolucoes/Romaneios
+   Pendentes/Comodatos), mesmo motivo de "shiny-data-frame table thead
+   th" mais acima. */
+/* ":not(:has(.comod-aviso-sobreposto))" -- as duas regras abaixo valem pro
+   modal QUE E' um aviso, nao pro modal que MOSTRA um aviso por cima do proprio
+   conteudo (a conferencia de documento da Solicitacao, ver
+   .comod-aviso-sobreposto). Sem essa ressalva, o ":has" passava a casar assim
+   que o aviso aparecia dentro do formulario e escondia o cabecalho dele --
+   sumiam o titulo "Solicitar comodato" e o botao de fechar (erro real relatado
+   pelo usuario). */
 .modal:has(.aviso-corpo):not(:has(.comod-aviso-sobreposto)) .modal-header {
   display: none;
 }
@@ -910,7 +2026,18 @@ shiny-data-frame table {
   font-size: 0.95rem;
   padding: 0 16px;
 }
+/* "Termos do Corporativo" no modal de Auditoria -- link sem acao
+   nenhuma no R tambem (actionLink sem observeEvent correspondente),
+   so o visual foi portado. */
 
+/* Bot de IA -- botao flutuante + painel de chat (core/chat_flutuante.py).
+   Pedido do usuario: canto inferior direito, em cima de qualquer pagina
+   (exceto Puxada/Invent. Vasilhame, que sao iframe puro). z-index alto o
+   bastante pra ficar acima do conteudo normal das paginas, mas abaixo de
+   modal (.modal do Bootstrap usa 1055) -- nao faz sentido o chat tampar
+   um modal de aviso/confirmacao em andamento. Largura/altura em vw/vh
+   (nunca px), mesma regra ja seguida no resto das tabelas do app -- ver
+   CLAUDE.md, "altura e largura sempre em unidade relativa". */
 .chat-flutuante-botao {
   position: fixed;
   right: 3vw;
@@ -930,10 +2057,30 @@ shiny-data-frame table {
   box-sizing: border-box;
   line-height: 0;
 }
-
+/* span que envolve o SVG (icon_svg, faicons) */
+/* Bootstrap/Shiny reserva ".action-icon + .action-label { margin-left:
+   1ch }" pra qualquer botao com icone seguido de rotulo -- pensado pra
+   dar um respiro entre icone e texto, mas aplica mesmo quando o rotulo
+   esta vazio (".chat_toggle"/".chat_enviar" sao botoes so' de icone,
+   ui.input_action_button(..., "", icon=...)). Isso empurra o icone pra
+   esquerda (o "1ch" reservado ocupa exatamente o espaco que sobraria
+   pra centralizar), mesmo com justify-content:center no botao --
+   achado real inspecionando o DOM (o rotulo vazio media largura 0 mas
+   tinha margin-left:8.6px, empurrando o icone). !important necessario
+   pra vencer a regra do Bootstrap (3 classes de especificidade). */
 .chat-flutuante-botao .action-label{
   margin-left: 0 !important;
 }
+
+/* garante que o SVG não gere espaçamento e fique centralizado;
+   ajuste 60% para mais/menos tamanho do ícone dentro do círculo.
+   !important necessário: icon_svg() (faicons) já vem com width/height/
+   margin-left/margin-right embutidos no proprio atributo style="..." do
+   SVG (pensados pra um icone ao lado de texto, não sozinho dentro de um
+   botão redondo) -- um estilo inline sempre vence uma regra de classe
+   comum, mesmo mais específica, então sem !important o robô ficava com
+   largura/altura fixas e desalinhado pra direita (margin-left: auto),
+   nunca realmente centralizado no botão. */
 
 .chat-flutuante-mensagens {
   flex: 1 1 auto;
@@ -943,7 +2090,13 @@ shiny-data-frame table {
   flex-direction: column;
   gap: 0.5rem;
 }
-
+/* Tela inicial do chat: saudação + perguntas prontas da página (clicar
+   manda). Antes era só uma frase cinza no meio do vazio. */
+/* A lista de temas (grupos, perguntas, contatos). O tamanho de fonte fica aqui,
+   em ".chat-flutuante-temas", e não só em ".chat-flutuante-vazio": essa segunda
+   classe existe apenas na tela inicial, então depois da 1ª resposta os botões
+   perdiam a regra e o texto CRESCIA (achado pelo usuário: "parece que os textos
+   estão aumentando de tamanho"). */
 .chat-flutuante-vazio{
   color: #666;
   font-size: 0.85rem;
@@ -951,6 +2104,9 @@ shiny-data-frame table {
   margin-top: 0.75rem;
 }
 
+/* Grupo de temas da ajuda ("Como esta tela funciona", "Erros e avisos"...): é o
+   botão que abre a lista de perguntas dele, um por vez. Os temas aparecem aos
+   poucos (pedido do usuário) -- primeiro só estes, depois as perguntas. */
 .chat-flutuante-grupo {
   display: flex;
   align-items: center;
@@ -975,6 +2131,9 @@ shiny-data-frame table {
   color: #fff;
 }
 
+/* Contatos do responsável (WhatsApp e e-mail) -- aparecem quando a pessoa diz
+   que nenhum tema respondeu a dúvida. Verde do WhatsApp e azul do app, para os
+   dois caminhos serem reconhecidos de longe. */
 .chat-flutuante-contatos {
   margin-top: 0.875rem;
 }
@@ -999,6 +2158,8 @@ shiny-data-frame table {
   fill: currentColor;
 }
 
+/* Canal escolhido: o botão fica marcado, para não haver dúvida de por onde a
+   mensagem vai sair (o campo de texto só nasce depois dessa escolha). */
 .chat-flutuante-contato {
   cursor: pointer;
 }
@@ -1010,6 +2171,32 @@ shiny-data-frame table {
   outline: 2px solid var(--cor-sidebar, #254D71);
   outline-offset: 2px;
 }
+/* Enviar do WhatsApp: é um link, não um botão -- mesma aparência do avião. */
+
+/* Mensagem instantânea no Spark (Openfire) -- terceira forma de falar com o
+   responsável, ao lado do WhatsApp e do e-mail. */
+
+/* Logo do Spark no botão de mandar mensagem (www/img/spark.png). Enquanto o
+   arquivo não existir, o botão usa um ícone de conversa e esta regra não pega
+   nada -- ver core/chat_flutuante.py::_icone_spark. */
+
+/* "Outras dúvidas" -- a lista de temas recolhida num botão só, depois de uma
+   resposta (a resposta é que tem de ficar à vista). */
+
+/* "Não achei minha dúvida" -- é o que libera o campo de digitação (última
+   opção, quando nenhum tema respondeu). Discreto de propósito: o caminho normal
+   é escolher um tema. */
+
+/* A barra de baixo antes de a digitação ser liberada: tem a cara do campo de
+   texto, mas não digita -- clicar nela também libera. */
+
+/* Título de cada grupo de temas da tela inicial da ajuda ("Como esta tela
+   funciona", "Erros e avisos"...) -- os grupos vêm de
+   config/ajuda_comodatos.json. */
+
+/* Link do manual de comodato em PDF, oferecido logo na abertura da ajuda
+   (pedido do usuário). Mesmo desenho dos botões de tema, com a cor de destaque
+   preenchida -- é a ação principal daquela tela inicial. */
 
 .chat-flutuante-sugestao {
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -1025,6 +2212,7 @@ shiny-data-frame table {
   border-color: var(--cor-destaque, #3874AB);
   color: #fff;
 }
+/* Cabeçalho: ícone do robô + nome + a área sobre a qual ele responde agora. */
 
 .chat-flutuante-bolha {
   max-width: 85%;
@@ -1037,7 +2225,9 @@ shiny-data-frame table {
   align-self: flex-end;
   background-color: var(--cor-destaque, #3874AB);
   color: #fff;
-
+  /* Mensagem do usuario continua texto puro (ver core/chat_flutuante.py
+     ::_montar_painel) -- pre-wrap preserva quebra de linha manual sem
+     precisar de markdown nenhum. */
   white-space: pre-wrap;
 }
 .chat-flutuante-bolha-bot {
@@ -1045,7 +2235,12 @@ shiny-data-frame table {
   background-color: #f0f0f0;
   color: #1a1a1a;
 }
-
+/* Resposta do bot agora e' HTML de verdade (ui.markdown(), ver
+   core/chat_flutuante.py) -- <p>/<ul>/<ol> ja trazem quebra de linha
+   propria; sem este reset, a margem padrao do navegador em cada
+   paragrafo deixava a bolha com espaco em branco sobrando em cima/
+   embaixo, e listas ficavam sem bala/numero visivel (herdava
+   "list-style:none" de algum reset global do tema). */
 .chat-flutuante-bolha-bot > *:first-child {
   margin-top: 0;
 }
@@ -1086,7 +2281,9 @@ shiny-data-frame table {
   font-style: italic;
   opacity: 0.75;
 }
-
+/* Tres pontinhos "piscando" em sequencia (padrao usual de indicador de
+   "digitando" em chat) em vez de reticencias estaticas -- mesmo pedido
+   do usuario de sinalizar "pensando" com alguma animacao. */
 .chat-flutuante-pontos {
   display: inline-flex;
   align-items: center;
@@ -1116,7 +2313,18 @@ shiny-data-frame table {
     transform: translateY(-0.125rem);
   }
 }
+/* Linha de input inteira vira uma "pilula" arredondada (clipe + caixa
+   de texto + enviar juntos dentro da mesma borda), pedido do usuario --
+   mesmo padrao visual de app de chat comum. */
 
+/* Percentual de uso da cota da Groq -- "em baixo do campo de texto, num
+   dos cantos", pedido do usuario. Canto direito, discreto (fonte pequena,
+   opacidade reduzida) -- e' informacao de apoio, nao o foco da tela. */
+
+/* Tabela/grafico dentro da bolha do bot (core/chat_flutuante.py --
+   _montar_tabela_html/_montar_grafico_html). A bolha e' estreita (painel
+   inteiro tem 26vw), entao a tabela ganha rolagem horizontal PROPRIA em
+   vez de estourar/espremer o painel inteiro. */
 .chat-flutuante-tabela {
   margin-top: 0.375rem;
   max-width: 100%;
@@ -1130,7 +2338,11 @@ shiny-data-frame table {
   margin-top: 0.375rem;
   max-width: 100%;
 }
-
+/* Imagens/arquivos devolvidos pelo motor "api_externa" (bot/api_externa.py,
+   core/chat_flutuante.py) -- mesmo espirito visual de
+   ".chat-flutuante-tabela"/".chat-flutuante-grafico" acima (motor "groq"),
+   so' que os dois motores nunca aparecem juntos na mesma mensagem (cada
+   um preenche campos diferentes em "mensagem_bot"). */
 .chat-flutuante-imagens {
   margin-top: 0.375rem;
   display: flex;
@@ -1152,13 +2364,32 @@ shiny-data-frame table {
   font-size: 0.8rem;
   text-decoration: underline;
 }
-
+/* Bug real (achado pelo usuario, "quando ele ta pensando, o chat fica
+   transparente"): o Shiny esmaece ("recalculating", ver shiny.min.css)
+   qualquer output enquanto espera o servidor responder -- e a resposta
+   deste output especifico (chat_flutuante_widget) so chega DEPOIS que a
+   pergunta pra Groq termina de vez (o efeito que a dispara e' o mesmo
+   efeito, async, que fica esperando a rede -- o Shiny so libera QUALQUER
+   atualizacao de tela desta sessao quando ele termina, nao a cada
+   "await"), entao a bolha "Pensando..." (ver _montar_painel) nunca
+   chegava a aparecer -- so o esmaecimento nativo, parado, por varios
+   segundos. Corrigido com um indicador imediato do lado do navegador
+   (www/js/custom.js, secao "Bot de IA") -- este seletor so anula o
+   esmaecimento nativo pra nao brigar com a bolha animada nova. */
 #chat_flutuante_widget.recalculating,
 #chat_flutuante_widget.recalculating > * {
   opacity: 1 !important;
   transition: none !important;
 }
 
+/* Coluna "NF-e" de Romaneios Pendentes (baixar XML/PDF da nota) e os
+   modais de escolha/falha -- ver pages/Romaneios_Pendentes/pag_rom_abertos.py. */
+
+/* O icone e' desenhado aqui, nao no HTML da celula: um <svg> do faicons
+   custa ~580 caracteres e a coluna aparece em toda linha da pagina (ate
+   500), o que viraria ~290 KB de HTML repetido. Pelo "mask" ele desce uma
+   vez e ainda herda a cor do tema. Mesma solucao da imagem de cabecalho da
+   tabela Vasilhames (Comodatos). */
 .bt-nfe-baixar {
   display: inline-block;
   width: 1.15rem;
@@ -1171,7 +2402,13 @@ shiny-data-frame table {
 .bt-nfe-baixar:hover {
   background-color: var(--cor-sidebar, #254D71);
 }
-
+/* O <a> escondido que recebe o clique do JS (www/js/romaneios.js) -- ele
+   existe so' pra o navegador salvar o arquivo, nunca aparece na tela.
+   Sai da tela por posicionamento, NAO por "display: none": o Shiny suspende
+   output que ele considera invisivel, e um download suspenso nunca envia a
+   URL dele -- o que travava a tela de carregamento da pagina pra sempre,
+   porque ela so' sai quando TODO output ja' entregou valor (ver
+   www/js/custom.js). */
 .nfe-download-oculto {
   position: absolute !important;
   left: -10000px !important;
@@ -1205,7 +2442,8 @@ shiny-data-frame table {
 .nfe-spinner {
   margin-bottom: 1rem;
 }
-
+/* A chave em grupos de 4, como a SEFAZ imprime no DANFE -- monospace pra
+   conferir digito a digito sem os numeros "dancarem". */
 .nfe-modal-chave {
   font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
   font-size: 0.78rem;
@@ -1225,6 +2463,8 @@ shiny-data-frame table {
   word-break: break-word;
 }
 
+/* Os dois cartoes de formato. "1fr 1fr" ate 480px de largura e' o que os
+   mantem do mesmo tamanho independente do texto dentro. */
 .nfe-cartoes {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1232,7 +2472,8 @@ shiny-data-frame table {
   max-width: 480px;
   margin: 0 auto;
 }
-
+/* ".modal" na frente porque o tema pinta todo botao de modal de azul
+   (mesma disputa ja' resolvida assim nos botoes de Comodatos). */
 .modal .nfe-cartao {
   display: flex;
   flex-direction: column;
@@ -1286,22 +2527,48 @@ shiny-data-frame table {
 .modal .nfe-btn-portal:hover {
   background-color: var(--cor-sidebar, #254D71) !important;
 }
+/* marca de sincronia */
 
+/* ==========================================================================
+   CELULAR / TELA ESTREITA
+   O que estava horrível (medido num viewport de 390px): as grades de filtro são
+   "repeat(12, 1fr)" fixas, então cada filtro virava uma coluna de 17px e os
+   rótulos se sobrepunham. O resto do app já se comporta (os cartões empilham, a
+   tabela rola dentro do próprio quadro, o menu virou gaveta).
+
+   A correção é a receita pronta de grade responsiva -- "auto-fit + minmax", que é
+   o que o layout_column_wrap() do bslib faz por baixo: em vez de um número fixo
+   de colunas, cabem quantas couberem com pelo menos 9rem cada. Num celular de
+   390px dá 2 colunas; num tablet, 4 ou 5. O corte é o breakpoint "lg" do
+   Bootstrap (991.98px), o mesmo que o próprio Bootstrap usa.
+   ========================================================================== */
 @media (max-width: 991.98px) {
   [class*="filtros-"] {
     grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)) !important;
   }
-
+  /* O botão de limpar é fixado na coluna 12 ("grid-column: 12") -- na grade nova
+     essa coluna não existe mais, então ele volta a entrar na sequência. */
   [class*="filtros-"] > * {
     grid-column: auto !important;
   }
-
+  /* O painel de ajuda tem 26vw de largura, pensado pra desktop: num celular isso
+     dava 101px (medido). Aqui ele ocupa a tela, como qualquer conversa de app. */
+  
+  /* Todo container de input do Shiny nasce com 300px FIXOS (a mesma armadilha já
+     documentada no botão "Distância" do Mapa Comercial e no checkbox do modal de
+     Solicitação). Numa tela de 390px, um switch de 300px empurra o vizinho pra
+     fora do card -- medido em Devoluções/Detalhes: o botão de exportar Excel
+     terminava em 524px, ou seja, inalcançável. Só nos containers de
+     switch/checkbox: esses nunca precisam dos 300px (o conteúdo é o próprio
+     rótulo), enquanto um select/selectize depende deles pra não encolher. */
   .shiny-input-container:has(> .form-check),
   .shiny-input-container:has(> .checkbox) {
     width: auto !important;
     max-width: 100%;
   }
-
+  /* A barra das 5 abas de Frota tem "min-width: 560px" (pensada pra ocupar o meio
+     da linha no desktop) -- na área de 324px de um celular, as últimas abas ficavam
+     cortadas, sem jeito de alcançar. Sem o mínimo, as abas quebram em linhas. */
   .abas-frota {
     min-width: 0 !important;
   }
@@ -1313,6 +2580,10 @@ shiny-data-frame table {
   }
 }
 
+/* Janela "O que mudou no painel" (aviso das mudancas nas telas de Comodato) --
+   texto rolavel com o botao "Entendi" fixo embaixo, fora da rolagem, no formato
+   de um termo de uso. Altura em vh (regra do projeto: nunca px de layout), pra
+   caber em qualquer resolucao sem a janela passar da tela. */
 .mudancas-corpo {
   max-height: 55vh;
   overflow-y: auto;
@@ -1324,7 +2595,9 @@ shiny-data-frame table {
 .mudancas-secao {
   margin-top: 1rem;
 }
-
+/* Marca do fim do texto: o JS observa este pedaco entrar na tela pra liberar o
+   botao (ver www/js/comodatos.js). Precisa de altura minima -- alvo de altura
+   zero nunca "intersecta" em alguns navegadores. */
 .mudancas-fim {
   min-height: 1px;
 }
@@ -1340,7 +2613,9 @@ shiny-data-frame table {
   font-size: 0.8rem;
   opacity: 0.75;
 }
-
+/* Cada topico com um respiro entre linhas -- sao paragrafos curtos, e colados
+   viram um bloco unico difcil de ler. O ui.markdown envolve cada topico num
+   <p>, cuja margem padrao do Bootstrap seria grande demais aqui. */
 .mudancas-corpo li {
   margin-bottom: 0.4rem;
 }
@@ -1348,6 +2623,12 @@ shiny-data-frame table {
   margin-bottom: 0;
 }
 
+/* Aviso de sessao expirada (core/sessao.py + www/js/custom.js). Mesmo desenho
+   dos avisos do app (circulo colorido, titulo em negrito, texto cinza), mais o
+   botao de recarregar -- montado pelo navegador, porque precisa continuar de
+   pe' depois de a sessao fechar. z-index alto de proposito: cobre tela de
+   carregamento, modal e botao flutuante, senao daria pra clicar por baixo num
+   app que ja nao responde mais. */
 #sessao-expirada {
   position: fixed;
   inset: 0;
@@ -1401,6 +2682,14 @@ shiny-data-frame table {
   cursor: pointer;
 }
 
+/* Ao abrir a lista, o selectize troca o display do campo pra "inline-block" --
+   e um elemento inline deixa um vao de linha (~6px) embaixo, que empurrava a
+   linha INTEIRA de filtros pra baixo (o campo vizinho "descia" ao abrir). */
+
+/* Opcao ja escolhida CONTINUA na lista, com um check a direita -- e' o
+   comportamento do pickerInput do app em R, e o motivo do "hideSelected": False
+   nos filtros. O check e' escrito pelo ponto de codigo (\2713), nunca o glifo
+   cru (regra do CLAUDE.md). */
 .selectize-dropdown .option.selected {
   position: relative;
   padding-right: 1.4rem !important;
@@ -1415,12 +2704,21 @@ shiny-data-frame table {
   color: var(--cor-destaque, #3874AB);
   font-weight: 700;
 }
-
+/* Sob o mouse/teclado o fundo da opcao vira a cor de destaque -- o check tem
+   de virar branco pra nao desaparecer dentro dela. */
 .selectize-dropdown .option.selected.active::after,
 .selectize-dropdown .option.selected:hover::after {
   color: #fff;
 }
 
+/* Quem esta ESCOLHIDO e quem esta SOB O CURSOR precisam de cores diferentes.
+   Antes: a regra de cor dos filtros pintava toda opcao de branco (!important),
+   entao a escolhida ficava igual as demais, enquanto o azul forte marcava a
+   "opcao em foco" -- a ultima clicada. Resultado relatado pelo usuario: depois
+   de DESMARCAR, a opcao ficava azul, com a cara de escolhida.
+   Agora: escolhida = fundo suave da cor do app (mais o check); em foco, sem o
+   cursor em cima = cinza leve, so' pra guiar as setas do teclado; sob o cursor
+   = o azul de sempre. */
 .selectize-dropdown .option.selected:not(:hover) {
   background: color-mix(in srgb, var(--cor-destaque, #3874AB) 12%, #fff) !important;
   color: #1a1a1a !important;
@@ -1430,6 +2728,27 @@ shiny-data-frame table {
   color: #1a1a1a !important;
 }
 
+/* Resumo "N itens" escondido -- vale pros quatro filtros do app. Repete o
+   seletor de cada resumo de proposito: as regras deles usam "display: flex
+   !important", e entre dois "!important" quem ganha e' o seletor mais
+   especifico, nao o que vem depois. */
+
+/* ==========================================================================
+   Faixa de filtros e tabelas do Fiscal: copia do bloco de Devolucoes (prefixo
+   ".dev-" -> ".fis-"), regra por regra.
+   ========================================================================== */
+/* Filtros -- grade de 12 colunas, mesma ideia de ".filtros-padrao"/
+   ".filtros-rom" (cada filtro ocupa 1 coluna, botão de limpar fixo na
+   última coluna ocupada). */
+
+/* Fundo/borda proprios do "item" (virando um cartao/chip) so fazem
+   sentido em filtro MULTI-select com 2+ tags -- num select de valor
+   UNICO, essa borda/fundo duplicava a MESMA borda/fundo que
+   ".selectize-input" (pai) ja tem, criando um "quadrado dentro do
+   quadrado" -- so ficava escondido com o tema escuro (superhero),
+   ficou visivel trocando pro tema claro (flatly). Mesmo bug/correcao
+   ja feita no Acompanhamento Comercial. */
+
 .btn-limpar-fis {
   height: 38px;
   grid-column: 12;
@@ -1438,6 +2757,14 @@ shiny-data-frame table {
   background-color: var(--cor-sidebar, #254D71) !important;
   border-color: var(--cor-sidebar, #254D71) !important;
 }
+/* Detalhes tem filtros a mais que as outras tres paginas de Devolucoes
+   ("Cidade", que nao existe no R, e "Ult compra") -- eram 11 filtros + botao
+   enchendo as 12 colunas exatas, entao cada filtro novo empurraria o botao de
+   limpar pra uma segunda linha (mesmo caso ja resolvido em
+   ".frota-modulo-saida"). Sao 13 filtros hoje (o 13o e' "Data do romaneio").
+   A coluna extra e' "auto" em vez de mais um "1fr": o botao e' so' um icone e
+   nao precisa de uma coluna inteira -- assim ele encolhe pro tamanho dele e
+   sobra mais largura pros filtros. */
 
 .btn-exportar-fis {
   background: transparent !important;
@@ -1451,6 +2778,16 @@ shiny-data-frame table {
   color: var(--cor-destaque, #3874AB) !important;
 }
 
+/* Tabelas -- Devolucoes usa render.data_frame nativo (ver CLAUDE.md
+   "Tabelas usam @render.data_frame"), nao itables/DataTables -- por
+   isso "shiny-data-frame"/".shiny-data-grid", nao "table.dataTable"/
+   ".dt-scroll" (que nao existem mais no DOM desta pagina; o bloco
+   antigo, escrito pra itables, ficou parado aqui sem valer pra nada
+   depois da troca de biblioteca -- so o cabecalho continuava com estilo
+   por causa do seletor global "shiny-data-frame table thead th" mais
+   acima). Cor de fundo/texto, cantos arredondados na caixa com rolagem,
+   largura das colunas esticada pra ocupar o card todo, "..." em vez de
+   quebrar linha -- mesmo visual de quando a tabela ainda era itables. */
 .fis-tabela shiny-data-frame .shiny-data-grid {
   background-color: var(--tabela-fundo-claro, #fff);
   border-radius: 8px;
@@ -1471,13 +2808,29 @@ shiny-data-frame table {
 }
 .fis-tabela shiny-data-frame table tbody td {
   padding: 5px 7px;
-
+  /* text-align fica por conta da regra global (ver "shiny-data-frame
+     table tbody td" mais acima) -- chegou a centralizar TODAS as
+     colunas sem excecao aqui (defaultColDef(align = "center") do
+     reactable no R, pag_det_dev.R), revertido pra seguir a regra geral
+     do app (1a coluna na esquerda) a pedido do usuario. */
 }
 
+/* ==========================================================================
+   Acompanhamento Fiscal -- o que e' so' dele. A faixa de filtros e as tabelas sao
+   o bloco de Devolucoes acima, espelhado regra por regra com o prefixo ".fis-"
+   (mesmas variaveis de cor; ver CLAUDE.md da raiz, "padrao visual unico").
+   ========================================================================== */
 .fis-modulo .card {
   margin-bottom: 1vh;
 }
+/* "Valor total das N notas" -- a faixa cinza das listas do Qive, em cima da tabela:
+   o resumo a esquerda, as acoes a direita. */
 
+/* As abas por papel (Recebidas/Emitidas/...) -- ui.navset_underline, como as do Qive. */
+
+/* As caixas do Painel, das etapas e dos certificados: o "Visao geral e totalizadores" do
+   Qive -- caixa clara sem sombra, o rotulo a esquerda e o numero ao lado. O fundo de
+   cada uma vem do value_box_theme (core/cores.py, CAIXA_*). */
 .fis-caixas .bslib-value-box {
   border: none !important;
   box-shadow: none !important;
@@ -1508,6 +2861,7 @@ shiny-data-frame table {
   margin: 0;
 }
 
+/* O detalhe de um documento (modal "Ver"). */
 .fis-detalhe dl {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -1535,7 +2889,7 @@ shiny-data-frame table {
   padding: 3px 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
-
+/* O "Baixar XML" de cada evento do historico do Ver. */
 .fis-baixar-evento {
   color: var(--cor-destaque, #5A55C4);
   text-decoration: none;
@@ -1548,17 +2902,31 @@ shiny-data-frame table {
   fill: currentColor;
   vertical-align: -0.05rem;
 }
+/* NF-e em Etapas: uma coluna por etapa, lado a lado. */
 
 .fis-vazio {
   font-size: 0.85rem;
   color: #6f7782;
   padding: 1vh 0;
 }
+/* Filtro de duas colunas da grade: periodo, empresa, emitente, busca. */
 
+/* O "Periodo de emissao" do Painel, fora da grade de filtros. */
+
+/* Nas caixas, cada pedaco (rotulo, numero, detalhe) do tamanho do proprio texto: sem
+   isto o detalhe ("1.833 nota(s)") ia para a ponta direita da caixa. */
 .fis-caixas .bslib-value-box .value-box-area > * {
   flex: 0 0 auto;
 }
 
+/* --------------------------------------------------------------------------
+   O desenho do Qive (varredura de 06/10/2026): pagina inicial, lista de NF-e e a
+   janela "Ver nota". Cartoes brancos com borda fina e sem sombra, titulo com icone.
+   -------------------------------------------------------------------------- */
+
+/* A busca: o tipo, o campo e a lupa colados, como um so' controle. */
+
+/* A caixa cinza de recado (certificados, consultas, busca). */
 .fis-aviso-claro {
   background: #F1F2F5;
   border-radius: 10px;
@@ -1568,12 +2936,22 @@ shiny-data-frame table {
   margin: 0.8vh 0;
 }
 
+/* O "i" com balao. */
 .fis-info {
   color: #5b6070;
   font-size: 0.85em;
   cursor: help;
 }
+/* "0 Vencidos": o numero antes do rotulo, como nas caixas da direita do Qive. */
 
+/* O cartao do grafico do Painel (o grafico e' pyecharts). */
+
+/* Lista de NF-e: titulo e empresa no topo, busca + Filtros, faixa do periodo, ferramentas. */
+
+/* A janela "Ver nota": numa linha so', o titulo, o emitente e as etiquetas a' esquerda e as acoes a' direita,
+   so' os icones com o nome no title (core/detalhe_documento.py::acao_do_alto; pedido do usuario, 04/11/2026:
+   "mais discreto no topo e na direita"). Faltando espaco, o emitente e' cortado com reticencias, nunca os
+   icones; o PDF ocupa a aba. */
 .fis-modal-cabecalho {
   display: flex;
   align-items: center;
@@ -1582,7 +2960,8 @@ shiny-data-frame table {
   width: 100%;
   min-width: 0;
 }
-
+/* O titulo nao encolhe (meio pixel a menos ja' poe as reticencias): so' o titulo comprido demais (o item do
+   Precos, o fornecedor do DE-PARA) para em 60% da linha. */
 .fis-modal-titulo {
   font-weight: 700;
   flex: none;
@@ -1598,7 +2977,7 @@ shiny-data-frame table {
   font-size: 0.85rem;
   color: #5b6070;
   font-weight: normal;
-  flex: 0 100 auto;
+  flex: 0 100 auto;     /* encolhe antes do titulo */
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1617,7 +2996,8 @@ shiny-data-frame table {
   margin-left: auto;
   flex: none;
 }
-
+/* O mesmo desenho das acoes da barra das telas (.fis-modulo .ppf-btn-discreto): a janela fica fora do modulo. O
+   !important vence o ".modal .btn-default" (fundo da cor de destaque e texto branco) dos botoes das janelas. */
 .fis-modal-acoes .ppf-btn-discreto {
   padding: 0.3rem 0.4rem;
   font-size: 1.05rem;
@@ -1633,9 +3013,10 @@ shiny-data-frame table {
 .fis-modal-acoes .ppf-btn-discreto:disabled,
 .fis-modal-acoes .ppf-btn-discreto.disabled { color: #b4b7c0 !important; }
 .fis-modal-acoes .fis-acao-linha { display: inline-flex; align-items: center; }
-
+/* O Manifestar ativo (o dropdown): em bloco, o botao ficava na linha de base do texto, 4px abaixo dos outros. */
 .fis-modal-acoes .fis-acao-dropdown { display: inline-flex; }
-
+/* A seta da ordenacao pelo valor (www/js/tabela_ordem.js): o desenho e o tamanho da seta nativa do DataGrid, na cor do
+   texto do cabecalho (copia do Comercial). */
 .tabela-ordem-seta {
   display: inline-block;
   width: 0.85em;
@@ -1649,9 +3030,10 @@ shiny-data-frame table {
   stroke-width: 0.6;
   stroke-linecap: round;
 }
-
+/* O botao apagado vai num involucro (o title do motivo): ele fica na mesma linha dos outros icones. O !important vence
+   o d-inline-block do Bootstrap, que deixava o involucro na linha de base do texto, mais baixo. */
 .fis-modal-acoes > span.d-inline-block { display: inline-flex !important; align-items: center; }
-
+/* Quantos comentarios a nota tem: o numero pequeno junto do icone, so' quando ha'. */
 .fis-acao-contagem {
   font-size: 0.62rem;
   font-weight: 700;
@@ -1663,17 +3045,17 @@ shiny-data-frame table {
   min-width: 0;
 }
 .fis-visualizador .nav-underline,
-.fis-filtros .nav-underline {
+.fis-qive .nav-underline {
   gap: 1.6rem;
   border-bottom: 1px solid #e3e5ea;
   margin-bottom: 1.2vh;
 }
 .fis-visualizador .nav-underline .nav-link,
-.fis-filtros .nav-underline .nav-link {
+.fis-qive .nav-underline .nav-link {
   color: #5b6070;
 }
 .fis-visualizador .nav-underline .nav-link.active,
-.fis-filtros .nav-underline .nav-link.active {
+.fis-qive .nav-underline .nav-link.active {
   color: #1a1a1a;
   font-weight: 600;
   border-bottom-color: var(--cor-destaque, #5A55C4);
@@ -1701,12 +3083,13 @@ shiny-data-frame table {
   padding: 4px 6px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
-
+/* Acao que nao pode agora (o Baixar do Fechamento do mes): apagada, sem clique; o motivo fica no title. */
 .fis-acao-apagada .ppf-acao {
   opacity: 0.4;
   pointer-events: none;
 }
-
+/* A Nota Completa do Ver (core/nota_completa.py), no desenho da do Qive (pedido do usuario, 04/11/2026): as abas
+   em pilula e uma tabela por aba, com a faixa cinza de cada secao, tres pares rotulo/valor por linha. */
 .fis-completa .nav-pills {
   gap: 0.3rem;
   flex-wrap: wrap;
@@ -1772,11 +3155,13 @@ shiny-data-frame table {
   background: #FAFAFB;
   font-weight: 600;
 }
-
+/* O faicons poe margin-left:auto no svg: dentro de um flex, isso empurra o icone (e o
+   texto depois dele) para a direita. */
 .fis-modal-titulo svg{
   margin-left: 0 !important;
 }
 
+/* O menu "Manifestar" da lista de NF-e (ui.popover): as respostas como uma lista. */
 .popover:has(.fis-menu-manifestar) {
   --bs-popover-max-width: 22rem;
 }
@@ -1803,7 +3188,8 @@ shiny-data-frame table {
   font-size: 0.8rem;
   margin: 0.6vh 0 0 0;
 }
-
+/* O quadradinho de marcar (a primeira coluna, " "), desenhado a partir da selecao do
+   DataGrid; o clique nele vira Ctrl+clique (www/js/marcar.js). */
 .fis-tabela-marcavel shiny-data-frame table tbody tr > td:first-child,
 .fis-tabela-marcavel shiny-data-frame table thead tr > th:first-child {
   width: 2.4rem;
@@ -1826,7 +3212,11 @@ shiny-data-frame table {
   border-color: var(--cor-destaque, #5A55C4);
   background: var(--cor-destaque, #5A55C4) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='white' stroke-width='2.4' d='M3.5 8.5l3 3 6-7'/%3E%3C/svg%3E") center / 85% no-repeat;
 }
+/* As opcoes do menu Manifestar, cada uma com o que quer dizer embaixo. */
 
+/* O contador do "Selecionar todas  N / M". */
+
+/* O filtro da manifestacao (ui.input_radio_buttons) a' vista, embaixo da faixa cinza. */
 .fis-tipos .shiny-input-container {
   margin-bottom: 0.6vh;
 }
@@ -1851,7 +3241,7 @@ shiny-data-frame table {
 .popover:has(.fis-tipos-legenda) {
   --bs-popover-max-width: 26rem;
 }
-
+/* A caixa (ui.value_box) que e' o clique: atalhos e tipos de manifestacao do Painel. */
 .fis-caixa-link {
   cursor: pointer;
   transition: filter 0.15s;
@@ -1865,7 +3255,7 @@ shiny-data-frame table {
   padding-left: 1.1rem;
   font-size: 0.8rem;
 }
-
+/* Caixas pequenas (atalhos e tipos do Painel): o rotulo em cima e o numero embaixo. */
 .fis-caixas-coluna .bslib-value-box .value-box-area {
   flex-direction: column;
   align-items: flex-start;
@@ -1874,7 +3264,9 @@ shiny-data-frame table {
 .fis-caixas-coluna .bslib-value-box .value-box-title {
   max-width: none;
 }
+/* O topo das paginas: os filtros de revenda (a visão corporativa e os grupos) e de empresa lado a lado. */
 
+/* O aviso do modo de teste (AMBIENTE=teste) na confirmacao da manifestacao. */
 .fis-aviso-teste {
   background: #FFF8E8;
   border: 1px solid #F0D9A0;
@@ -1884,12 +3276,27 @@ shiny-data-frame table {
   color: #6B4E00;
   margin-bottom: 1.2vh;
 }
+/* ==========================================================================
+   A faixa de filtros, no molde da do Financeiro (.ppf-faixa-filtros): tudo a' vista,
+   rotulo pequeno em cima, campos compactos, as linhas quebrando so' em tela estreita.
+   ========================================================================== */
 
+/* Os cartoes de total (os .ppf-cartao-total de Contas a Pagar). */
+
+/* --------------------------------------------------------------------------
+   Revisao visual de 08/10/2026 (pedido do usuario: "ajeitar o visual em comparacao com
+   o Arquivei; a parte de como manifesta esta' ridicula"): o menu e a janela de manifestar,
+   os botoes das respostas, o filtro dos tipos em etiquetas, as ferramentas leves e os
+   numeros do Painel. So' o Fiscal; a tabela segue o padrao das irmas.
+   -------------------------------------------------------------------------- */
+
+/* A cor de cada resposta (as mesmas das etiquetas da tabela, core/formato.py). */
 .fis-op-ciencia { --op-cor: #1F5F99; --op-fundo: #E5F1FB; }
 .fis-op-confirmacao { --op-cor: #1E7B3A; --op-fundo: #E6F4EA; }
 .fis-op-desconhecimento { --op-cor: #B42318; --op-fundo: #FDECEC; }
 .fis-op-nao-realizada { --op-cor: #9A6200; --op-fundo: #FFF4DE; }
 
+/* O menu Manifestar: lista enxuta, icone colorido + nome + frase curta. */
 .popover:has(.fis-menu-manifestar) {
   --bs-popover-max-width: 21rem;
 }
@@ -1962,12 +3369,13 @@ shiny-data-frame table {
   color: #B42318;
 }
 
+/* A janela de confirmacao: titulo com o icone, os numeros em destaque, o aviso fiscal. */
 .fis-op-titulo {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
 }
-
+/* O resumo da janela: dois ui.value_box (notas e valor), o numero em destaque. */
 .fis-resumo-manifestar {
   margin-bottom: 1.2vh;
 }
@@ -1984,7 +3392,7 @@ shiny-data-frame table {
   font-weight: 700;
   margin: 0;
 }
-
+/* O Cancelar (ui.modal_button): contorno discreto ao lado do botao principal. */
 .modal-footer .btn.btn-outline-secondary {
   background: #fff !important;
   color: #3a3f4b !important;
@@ -2013,10 +3421,11 @@ shiny-data-frame table {
   fill: currentColor;
   vertical-align: -0.1rem;
 }
-
+/* O aviso do fornecedor no Resolver: o texto a' esquerda e as acoes discretas (link) a' direita (pedido do usuario,
+   05/11/2026: "mais discreto e no lado direito"). */
 .fis-op-alerta-linha { display: flex; align-items: center; gap: 0.8rem; }
 .fis-op-alerta-acoes { margin-left: auto; display: flex; align-items: center; gap: 0.7rem; flex-shrink: 0; }
-
+/* !important vence o ".modal .btn-default" (fundo da cor de destaque e texto branco), como no .fis-modal-acoes. */
 .fis-op-alerta-acoes .btn {
   padding: 0 !important;
   border: 0 !important;
@@ -2047,6 +3456,7 @@ shiny-data-frame table {
   text-align: right;
 }
 
+/* A celula do tipo na tabela da janela: o verde/azul/ambar/vermelho da tabela principal. */
 .fis-tabela-janela td[class*="fis-tipo-"] {
   font-size: 0.75rem;
   font-weight: 600;
@@ -2057,6 +3467,11 @@ shiny-data-frame table {
 .fis-tipo-desconhecida,
 .fis-tipo-nao { background: #FDECEC; color: #B42318; }
 
+/* Os botoes das respostas na pagina de Manifestacao: contorno e icone na cor do tipo
+   (o seletor repete a classe para vencer o das ferramentas, que vem depois). */
+
+/* O filtro dos tipos de manifestacao: etiquetas com a contagem, a escolhida cheia. O
+   input_radio_buttons inline sai como <label class="radio-inline"><input> <span>. */
 .fis-tipos .shiny-options-group {
   display: flex;
   flex-wrap: wrap;
@@ -2107,6 +3522,19 @@ shiny-data-frame table {
   display: none;
 }
 
+/* As ferramentas da lista: botoes leves (branco, borda fina, icone na cor do app). */
+
+/* Painel: o numero em destaque, o rotulo em cima numa linha so'. */
+
+/* O numero vem dentro de um <p>, que a regra antiga das caixas encolhia (0.78rem). */
+
+/* =========================================================================
+   Faixa e tabela no molde do Financeiro (10/10/2026)
+   A estrutura das faixas de Lancamentos a Pagar e Importar notas de la'
+   (`.ppf-faixa-filtros` e os grupos: cartoes, periodo, selects com o rotulo
+   ao lado, Limpar, acoes com o nome embaixo), com a fonte e o indigo daqui.
+   Uma classe so' para todas as telas (o Financeiro estende por id da faixa).
+   ========================================================================= */
 .fis-modulo .ppf-secao-titulo {
   display: flex;
   align-items: center;
@@ -2131,7 +3559,7 @@ shiny-data-frame table {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-
+/* O output_ui dos cartoes some da arvore: os cartoes ficam filhos da faixa. */
 .fis-modulo .ppf-cartoes { display: contents; }
 .fis-modulo .ppf-cartao-total {
   display: flex;
@@ -2167,6 +3595,7 @@ shiny-data-frame table {
 .fis-modulo .ppf-cartao-alerta .ppf-cartao-total-titulo,
 .fis-modulo .ppf-cartao-alerta .ppf-cartao-total-valor { color: #b42318; }
 
+/* Cada grupo e' uma coluna da faixa. */
 .fis-modulo .ppf-grupo-filtros {
   display: flex;
   flex: 0 0 auto;
@@ -2209,6 +3638,7 @@ shiny-data-frame table {
   border: none;
 }
 
+/* Os selects: rotulo a esquerda, caixa a direita, todas da mesma largura. */
 .fis-modulo .ppf-grupo-selects .ppf-filtro .shiny-input-container {
   display: flex;
   align-items: center;
@@ -2240,7 +3670,9 @@ shiny-data-frame table {
   border-radius: 6px;
   box-shadow: none;
 }
-
+/* Ao abrir a lista, o selectize troca o display do campo para "inline-block", e o elemento inline deixa
+   um vao de linha (~6px) embaixo que empurrava a faixa INTEIRA (o campo vizinho "descia"). A mesma
+   correcao do Financeiro (.filtros-fin). */
 .fis-modulo .ppf-faixa-filtros .selectize-input.input-active { display: flex !important; }
 .fis-modulo .ppf-grupo-selects .selectize-input > input { font-size: 0.8rem !important; }
 .fis-modulo .ppf-grupo-selects .selectize-input > input::placeholder { color: inherit; opacity: 1; }
@@ -2258,7 +3690,9 @@ shiny-data-frame table {
   opacity: 0.5;
 }
 .fis-modulo .ppf-grupo-selects .plugin-clear_button .clear:hover { opacity: 1; }
-
+/* Filtro de varios itens: o selectize nativo, sem script nosso (pedido do usuario, 05/11/2026: nada de remendo nos
+   filtros). Cada escolhido vira uma etiqueta com o "x" do plugin remove_button; com varias, o campo cresce para baixo
+   em vez de esconder alguma. */
 .fis-modulo .fis-filtro-multiplo .selectize-input {
   flex-wrap: wrap;
   gap: 2px;
@@ -2268,7 +3702,8 @@ shiny-data-frame table {
   padding-bottom: 2px !important;
   white-space: normal;
 }
-
+/* O "x" fica preso no canto direito da etiqueta e o nome comprido e' que encurta (reticencias): com o "x" depois do
+   texto, o nome longo ("Fornecedor sem cadastro") o empurrava para fora e ele sumia, e so' o backspace tirava. */
 .fis-modulo .fis-filtro-multiplo .selectize-input > .item {
   display: block !important;
   position: relative;
@@ -2318,8 +3753,11 @@ shiny-data-frame table {
 .ppf-filtro-dropdown .option { padding: 3px 8px; }
 .ppf-filtro-dropdown .option.active { color: #000; background: var(--cor-mais-claro); }
 .ppf-filtro-dropdown .selectize-dropdown-content { max-height: 16rem; }
-
+/* Toda lista de opcoes que abre no <body> (dropdownParent "body") fica por cima da janela (.modal, 1300): a
+   Natureza e o Produto do Resolver e do DE-PARA abriam por tras dela (o padrao do selectize e' 1000). */
 body > .selectize-dropdown { z-index: 2000; }
+
+/* Limpar: a pilula da cor do app. */
 
 .fis-modulo .ppf-btn-limpar {
   padding: 0.2rem 0.6rem;
@@ -2333,6 +3771,7 @@ body > .selectize-dropdown { z-index: 2000; }
 }
 .fis-modulo .ppf-btn-limpar:hover { color: #fff; background-color: var(--cor-destaque); }
 
+/* As acoes: o icone e o nome embaixo. */
 .fis-modulo .ppf-grupo-acoes {
   display: flex;
   flex: 0 0 auto;
@@ -2346,9 +3785,10 @@ body > .selectize-dropdown { z-index: 2000; }
   align-items: center;
   gap: 0.25rem;
 }
-
+/* O icone de cada acao numa caixa da mesma altura: o Relatorio (link de download) subia em relacao aos botoes, e o
+   botao com motivo no title vem dentro de um span (pedido do usuario, 09/11/2026). */
 .fis-modulo .ppf-acao > :first-child {
-  display: flex !important;
+  display: flex !important;     /* o span do botao com motivo tem o d-inline-block do Bootstrap, que e' !important */
   align-items: center;
   justify-content: center;
   height: 1.35rem;
@@ -2376,8 +3816,10 @@ body > .selectize-dropdown { z-index: 2000; }
 .fis-modulo .ppf-btn-discreto:disabled,
 .fis-modulo .ppf-btn-discreto.disabled { color: #b4b7c0; }
 
+/* A fila (radio com contagem) logo abaixo da faixa. */
 .fis-modulo .fis-fila { margin: 0 0 0.5rem; }
 
+/* A tabela: cabecalho em degrade e caixa alta, grudado no topo ao rolar. */
 .fis-modulo shiny-data-frame table thead th {
   padding: 0.4rem 0.5rem !important;
   font-size: 0.68rem !important;
@@ -2405,6 +3847,8 @@ body > .selectize-dropdown { z-index: 2000; }
   border-radius: 5px;
 }
 
+/* A situacao: um ponto de cor e o texto (o `.lib-sit` do Financeiro), pela classe
+   que `core/formato.py::estilos` poe na celula. */
 td.fis-sit { font-weight: 600; }
 td.fis-sit::before {
   content: "";
@@ -2427,13 +3871,16 @@ td.fis-sit::before {
 .fis-sit-cinza::before { background: #a0a0b0; }
 td[class*="fis-cor-"] { font-weight: 600; }
 
+/* O titulo da tela, a esquerda, na cor do menu. */
 .fis-modulo .card-header .ppf-secao-titulo {
   font-size: 1rem;
   font-weight: 700;
   color: var(--cor-sidebar);
 }
 .fis-modulo .card-header .ppf-secao-titulo > svg { fill: var(--cor-destaque); }
+/* Busca e Limpar na mesma coluna: o Limpar embaixo, a direita. */
 
+/* A barra embaixo da faixa: a fila a esquerda, as acoes a direita. */
 .fis-modulo .fis-barra {
   display: flex;
   flex-wrap: wrap;
@@ -2445,17 +3892,19 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-modulo .fis-barra .ppf-grupo-acoes { margin-left: auto; }
 .fis-modulo .fis-barra .fis-fila,
 .fis-modulo .fis-barra .fis-fila .shiny-input-container { margin: 0; }
-
+/* Fila comprida (a da Escrituracao tem 10): as opcoes quebram so' no espaco da esquerda e as acoes
+   ficam na primeira linha, a direita, em vez de cair sozinhas numa linha de baixo. */
 @media (min-width: 900px) {
   .fis-modulo .fis-barra { flex-wrap: nowrap; }
   .fis-modulo .fis-barra .fis-fila { flex: 1 1 auto; min-width: 0; }
   .fis-modulo .fis-barra .fis-fila .shiny-input-container { width: auto; }
   .fis-modulo .fis-barra .ppf-grupo-acoes { flex: 0 0 auto; }
 }
-
+/* As colunas pela largura do conteudo (o `table-layout: fixed` herdado dava a mesma
+   largura a todas e cortava o emitente); texto longo termina em reticencias. */
 .fis-modulo .fis-tabela shiny-data-frame table { table-layout: auto; }
 .fis-modulo .fis-tabela shiny-data-frame table tbody td { max-width: 22rem; }
-
+/* A janela de espera do processo separado (manifestar, enviar). */
 .fis-esperando {
   display: flex;
   align-items: center;
@@ -2463,7 +3912,9 @@ td[class*="fis-cor-"] { font-weight: 600; }
   padding: 0.5rem 0;
   font-size: 0.9rem;
 }
-
+/* As Configuracoes da emissao (Administracao): a tabela das chaves, uma empresa por linha e as caixas da SAIB nas
+   colunas, no desenho das tabelas das outras telas (o cabecalho indigo das .fis-modulo shiny-data-frame), com o
+   interruptor no meio da celula; e a chave geral na barra, ao lado do texto que explica. */
 .fis-chaves {
   overflow-x: auto;
   border-radius: 6px;
@@ -2482,7 +3933,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
 }
 .fis-chaves thead th:first-child,
 .fis-chaves tbody td:first-child { text-align: left; }
-
+/* O titulo quebra so' onde o texto pede (duas linhas); o nome da empresa, nunca. */
 .fis-chaves .fis-chaves-titulo { cursor: help; white-space: nowrap; }
 .fis-chaves tbody td:first-child { white-space: nowrap; }
 .fis-chaves tbody td {
@@ -2500,7 +3951,8 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-chaves .fis-chaves-texto input { font-size: 0.76rem; padding: 0.2rem 0.4rem; }
 .fis-chaves-geral { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1rem; }
 .fis-chaves-geral .shiny-input-container { margin: 0; width: auto; }
-
+/* A janela do Gerar do SPED: as secoes em ui.card, leves (sem a sombra e o fio das caixas da tela), o titulo
+   da secao (titulo_secao) num fundo claro e a frase do contador a direita. */
 .fis-gerar-secao {
   box-shadow: none !important;
   border: 1px solid #e3e5ec !important;
@@ -2512,7 +3964,8 @@ td[class*="fis-cor-"] { font-weight: 600; }
   padding: 0.8vh 0.9rem;
   border-bottom: 1px solid #e3e5ec;
 }
-
+/* O titulo da secao como o das caixas da tela (as regras de la' valem so' dentro de .fis-modulo, e a janela
+   fica fora). */
 .fis-gerar-secao > .card-header .ppf-secao-titulo {
   display: flex;
   align-items: center;
@@ -2538,9 +3991,10 @@ td[class*="fis-cor-"] { font-weight: 600; }
   color: #4a4f5c;
   margin-bottom: 0.2rem;
 }
-
+/* O formulario do cadastro do fornecedor (as secoes do Gerar do SPED) com os campos baixos, para caber na tela de
+   notebook sem rolar (pedido do usuario, 05/11/2026: "o modal de cadastro de fornecedor ficou muito gigante"). */
 .fis-form-fornecedor .shiny-input-container { width: 100% !important; margin-bottom: 0.4vh; }
-
+/* As linhas (ui.layout_columns) sem o 1rem do bslib embaixo e entre elas. */
 .fis-form-fornecedor .fis-gerar-secao > .card-body { padding-top: 0.8vh; gap: 0.3rem; }
 .fis-form-fornecedor .bslib-grid { margin-bottom: 0 !important; row-gap: 0.3rem; }
 .fis-form-fornecedor .form-control {
@@ -2564,7 +4018,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
+/* O resumo da janela (empresa e SPED importado) baixo, para a janela caber na tela sem rolar. */
 .fis-gerar-resumo {
   margin-bottom: 0.6vh;
 }
@@ -2580,7 +4034,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
   font-weight: 400;
   color: #6f7782;
 }
-
+/* O Gerar do SPED: as primeiras linhas que diferem do SPED do Control. */
 .fis-sped-diferencas {
   max-height: 30vh;
   overflow: auto;
@@ -2592,6 +4046,9 @@ td[class*="fis-cor-"] { font-weight: 600; }
   border-radius: 0.375rem;
 }
 
+/* A coluna Marcar: o nome no cabecalho com o quadradinho que marca todas (marcar.js).
+   O quadradinho segue o estado que o servidor manda: todas, algumas (um traco) ou
+   nenhuma; sem nota na lista, some. */
 .fis-modulo .fis-tabela-marcavel shiny-data-frame table tbody tr > td:first-child,
 .fis-modulo .fis-tabela-marcavel shiny-data-frame table thead tr > th:first-child {
   width: 6rem;
@@ -2625,11 +4082,11 @@ td[class*="fis-cor-"] { font-weight: 600; }
   max-width: none;
   cursor: default;
 }
-
+/* As colunas da lista ("Colunas"): duas colunas de caixas no balao. */
 .popover:has(.fis-colunas) { --bs-popover-max-width: 24rem; }
 .fis-colunas .shiny-options-group { columns: 2; column-gap: 1.2rem; }
 .fis-colunas .checkbox { margin: 0 0 0.2rem; font-size: 0.82rem; break-inside: avoid; }
-
+/* A janela dos CFOPs do Faturamento: uma linha por CFOP, o numero, o que e' e o valor no periodo alinhados. */
 .fis-cfops-titulo {
   font-weight: 600;
   font-size: 0.9rem;
@@ -2664,12 +4121,15 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-cfop-numero { font-weight: 600; }
 .fis-cfop-texto { color: #4a4f5c; }
 .fis-cfop-valor { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-
+/* O Resolver da Resolucao de Cadastros (pedido do usuário, 03/11/2026): uma linha por produto e por CFOP da
+   nota, com a caixa de marcar, o que veio no XML e o campo do Control ja' preenchido. */
 .fis-resolver-secao { height: auto; margin-bottom: 1.2vh; }
 .fis-resolver-topo { justify-content: space-between; }
 .fis-resolver-topo a { font-size: 0.8rem; font-weight: 400; }
 .fis-resolver-lista { max-height: 44vh; overflow-y: auto; }
-
+/* O DE-PARA das notas da lista (pedido do usuario, 09/11/2026: "deixe clara a separacao ... de de para e entre revendas";
+   "olha como os botoes estao em cima"): a barra dos controles, a faixa de cada revenda e as listas sem rolagem propria (a
+   janela inteira rola). */
 .fis-filtradas-barra {
   display: flex;
   flex-wrap: wrap;
@@ -2724,7 +4184,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-resolver-cabecalho {
   position: sticky;
   top: 0;
-  z-index: 5;
+  z-index: 5;           /* acima do campo do Control (o .selectize-input tem z-index 1 e vem depois) */
   background: #fff;
   font-weight: 600;
   font-size: 0.78rem;
@@ -2736,7 +4196,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-resolver-texto { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .fis-resolver-nota { font-size: 0.74rem; color: #6b6b80; }
 .fis-resolver-valor { font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
-
+/* O olho: a nota (DANFE) numa aba nova, no titulo do Resolver e nos numeros da conferencia do DE-PARA. */
 .fis-resolver-ver {
   font-size: 0.85rem;
   font-weight: 600;
@@ -2748,7 +4208,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-resolver-ver svg { width: 0.9rem; height: 0.9rem; fill: currentColor; vertical-align: -0.1rem; }
 .fis-resolver-nota-erro { color: #b42318; }
 .fis-resolver-campos-cfop { display: grid; grid-template-columns: 32% 1fr; gap: 0.4rem; }
-
+/* O tipo e os grupos do produto novo, embaixo da linha (so' com "+ Cadastrar como produto novo" no campo). */
 .fis-resolver-novo {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -2760,14 +4220,14 @@ td[class*="fis-cor-"] { font-weight: 600; }
   border-radius: 0 6px 6px 0;
 }
 .fis-resolver-novo-titulo { grid-column: 1 / -1; font-size: 0.78rem; color: #3d4250; }
-
+/* A descricao do produto novo ocupa a linha com o NCM ao lado (tres colunas; na tela DE-PARA, a linha inteira). */
 .fis-resolver-novo-descricao { grid-column: span 3; }
 .fis-de-para-novo .fis-resolver-novo-descricao { grid-column: 1 / -1; }
 .fis-resolver-novo .form-control { min-height: 0; padding: 0.25rem 0.5rem; font-size: 0.8rem; }
 .fis-resolver-novo .shiny-input-container, .fis-resolver-novo .form-group { margin: 0; width: 100%; }
 .fis-resolver-novo .control-label { font-size: 0.74rem; font-weight: 600; color: #6b7080; margin-bottom: 0.1rem; }
 .fis-resolver-novo .selectize-input { min-height: 0; padding: 0.25rem 0.5rem; font-size: 0.8rem; }
-
+/* Na conferencia da tela DE-PARA o bloco fica na coluna do meio, estreita: dois campos por linha. */
 .fis-de-para-novo { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 1vh 0 0; }
 .fis-resolver-dados { margin-top: 0.5vh; --bs-accordion-bg: transparent; }
 .fis-resolver-dados .accordion-button { padding: 0.35rem 0.6rem; font-size: 0.8rem; background: transparent; }
@@ -2786,6 +4246,9 @@ td[class*="fis-cor-"] { font-weight: 600; }
   white-space: nowrap;
 }
 
+/* Painel: as caixas do "o que pede acao" e a frase curta embaixo do numero. */
+/* O "o que pede acao": 5 x 2, cards mais baixos (pedido do usuario, 14/10/2026). Em tela estreita,
+   3 colunas, e no celular uma so'. */
 .fis-modulo .fis-caixas-acao { gap: 0.7rem; margin-bottom: 0.4rem; }
 .fis-modulo .fis-caixas-acao .value-box-area { padding: 0.7rem 0.9rem; }
 .fis-modulo .fis-caixas-acao .value-box-title { font-size: 0.8rem; font-weight: 600; }
@@ -2798,6 +4261,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
   .fis-modulo .fis-caixas-acao { grid-template-columns: minmax(0, 1fr) !important; }
 }
 
+/* As bolinhas das filas novas (NF-e, Escrituracao, Certificados), nas cores das situacoes. */
 .fis-tipos label.radio-inline:has(input[value="a_manifestar"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="Aguardando (até 2 meses)"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="30dias"]) > span::before { background: #E0A12B; }
@@ -2807,18 +4271,20 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-tipos label.radio-inline:has(input[value="recusadas"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="problemas"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="Não escriturada"]) > span::before,
+.fis-tipos label.radio-inline:has(input[value="Cancelada na Receita, ativa no Control"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="vencido"]) > span::before { background: #D64545; }
-
+.fis-tipos label.radio-inline:has(input[value="No Control de outra revenda"]) > span::before { background: #3B82C4; }
+/* Auditoria (o grupo) e a fila "Valor diferente" da Escrituracao. */
 .fis-tipos label.radio-inline:has(input[value="Tributação"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="valor_diferente"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="de_para"]) > span::before { background: #D64545; }
 .fis-tipos label.radio-inline:has(input[value="Cálculo"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="Reforma"]) > span::before { background: #E0A12B; }
-
+/* Escrituracao: "Prontas para lancar", o proximo passo (a cor do app). */
 .fis-tipos label.radio-inline:has(input[value="prontas"]) > span::before { background: #5A55C4; }
 .fis-tipos label.radio-inline:has(input[value="Preço"]) > span::before { background: #3B82C4; }
 .fis-tipos label.radio-inline:has(input[value="Fornecedor"]) > span::before { background: #A0A0B0; }
-
+/* Precos: subiu, caiu, igual; as visoes do Frete nao tem cor. */
 #precos-fila label.radio-inline:has(input[value="subiu"]) > span::before { background: #D64545; }
 #precos-fila label.radio-inline:has(input[value="caiu"]) > span::before { background: #2E9E50; }
 #precos-fila label.radio-inline:has(input[value="igual"]) > span::before { background: #A0A0B0; }
@@ -2828,10 +4294,11 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-tipos label.radio-inline:has(input[value="sem_xml"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="fora"]) > span::before,
 .fis-tipos label.radio-inline:has(input[value="sem"]) > span::before { background: #A0A0B0; }
-
+/* Os icones das caixas: os de www/img/painel, no desenho dos do Financeiro. */
 .fis-modulo .fis-caixas-acao .value-box-showcase img.fis-caixa-icone { width: 2.3rem; height: 2.3rem; }
 .fis-modulo .fis-caixas-acao .value-box-showcase { padding: 0.5rem 0.6rem 0 0; }
 
+/* DE-PARA: a janela Conferir (tres blocos lado a lado). */
 .fis-conferir-bloco { height: 100%; margin: 0; }
 .fis-conferir-bloco .card-header { font-size: 0.85rem; font-weight: 700; color: var(--cor-sidebar); }
 .fis-conferir-bloco .card-body { font-size: 0.82rem; }
@@ -2840,10 +4307,15 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-conferir-dl dd { margin: 0; overflow-wrap: anywhere; }
 .fis-conferir-bloco .shiny-options-group .radio { margin-bottom: 0.35rem; font-size: 0.8rem; }
 
+/* DE-PARA: muitas colunas de texto; as longas cortam com reticencias (o texto inteiro esta' no Conferir). */
 .fis-modulo .fis-tabela.fis-tabela-estreita shiny-data-frame table tbody td { max-width: 14rem; }
 
+/* Escrituração, resultado do Importar: a lista alinhada à esquerda dentro do aviso centralizado. */
 .fis-lista-importar { text-align: left; margin: 0.3rem 0 0.6rem; }
 
+/* As caixas das telas, no desenho das do Financeiro (pedido do usuario, 11/10/2026): branca, o fio da
+   cor de destaque em cima, cantos arredondados e sombra; uma para o titulo e os filtros, outra para a
+   fila, os botoes e a tabela. As caixas do Painel (value_box) ficam como estao. */
 .fis-modulo .card:not(.bslib-value-box) {
   background: #fff;
   border: 1px solid rgba(0, 0, 0, 0.08);
@@ -2854,13 +4326,16 @@ td[class*="fis-cor-"] { font-weight: 600; }
 }
 .fis-modulo .card:not(.bslib-value-box) > .card-header { border-radius: 9px 9px 0 0; }
 .fis-modulo .fis-caixa-filtros .ppf-faixa-filtros { background: transparent; box-shadow: none; margin-bottom: 0; }
-
+/* Resolucao de Cadastros: os cartoes juntos a' esquerda e o periodo a' direita, em vez de espalhados pela linha. */
 .fis-modulo .ppf-faixa-filtros.fis-faixa-cartoes-juntos { justify-content: flex-start; }
 .fis-modulo .fis-faixa-cartoes-juntos > .ppf-grupo-data { margin-left: auto; }
 
+/* As dicas das tabelas (ui.tooltip na celula, core/dicas.py): sem sublinhado (pedido do usuario); o
+   cursor de ajuda avisa que ha' dica; a dica alinhada a' esquerda, mais larga que a padrao. */
 .fis-com-dica { cursor: help; }
 .tooltip .tooltip-inner { text-align: left; max-width: 30rem; }
 
+/* O Relatorio da NF-e: as tres planilhas da lista (notas, itens, duplicatas) num popover. */
 .popover:has(.fis-menu-relatorios) { --bs-popover-max-width: 22rem; }
 .fis-menu-relatorios { display: flex; flex-direction: column; align-items: stretch; gap: 0.2rem; text-align: left; }
 .fis-menu-relatorios a.shiny-download-link {
@@ -2871,6 +4346,8 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-menu-relatorios a.shiny-download-link svg { color: var(--cor-destaque); width: 1rem; }
 .fis-menu-relatorios .fis-menu-nota { padding: 0.3rem 0.6rem 0; }
 
+/* A coluna "Acao" das listas (NF-e e Escrituracao, www/js/acao_linha.js): os botoes da linha, no
+   desenho dos icones da faixa de acoes, e o menu das respostas no desenho do menu Manifestar. */
 .fis-acao-linha {
   display: inline-flex;
   align-items: center;
@@ -2902,15 +4379,18 @@ td[class*="fis-cor-"] { font-weight: 600; }
   margin: 0 !important;
   fill: currentColor;
 }
-
+/* Cada botao na cor da fila que ele resolve: o carimbo, a de "A manifestar"; o Lancar, a de "Prontas
+   para lancar" (a do app). Apagado, o cinza de sempre. */
 .fis-acao-manifestar:not(:disabled) { color: #C98A12; border-color: #EBCB8B; }
 .fis-acao-manifestar:hover:not(:disabled) { background: #FFF4DE; }
 .fis-acao-lancar:not(:disabled), .fis-acao-resolver:not(:disabled) { color: #5A55C4; border-color: #C9C6EE; }
-
+/* O CFOP de entrada da nota (pedido do usuário, 05/11/2026): cinza sem escolha; aceso, na cor do app, com ela. */
 .fis-acao-cfop:not(:disabled) { color: #7a7f8c; border-color: #D9DCE3; }
 .fis-acao-cfop.fis-acao-cfop-escolhido:not(:disabled) { color: #FFFFFF; background: #5A55C4; border-color: #5A55C4; }
 .fis-acao-cfop.fis-acao-cfop-escolhido:hover:not(:disabled) { background: #4842A8; }
 
+/* As etiquetas (core/etiquetas.py::selo): o nome na cor dela, como no Qive; na lista, na janela de
+   escolher e no Gerenciar. */
 .fis-etiqueta {
   display: inline-block;
   padding: 0.05rem 0.4rem;
@@ -2932,13 +4412,15 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-etiqueta-nova .btn { white-space: nowrap; }
 .fis-etiquetas-gerir td { vertical-align: middle; }
 .fis-etiquetas-gerir .form-group, .fis-etiquetas-gerir .shiny-input-container { margin-bottom: 0; width: 100%; }
-
+/* As etiquetas do documento no alto do Ver, ao lado do emitente. */
 .fis-modal-etiquetas { display: inline-flex; flex-wrap: wrap; align-items: center; }
-
+/* Os Comentarios na nota (core/comentarios.py): a lista rola dentro da janela e o texto guarda as quebras de linha. */
 .fis-comentarios { max-height: 45vh; overflow-y: auto; }
 .fis-comentarios td { vertical-align: top; }
 .fis-comentario-texto { white-space: pre-wrap; overflow-wrap: anywhere; }
-
+/* O caminhao do Numero da NF-e com transporte (o CT-e no Fiscal ou o aviso da Receita), com a dica
+   dele: o numero a' esquerda e o caminhao a' direita da celula, em verde (pedido do usuario,
+   14/10/2026). */
 .fis-com-marca {
   display: flex;
   align-items: center;
@@ -2957,7 +4439,8 @@ td[class*="fis-cor-"] { font-weight: 600; }
   margin: 0 !important;
   fill: currentColor;
 }
-
+/* A mesma marca, em vermelho, na nota que voltou do envio ao Control por cadastro ou DE-PARA
+   (core/tentativas_de_envio.py), na Resolucao de Cadastros e no DE-PARA; o numero segue centralizado. */
 .fis-com-marca:has(.fis-marca-tentativa) { justify-content: center; }
 .fis-marca-tentativa {
   display: inline-flex;
@@ -2969,7 +4452,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
   margin: 0 !important;
   fill: currentColor;
 }
-
+/* A aba Relacionados do Ver (core/relacionados.py). */
 .fis-relacionados { padding: 0.6rem 0.2rem; }
 .fis-relacionados .fis-subtitulo { margin-top: 0.8rem; }
 .fis-relacionados .fis-acao-linha .btn { padding: 0.1rem 0.6rem; font-size: 0.78rem; }
@@ -2984,14 +4467,14 @@ td[class*="fis-cor-"] { font-weight: 600; }
   color: #6f7782;
   padding: 0.2rem 0.5rem 0.4rem 0.5rem;
 }
-
+/* A janela curta (uma nota): o numero e o valor em cima, o emitente e a manifestacao de hoje embaixo. */
 .fis-op-uma-nota {
   padding: 0.6rem 0.8rem;
   border-radius: 0.5rem;
   background: #F6F7FA;
   margin-bottom: 0.8rem;
 }
-
+/* A escolha do CFOP de entrada no Lancar da linha (pedido do usuário, 05/11/2026): os itens com os dois campos. */
 .fis-escolha-cfop-caixa {
   max-height: 42vh;
   overflow-y: auto;
@@ -3004,7 +4487,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-escolha-cfop th {
   position: sticky;
   top: 0;
-  z-index: 3;
+  z-index: 3;         /* acima dos campos ao rolar: a caixa da natureza (selectize) tem posicao e camada proprias */
   background: #F6F7FA;
   font-weight: 600;
   white-space: nowrap;
@@ -3028,7 +4511,7 @@ td[class*="fis-cor-"] { font-weight: 600; }
   color: #4a4f5c;
   margin-top: 0.15rem;
 }
-
+/* Confirmacao: o motivo em pilulas (as da fila, sem a bolinha) e o aviso do que acontece agora. */
 .fis-op-motivo { margin: 0.4rem 0 0.6rem; }
 .fis-op-motivo .control-label { font-size: 0.85rem; font-weight: 600; color: #3d4250; margin-bottom: 0.35rem; }
 .fis-tipos.fis-op-motivo label.radio-inline > span::before { display: none; }
@@ -3052,49 +4535,56 @@ td[class*="fis-cor-"] { font-weight: 600; }
   margin-top: 0.15rem;
 }
 
+
+/* A janela Exportar (core/exportar.py): a etiqueta da coluna se arrasta para mudar a ordem. */
 .fis-exportar .selectize-input .item { cursor: move; }
 .fis-exportar .selectize-input .item.ui-sortable-placeholder { visibility: visible !important; opacity: 0.35; }
 .fis-exportar-rodape { margin-top: 0.4rem; font-size: 0.85rem; }
-
+/* O cofre dos certificados (core/cofre_certificados.py): a chave de recuperacao, mostrada uma vez, e o registro. */
 .fis-cofre-chave { font-family: ui-monospace, Consolas, monospace; font-size: 1.35rem; letter-spacing: 0.12em;
   margin-top: 0.6rem; padding: 0.5rem 0.8rem; border: 1px dashed currentColor; border-radius: 0.4rem; text-align: center; }
 .fis-cofre-secoes { margin-top: 0.8rem; }
 .fis-cofre-registro { font-size: 0.85rem; margin-bottom: 0; }
-
+/* A janela do cofre, enxuta: uma linha por app (o nome ao lado do campo). */
 .fis-cofre .fis-cofre-app { display: grid; grid-template-columns: 9rem 1fr; align-items: center; gap: 0.6rem;
   margin-bottom: 0.4rem; }
 .fis-cofre .fis-cofre-app .form-group, .fis-cofre .fis-cofre-app .shiny-input-container { margin-bottom: 0; width: 100%; }
 .fis-cofre-app-nome { font-weight: 600; margin: 0; }
 .fis-cofre-nota { color: var(--bs-secondary-color, #6c757d); font-size: 0.85em; }
-
+/* O campo de usuario escondido das janelas com senha (pag_certificados.py::isca_do_navegador): fora da vista, mas no
+   lugar, para o gerenciador de senhas do navegador preencher aqui e nao no filtro da tela. */
 .fis-isca-do-navegador { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; border: 0;
   padding: 0; margin: 0; }
-
-.fis-modulo .fis-filtros { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; }
-.fis-modulo .fis-filtros .shiny-input-container,
-.fis-modulo .fis-filtros .bslib-mb-spacing { margin-bottom: 0; }
-.fis-modulo .fis-filtros .control-label { margin-bottom: 0.15rem; font-size: 0.8rem; }
-.fis-modulo .fis-filtros .form-control,
-.fis-modulo .fis-filtros .input-group-text { height: 2rem; padding: 0.2rem 0.5rem; font-size: 0.8rem; }
-.fis-modulo .fis-filtros .selectize-input { min-height: 2rem; padding: 0.25rem 0.5rem; font-size: 0.8rem; }
-.fis-modulo .fis-filtros .selectize-control.multi .selectize-input.has-items { padding-block: 0.15rem; }
-.fis-modulo .fis-filtros .selectize-control.multi .selectize-input > .item { margin-block: 0.1rem; }
-.fis-modulo .fis-filtros .selectize-input > input,
-.fis-modulo .fis-filtros .selectize-dropdown { font-size: 0.8rem; }
-.fis-modulo .fis-filtros .accordion {
+/* A caixa dos filtros no desenho do Qive (pedido do usuário, 11/11/2026; na NF-e, pag_nfe.py): os componentes do
+   Shiny com o desenho deles, so' na medida das outras faixas do app (o usuario, 12/11/2026: "ta tudo muito grande /
+   deixe mais compacto"): rotulo e texto de 0.8rem, campo de 2rem, menos folga no accordion e nas abas. */
+.fis-modulo .fis-qive { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.8rem; }
+.fis-modulo .fis-qive .shiny-input-container,
+.fis-modulo .fis-qive .bslib-mb-spacing { margin-bottom: 0; }
+.fis-modulo .fis-qive .control-label { margin-bottom: 0.15rem; font-size: 0.8rem; }
+.fis-modulo .fis-qive .form-control,
+.fis-modulo .fis-qive .input-group-text { height: 2rem; padding: 0.2rem 0.5rem; font-size: 0.8rem; }
+.fis-modulo .fis-qive .selectize-input { min-height: 2rem; padding: 0.25rem 0.5rem; font-size: 0.8rem; }
+.fis-modulo .fis-qive .selectize-control.multi .selectize-input.has-items { padding-block: 0.15rem; }
+.fis-modulo .fis-qive .selectize-control.multi .selectize-input > .item { margin-block: 0.1rem; }
+.fis-modulo .fis-qive .selectize-input > input,
+.fis-modulo .fis-qive .selectize-dropdown { font-size: 0.8rem; }
+.fis-modulo .fis-qive .accordion {
   --bs-accordion-btn-padding-y: 0.35rem;
   --bs-accordion-btn-padding-x: 0.75rem;
   --bs-accordion-body-padding-y: 0.5rem;
   --bs-accordion-body-padding-x: 0.75rem;
   font-size: 0.8rem;
 }
-.fis-modulo .fis-filtros .accordion-button { font-size: 0.8rem; }
-.fis-modulo .fis-filtros .nav-underline { margin-bottom: 0; }
-.fis-modulo .fis-filtros .nav-underline .nav-link { padding-block: 0.25rem; }
-
+.fis-modulo .fis-qive .accordion-button { font-size: 0.8rem; }
+.fis-modulo .fis-qive .nav-underline { margin-bottom: 0; }
+.fis-modulo .fis-qive .nav-underline .nav-link { padding-block: 0.25rem; }
+/* A Apuracao (pag_apuracao.py, o desenho do Power BI "Apuracao Fiscal"; pedido do usuario, 17/11/2026): as Entradas
+   numa faixa verde, as Saidas numa vermelha e a apuracao num painel cinza, nos tons das caixas do Painel
+   (core/cores.py::CAIXA_*) e no verde e vermelho do .fis-cor-*. */
 .fis-modulo .fis-apu-grade > * { min-width: 0; }
 .fis-modulo .fis-apu-livro { border: 1px solid #e3e5ea; border-radius: 0.5rem; overflow: hidden; background: #fff; }
-
+/* A Operacao (o nome do CFOP) cortada com reticencias: o valor, a base e o ICMS cabem sem rolar. */
 .fis-modulo .fis-apu-livro td:nth-child(2) { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; }
 .fis-modulo .fis-apu-titulo {
   display: flex; align-items: center; gap: 0.4rem;
@@ -3103,14 +4593,16 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-modulo .fis-apu-titulo svg { width: 0.9rem; height: 0.9rem; fill: currentColor; }
 .fis-modulo .fis-apu-entrada .fis-apu-titulo { background: #EAF6EE; color: #1a7f37; }
 .fis-modulo .fis-apu-saida .fis-apu-titulo { background: #FDEEEE; color: #b42318; }
-
+/* O Total congelado no pe' da tabela (pedido do usuario, 17/11/2026: "linhas de total tem que ser congeladas"), como o
+   cabecalho fica no alto: a classe vem do `styles=` do DataGrid em cada celula da ultima linha. */
 .fis-modulo .fis-apu-total {
   font-weight: 700;
   position: sticky; bottom: 0; z-index: 1;
   background: #F1F2F5 !important;
   box-shadow: inset 0 1px 0 #c9ccd6;
 }
-
+/* A receita e as deducoes (12 colunas, as do Power BI): o cabecalho quebra nos espacos em vez de cortar, como o Saldo
+   do Comodato do Logistico. "!important": o componente poe um <div> com "nowrap" dentro de cada <th>. */
 .fis-modulo .fis-apu-receita shiny-data-frame table thead th,
 .fis-modulo .fis-apu-receita shiny-data-frame table thead th > div { white-space: normal !important; line-height: 1.25; }
 .fis-modulo .fis-apu-resumo { background: #F1F2F5; border-radius: 0.5rem; padding: 0.75rem 0.9rem; height: 100%; }
@@ -3121,15 +4613,18 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-modulo .fis-apu-credito { color: #1a7f37; }
 .fis-modulo .fis-apu-sub { font-size: 0.75rem; color: #4a4f5c; white-space: nowrap; }
 .fis-modulo .fis-apu-separador { border-top: 1px solid #d9dce3; margin: 0.4rem 0 0.7rem; }
-
+/* O bloco do SPED gerado: uma linha por valor, o nome a' esquerda e o valor a' direita. */
 .fis-modulo .fis-apu-linha { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.75rem;
   color: #2f3540; margin-bottom: 0.15rem; white-space: nowrap; }
 .fis-modulo .fis-apu-quebra { white-space: normal; }
-
+/* Os graficos do mes a mes e da receita bruta: o nome em cima, num quadro como o dos livros. */
 .fis-modulo .fis-apu-grafico { border: 1px solid #e3e5ea; border-radius: 0.5rem; padding: 0.5rem 0.75rem 0.25rem;
   background: #fff; margin-top: 0.75rem; }
 .fis-modulo .fis-apu-grafico-titulo { font-size: 0.85rem; font-weight: 600; color: #3d4250; }
-
+/* O estilo do Power BI "Apuracao Fiscal" so' nesta tela (pedido do usuário, 17/11/2026: "pode pegar o estilo de power bi,
+   ficou bonito"): as cores do tema dele (Fiscal01 e as imagens de fundo) pelas mesmas variaveis do app -- o cabecalho
+   das tabelas, o fio das caixas e as pilulas ficam verde-petroleo; as faixas dos livros e dos graficos, verde-petroleo
+   com o texto branco; o corpo das Entradas verde-claro, o das Saidas rosa e o painel cinza-azulado, como la'. */
 .fis-apu-pbi {
   --cor-destaque: #085151;
   --cor-sidebar: #053F3F;
@@ -3153,14 +4648,161 @@ td[class*="fis-cor-"] { font-weight: 600; }
 .fis-apu-pbi .fis-apu-separador { border-top-color: #9fb5ba; }
 .fis-apu-pbi .fis-apu-grafico { border-color: #B2DBC3; padding-top: 0; overflow: hidden; }
 .fis-apu-pbi .fis-apu-grafico-titulo { background: #085151; color: #fff; margin: 0 -0.75rem 0.4rem; padding: 0.4rem 0.75rem; }
+/* Entradas, Saidas e Resumo (25/11/2026, pedido do usuario: sem o painel da direita, que apertava as tabelas): os
+   valores do mes em mini cards na linha do Agrupar, a' direita, e os livros ocupando a largura toda -- um sozinho ou
+   os dois lado a lado (o que a parte nao mostra fica escondido pelo panel_conditional). */
+.fis-modulo .fis-apu-barra { align-items: center; gap: 0.75rem; }
+/* O Agrupar fica inteiro numa linha; os cartoes e' que quebram (no Resumo sao dez). */
+.fis-modulo .fis-barra.fis-apu-barra .fis-fila { flex: 0 0 auto; }
+.fis-modulo .fis-apu-barra .fis-fila .shiny-options-group { flex-wrap: nowrap; }
+/* Os cartoes numa linha so', em qualquer tela (o usuario, 26/11/2026: "voce deve estar usando px, eu ja disse que nao
+   quero px"): a caixa deles ocupa o resto da linha do Agrupar, e cada cartao uma fracao dela (o mesmo para todos, entao
+   o valor nao empurra o vizinho ao trocar o filtro); a fonte acompanha a largura da janela (vw). */
+.fis-modulo .fis-apu-minis {
+  display: flex; flex: 1 1 0; min-width: 0; flex-wrap: nowrap; justify-content: flex-end; gap: 0.6%; margin-left: auto;
+}
+.fis-modulo .fis-apu-mini {
+  background: #F1F2F5; border-radius: 0.5rem; padding: 0.3rem 0.6rem; flex: 0 1 13.5%; min-width: 0; line-height: 1.2;
+}
+/* O cartao duplo do Resumo (o par entrada x saida): o credito em cima, um fio, o debito embaixo; o nome curto a'
+   esquerda e o valor a' direita, menor que o do cartao simples para caber na mesma largura. */
+.fis-modulo .fis-apu-par { display: flex; justify-content: space-between; align-items: baseline; gap: 0.4rem; }
+.fis-modulo .fis-apu-par-nome { font-size: clamp(0.55rem, 0.6vw, 0.65rem); color: #5b6170; }
+.fis-modulo .fis-apu-par-valor { font-size: clamp(0.65rem, 0.72vw, 0.85rem); font-weight: 700; color: #085151;
+  white-space: nowrap; }
+.fis-modulo .fis-apu-par-valor.fis-apu-credito { color: #1a7f37; }
+.fis-modulo .fis-apu-par-valor.fis-apu-debito { color: #b42318; }
+.fis-modulo .fis-apu-par-separador { border-top: 1px solid #9fb5ba; margin: 0.15rem 0; }
+.fis-apu-detalhe-titulo { font-weight: 600; margin-top: 0.25rem; text-align: left; color: #085151; }
+/* O cartao que tem detalhe abre o balao no clique: a mao e um fio na cor do app ao passar o mouse. */
+.fis-modulo .fis-apu-mini-com-balao { cursor: pointer; }
+.fis-modulo .fis-apu-mini-com-balao:hover { box-shadow: inset 0 0 0 1px #085151; }
+/* O balao dos cartoes: o mesmo das notas do CFOP (.fis-nt-balao), o titulo verde-petroleo e o X do proprio balao. */
+.popover.fis-apu-balao {
+  --bs-popover-max-width: 92vw;
+  min-width: 18vw; max-width: 30vw;
+  background: linear-gradient(180deg, #E4F1EC 0%, #fff 55%);
+  border: 1px solid #B2DBC3; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 0.75rem; color: #2d3748;
+}
+.popover.fis-apu-balao .popover-header {
+  background: transparent; border-bottom: 1px solid #B2DBC3; color: #085151; font-size: 0.82rem; font-weight: 600;
+  padding: 0.7rem 2rem 0.5rem 0.9rem;
+}
+.popover.fis-apu-balao .popover-body { padding: 0.6rem 0.9rem 0.8rem; color: #2d3748; }
+.fis-apu-balao-corpo .fis-apu-detalhe-sped { min-width: 0; }
+.fis-apu-balao-corpo .fis-apu-linha { padding: 0.2rem 0; border-top: 1px solid rgba(8, 81, 81, 0.12); }
+.fis-apu-balao-corpo .fis-apu-linha:first-child { border-top: 0; }
+.fis-modulo .fis-apu-mini .fis-apu-rotulo { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* O aviso do mes sem impostos na linha do Agrupar; a linha do "Filtrando por" na altura das etiquetas; as listas
+   paginadas com a altura delas mesmo com poucas linhas: nada empurra o resto da pagina ao trocar um filtro. */
+.fis-modulo .fis-apu-aviso-na-linha { flex: 0 1 auto; min-width: 0; }
+.fis-modulo .fis-apu-aviso-na-linha .fis-op-alerta { margin: 0; font-size: 0.75rem; }
+.fis-modulo .fis-apu-linha-filtros { min-height: 2.1rem; }
+.fis-modulo .fis-apu-lista-fixa { min-height: 56vh; }
+.fis-modulo .fis-apu-mini .fis-apu-rotulo { font-size: clamp(0.55rem, 0.6vw, 0.68rem); }
+.fis-modulo .fis-apu-mini .fis-apu-valor { font-size: clamp(0.72rem, 0.85vw, 1rem); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; }
+.fis-apu-pbi .fis-apu-mini { background: #C9D8DB; }
+.fis-modulo .fis-apu-livros { display: flex; gap: 0.75rem; align-items: flex-start; }
+/* O invólucro do panel_conditional e' "display: contents": quem cresce e' a caixa do livro. */
+.fis-modulo .fis-apu-livros .fis-apu-livro { flex: 1 1 0; min-width: 0; }
+/* Em tela estreita os dois livros lado a lado cortavam o ICMS (conferido em 1250px): um embaixo do outro. */
+@media (max-width: 1400px) { .fis-modulo .fis-apu-livros { flex-direction: column; align-items: stretch; } }
+/* O detalhe do SPED gerado no balao do mini card: uma linha por valor. */
+.fis-apu-detalhe-sped { min-width: 14vw; text-align: left; }
+.fis-apu-detalhe-sped .fis-apu-linha { display: flex; justify-content: space-between; gap: 1rem; white-space: nowrap; }
+/* As notas da linha escolhida no livro (pag_apuracao.py::_painel_das_notas, pedido do usuário, 25/11/2026): o desenho
+   do balao "Deve a" do Fluxo Financeiro (.flx-balao), nas cores daqui -- o titulo, o resumo em duas colunas, a secao e
+   os dias num ui.accordion compacto (a seta a' esquerda, como la'), numa rolagem com o cabecalho parado. */
+.fis-apu-pbi .fis-apu-entrada shiny-data-frame table tbody tr[aria-selected="true"] td,
+.fis-apu-pbi .fis-apu-saida shiny-data-frame table tbody tr[aria-selected="true"] td {
+  background-color: var(--cor-destaque, #085151) !important; color: #fff;
+}
+.fis-apu-pbi .fis-apu-livro shiny-data-frame table tbody tr { cursor: pointer; }
+/* O balao (ui.popover, que o Bootstrap poe no fim da pagina, fora do .fis-modulo): o .flx-balao do "Deve a", nas cores
+   do app, com o X do proprio balao no canto. O ponto onde ele nasce fica ao lado da linha clicada (www/js/apuracao.js). */
+.fis-apu-livro { position: relative; }
+.fis-nt-ancora { position: absolute; top: 3rem; left: 0; width: 1px; height: 1px; pointer-events: none; }
+.popover.fis-nt-balao {
+  --bs-popover-max-width: 95vw;
+  width: 42vw;
+  background: linear-gradient(180deg, #E4F1EC 0%, #fff 55%);
+  border: 1px solid #B2DBC3; border-radius: 0.5rem; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.popover.fis-nt-balao .popover-body { padding: 0; }
+.fis-nt { padding: 0.9rem 0.95rem 0.95rem; font-size: 0.75rem; color: #2d3748; }
+.fis-nt-topo {
+  font-size: 0.82rem; font-weight: 600; color: #085151; margin-bottom: 0.6rem; padding-right: 1.5rem;
+}
+.fis-nt-resumo { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.35rem 1rem; margin-bottom: 0.75rem; }
+.fis-nt-resumo span { color: #4a5568; }
+.fis-nt-resumo strong { float: right; color: #2d3748; }
+.fis-nt-secao {
+  font-weight: 600; margin: 0.6rem 0 0.4rem; padding-bottom: 0.25rem;
+  color: var(--cor-destaque, #085151); border-bottom: 1px solid var(--cor-claro, #B2DBC3);
+}
+.fis-nt-vazio { font-style: italic; color: #4a5568; }
+.fis-nt-rolagem {
+  max-height: 45vh; overflow-y: auto; overscroll-behavior: contain; padding-right: 0.25rem;
+  scrollbar-width: thin; scrollbar-color: var(--cor-claro, #B2DBC3) transparent;
+}
+.fis-nt-rolagem::-webkit-scrollbar { width: 6px; }
+.fis-nt-rolagem::-webkit-scrollbar-thumb { background: var(--cor-claro, #B2DBC3); border-radius: 3px; }
+/* Cada linha (o cabecalho, o dia e a nota) e' a mesma grade de cinco colunas, para os valores ficarem um embaixo do
+   outro. */
+.fis-nt-linha {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1.7fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 0.8fr) 1.75rem;
+  gap: 0.5rem; width: 100%; align-items: baseline; font-size: 0.7rem;
+}
+.fis-nt-linha > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fis-nt-linha .valor { text-align: right; }
+.fis-nt-cabecalho {
+  position: sticky; top: 0; z-index: 2; background: #fff; color: #4a5568; font-weight: 600; padding-bottom: 0.25rem;
+}
+.fis-nt-dias { --bs-accordion-border-width: 0; --bs-accordion-bg: transparent; }
+.fis-nt-dias .accordion-item { border-top: 1px solid rgba(8, 81, 81, 0.15); background: transparent; }
+.fis-nt-dias .accordion-button {
+  padding: 0.25rem 0; background: transparent; box-shadow: none !important; outline: 0; border: 0;
+  color: #2d3748; font-weight: 600;
+}
+.fis-nt-dias .accordion-button::after,
+.fis-nt-dias .accordion-icon { display: none; }
+/* O titulo ocupa o botao inteiro: sem isso a grade do dia fica mais estreita que a do cabecalho e das notas. */
+.fis-nt-dias .accordion-title { flex: 1 1 auto; min-width: 0; padding: 0; }
+.fis-nt-dias .accordion-body { padding: 0 0 0.25rem; }
+.fis-nt-seta {
+  display: inline-block; width: 1em; margin-right: 0.25rem; text-align: center; transition: transform 0.15s ease;
+}
+.fis-nt-seta svg { height: 0.8em; vertical-align: -0.05em; fill: currentColor; }
+.fis-nt-dias .accordion-button:not(.collapsed) .fis-nt-seta { transform: rotate(90deg); }
+.fis-nt-nota { padding: 0.2rem 0; border-top: 1px solid rgba(8, 81, 81, 0.08); }
+.fis-nt-nota > span:first-child { padding-left: calc(1em + 0.25rem); }
+.fis-nt-link { text-align: center; }
+/* O PDF em vermelho (o do ícone de PDF do Financeiro), para contrastar com o verde; a consulta em azul (o usuário,
+   25/11/2026). */
+.fis-nt-link a { font-size: 0.8rem; }
+.fis-nt-link a.fis-nt-pdf { color: #c62828; }
+.fis-nt-link a.fis-nt-pdf:hover { color: #8e1c1c; }
+.fis-nt-link a.fis-nt-consulta { color: #1f6fb2; }
+.fis-nt-link a.fis-nt-consulta:hover { color: #154f80; }
+.fis-nt-link svg { height: 0.85em; fill: currentColor; }
+.fis-nt-carregando { font-style: italic; color: #4a5568; padding-left: calc(1em + 0.25rem); }
 
+/* A linha com observacao (core/observacao.py, 18/11/2026): o amarelo-claro das vencidas do Financeiro, com a faixa a
+   esquerda, sem mudar a ordem da lista. */
 .fis-tabela .shiny-data-grid td.fis-linha-observacao { background-color: #fff3cd !important; }
 .fis-tabela .shiny-data-grid tr:hover td.fis-linha-observacao { background-color: #ffeaa7 !important; }
 .fis-tabela .shiny-data-grid td.fis-linha-observacao-inicio { box-shadow: inset 4px 0 0 #ffc107; }
-
+/* A Escrituracao, pela gravidade (18/11/2026, o usuario: "quanto mais vermelho, pior e', quanto mais azulzinho, tudo
+   'certo'"): vermelho o que esta' errado no Control, laranja o que trava a entrada, ambar o que falta lancar, azul-claro o
+   pronto para lancar, azul o que ja' entrou, cinza-azulado o que nao se julga. So' nesta tela: as outras filas seguem. */
 #escrituracao-situacao label.radio-inline:has(input[value="problemas"]) > span::before,
 #escrituracao-situacao label.radio-inline:has(input[value="valor_diferente"]) > span::before,
-#escrituracao-situacao label.radio-inline:has(input[value="Não escriturada"]) > span::before { background: #D64545; }
+#escrituracao-situacao label.radio-inline:has(input[value="Não escriturada"]) > span::before,
+#escrituracao-situacao label.radio-inline:has(input[value="Cancelada na Receita, ativa no Control"]) > span::before,
+#escrituracao-situacao label.radio-inline:has(input[value="No Control de outra revenda"]) > span::before { background: #D64545; }
 #escrituracao-situacao label.radio-inline:has(input[value="de_para"]) > span::before { background: #EA7A2E; }
 #escrituracao-situacao label.radio-inline:has(input[value="pendentes"]) > span::before,
 #escrituracao-situacao label.radio-inline:has(input[value="Aguardando (até 2 meses)"]) > span::before { background: #E0A12B; }
@@ -3169,7 +4811,8 @@ td[class*="fis-cor-"] { font-weight: 600; }
 #escrituracao-situacao label.radio-inline:has(input[value="Não se lança (validação do fiscal)"]) > span::before,
 #escrituracao-situacao label.radio-inline:has(input[value="fora"]) > span::before { background: #8A9BB0; }
 
+/* A caixinha da confirmacao de leitura do E-mail (core/email_fiscal.py): sem a margem do grupo do Shiny, no meio da
+   altura do seletor ao lado, que nao tem margem embaixo. */
 .fis-email-confirmacao .form-group {
   margin-bottom: 0;
 }
-

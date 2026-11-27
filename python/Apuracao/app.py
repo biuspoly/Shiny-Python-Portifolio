@@ -1,9 +1,11 @@
+import re
 import sys
 from pathlib import Path
 from urllib.parse import parse_qs
 
 from faicons import icon_svg
 from shiny import App, reactive, render, ui
+from shiny.module import ResolvedId
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
@@ -42,16 +44,54 @@ PASTA_APP = Path(__file__).parent
 CSS_ESTILO = (PASTA_APP / "www" / "css" / "style.css").read_text(encoding="utf-8")
 CSS_INICIAL = (PASTA_APP / "www" / "css" / "inicial.css").read_text(encoding="utf-8")
 
-# (código, rótulo, ícone do faicons, grupo do menu). A ordem é a do menu.
+# (código, rótulo, ícone do faicons ou .svg de www/, grupo do menu). A ordem é a do menu. Como no original: a
+# Apuração é um grupo com quatro subabas, que abrem a mesma página (apu), cada uma no seu livro (SECAO_DO_ITEM).
 MENU = [
-    ("apu", "Apuração", "scale-balanced", "Análises"),
+    ("apu_res", "Resumo", "img/menu/resumo.svg", "Apuração"),
+    ("apu_ent", "Entradas", "img/menu/entrada.svg", "Apuração"),
+    ("apu_sai", "Saídas", "img/menu/saida.svg", "Apuração"),
+    ("apu_gra", "Gráficos", "chart-column", "Apuração"),
     ("fat", "Faturamento", "file-invoice-dollar", "Relatórios"),
 ]
-ICONE_DO_GRUPO = {"Análises": "chart-line", "Relatórios": "print"}
+ICONE_DO_GRUPO = {"Apuração": "scale-balanced", "Relatórios": "print"}
+# A subaba do menu -> (a página, a visão dela que abre). Item que não está aqui é a própria página.
+SECAO_DO_ITEM = {
+    "apu_res": ("apu", "resumo"),
+    "apu_ent": ("apu", "entradas"),
+    "apu_sai": ("apu", "saidas"),
+    "apu_gra": ("apu", "graficos"),
+}
+MODULO_DA_PAGINA = {"apu": "apuracao"}
 PRIMEIRA = MENU[0][0]
+
+
+def pagina_do_item(codigo: str) -> str:
+    return SECAO_DO_ITEM.get(codigo, (codigo, None))[0]
+
+
+PAGINAS_DO_MENU = list(dict.fromkeys(pagina_do_item(codigo) for codigo, *_ in MENU))
 
 # Tabelas de onde sai o "Atualizado em" de cada tela.
 MAPA_ATUALIZACAO_ABA = {"apu": ("faturamento",), "fat": ("faturamento",)}
+
+
+def _icone(nome: str):
+    """Ícone do faicons ou um .svg de www/ embutido no mesmo formato (a cor do texto do menu, 1em)."""
+    if not nome.endswith(".svg"):
+        return icon_svg(nome, a11y="deco")
+    desenho = (PASTA_APP / "www" / nome).read_text(encoding="utf-8")
+    desenho = re.sub(r'\swidth="[^"]*"|\sheight="[^"]*"', "", desenho, count=2)
+    estilo = (
+        'style="fill:currentColor;height:1em;width:1em;margin-left:auto;margin-right:0.2em;position:relative;'
+        'vertical-align:-0.125em;overflow:visible;" aria-hidden="true" role="img"'
+    )
+    return ui.HTML(desenho.replace("<svg ", f"<svg {estilo} ", 1))
+
+
+def _ui_da_pagina(pagina: str):
+    """A página; a que tem subabas no menu abre na visão do primeiro item dela."""
+    secao = next((s for codigo, (p, s) in SECAO_DO_ITEM.items() if p == pagina and codigo == PRIMEIRA), None)
+    return PAGINAS[pagina][0](None, secao) if secao else PAGINAS[pagina][0](None)
 
 
 def _menu() -> list:
@@ -63,7 +103,7 @@ def _menu() -> list:
             icone = ICONE_DO_GRUPO.get(grupo_atual)
             botoes.append(
                 ui.accordion(
-                    ui.accordion_panel(grupo_atual, *itens, **({"icon": icon_svg(icone)} if icone else {})),
+                    ui.accordion_panel(grupo_atual, *itens, **({"icon": _icone(icone)} if icone else {})),
                     open=any(item.attrs.get("id") == f"link_{PRIMEIRA}" for item in itens),
                 )
             )
@@ -73,7 +113,7 @@ def _menu() -> list:
         botao = ui.input_action_button(
             f"link_{codigo}",
             rotulo,
-            icon=icon_svg(icone, a11y="deco"),
+            icon=_icone(icone),
             class_="selecionado" if codigo == PRIMEIRA else None,
         )
         if grupo != grupo_atual:
@@ -89,9 +129,9 @@ app_ui = ui.page_sidebar(
         _menu(), gap="12px", padding="50px 10px 0 10px", width="240px", open={"desktop": "open", "mobile": "closed"}
     ),
     ui.navset_hidden(
-        *[ui.nav_panel(None, com_carregamento(PAGINAS[codigo][0](None)), value=codigo) for codigo, *_ in MENU],
+        *[ui.nav_panel(None, com_carregamento(_ui_da_pagina(pagina)), value=pagina) for pagina in PAGINAS_DO_MENU],
         id="conteudo_tabs",
-        selected=PRIMEIRA,
+        selected=pagina_do_item(PRIMEIRA),
     ),
     ui.head_content(ui.tags.style(CSS_INICIAL)),
     ui.tags.style(f"""
@@ -123,6 +163,7 @@ app_ui = ui.page_sidebar(
     ui.tags.script(src=forca_style("js/marcar.js")),
     ui.tags.script(src=forca_style("js/tabela_ordem.js")),
     ui.tags.script(src=forca_style("js/acao_linha.js")),
+    ui.tags.script(src=forca_style("js/apuracao.js")),
     ui.tags.script(src=forca_style("js/echarts.min.js")),
     title=ui.div(
         ui.tags.img(src="img/logo_ficticia.svg", height="40vh"),
@@ -143,8 +184,8 @@ def server(input, output, session):
 
     usuario_atual = reactive.value(USUARIO_PORTFOLIO)
     versao_cache = reactive.value(0)
-    for codigo, *_ in MENU:
-        PAGINAS[codigo][1](revenda_atual, usuario_atual, versao_cache)
+    for pagina in PAGINAS_DO_MENU:
+        PAGINAS[pagina][1](revenda_atual, usuario_atual, versao_cache)
 
     @render.ui
     def valuebox_atualizacao():
@@ -155,10 +196,16 @@ def server(input, output, session):
         return cartao_atualizacao(obter_atualizacao(PASTA_CACHE, *tabelas), DESTAQUE)
 
     def _ligar_botao(codigo: str) -> None:
+        """Uma função por botão (no laço, todos os efeitos fechariam sobre a última variável). A subaba troca a
+        página e a visão dela."""
+        pagina, secao = SECAO_DO_ITEM.get(codigo, (codigo, None))
+
         @reactive.effect
         @reactive.event(input[f"link_{codigo}"])
         def _():
-            ui.update_navset("conteudo_tabs", selected=codigo)
+            ui.update_navset("conteudo_tabs", selected=pagina)
+            if secao:
+                ui.update_navset(ResolvedId(MODULO_DA_PAGINA[pagina])("visao"), selected=secao)
 
     for codigo, *_ in MENU:
         _ligar_botao(codigo)

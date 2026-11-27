@@ -35,7 +35,69 @@ CFOPS = {
     "1411": ("E", 0.018, 0.0, True),
     "2202": ("E", 0.002, 0.12, False),
     "1556": ("E", 0.01, 0.0, False),
+    "1653": ("E", 0.012, 0.0, False),  # combustível (entra nas deduções do PIS/COFINS)
+    "1910": ("E", 0.008, 0.20, False),  # bonificação recebida da fábrica
 }
+
+# Os títulos pagos (o contas a pagar do Financeiro), que a Apuração usa nas Despesas e nas deduções do PIS/COFINS.
+# Código da despesa no cadastro -> (nome, valor mensal de referência para o porte 1). Os códigos de aluguel (53),
+# energia (29) e ICMS antecipado (94) são os que o config/apuracao.json do app usa.
+PASTA_TITULOS = b.PY / "Apuracao" / "data" / "bd_financeiro"
+DESPESAS = {
+    2: ("PEÇAS PARA VEÍCULOS", 38000.0),
+    10: ("COMBUSTÍVEIS E LUBRIFICANTES", 61000.0),
+    15: ("TELEFONIA E INTERNET", 4200.0),
+    29: ("ENERGIA ELÉTRICA", 23000.0),
+    40: ("MANUTENÇÃO PREDIAL", 9000.0),
+    53: ("ALUGUÉIS PJ", 31000.0),
+    61: ("SERVIÇOS DE TERCEIROS", 17000.0),
+    94: ("ICMS ANTECIPADO", 54000.0),
+}
+FORNECEDORES_DA_DESPESA = {
+    2: ["AUTO PEÇAS POTIGUAR LTDA", "DISTRIBUIDORA DE PEÇAS NORDESTE LTDA"],
+    10: ["POSTO PONTA NEGRA COMBUSTÍVEIS LTDA", "POSTO ESTRADA DO SOL LTDA"],
+    15: ["TELECOM LITORAL S.A."],
+    29: ["COMPANHIA ENERGÉTICA FICTÍCIA S.A."],
+    40: ["CONSTRUTORA E REFORMAS DUNAS LTDA"],
+    53: ["IMOBILIÁRIA E ADMINISTRADORA ATLÂNTICO LTDA"],
+    61: ["SERVIÇOS GERAIS NORDESTE LTDA", "SEGURANÇA PATRIMONIAL ALERTA LTDA"],
+    94: ["SECRETARIA DA FAZENDA (GUIA FICTÍCIA)"],
+}
+
+
+def _titulos_pagos(r) -> dict[str, pl.DataFrame]:
+    linhas = []
+    for _nome, cnpj, porte in EMPRESAS:
+        documento = r.randint(10000, 90000)
+        for n in range(MESES - 1, -1, -1):
+            mes = b.meses_atras(b.HOJE, n)
+            for codigo, (_descricao, valor) in DESPESAS.items():
+                for _ in range(1 if codigo in (29, 53, 15, 94) else r.randint(1, 3)):
+                    vencimento = mes.replace(day=r.randint(5, 25))
+                    pagamento = vencimento - b.timedelta(days=r.randint(0, 3))
+                    if pagamento > b.HOJE:
+                        continue
+                    documento += 1
+                    parcelas = 1 if codigo in (29, 53, 15, 94) else 2
+                    linhas.append(
+                        {
+                            "CNPJ_REV": cnpj,
+                            "data_vencimento": vencimento,
+                            "data_pagamento": pagamento,
+                            "codigo_despesa": codigo,
+                            "valor_pago": round(valor * porte * r.uniform(0.75, 1.25) / parcelas, 2),
+                            "razao_social": r.choice(FORNECEDORES_DA_DESPESA[codigo]),
+                            "num_doc": str(documento),
+                        }
+                    )
+    cadastro = [
+        {"CNPJ_REV": cnpj, "codigo_despesa": codigo, "descricao_despesa": descricao}
+        for _nome, cnpj, _porte in EMPRESAS
+        for codigo, (descricao, _valor) in DESPESAS.items()
+    ]
+    return {"titulos_pagos": pl.DataFrame(linhas), "cod_despesa": pl.DataFrame(cadastro)}
+
+
 SAZONALIDADE = {
     1: 1.18,
     2: 1.22,
@@ -93,7 +155,7 @@ def _faturamento(r) -> pl.DataFrame:
     return pl.DataFrame(linhas).with_columns(pl.col("CANCELADA").cast(pl.Int64), pl.col("LINHAS").cast(pl.Int64))
 
 
-MESES_ITENS = 3
+MESES_ITENS = 13  # o mês corrente e os 12 dos gráficos mês a mês da Apuração
 
 
 def _livro_itens(fat: pl.DataFrame, r) -> tuple[dict[str, pl.DataFrame], dict[str, pl.DataFrame]]:
@@ -203,6 +265,10 @@ def gerar() -> None:
     for nome, df in tabelas.items():
         df.write_parquet(PASTA / f"{nome}.parquet", compression="zstd")
         print(f"  bd_fiscal/{nome}.parquet: {df.height:,} linhas".replace(",", "."))
+    PASTA_TITULOS.mkdir(parents=True, exist_ok=True)
+    for nome, df in _titulos_pagos(r).items():
+        df.write_parquet(PASTA_TITULOS / f"{nome}.parquet", compression="zstd")
+        print(f"  bd_financeiro/{nome}.parquet: {df.height:,} linhas".replace(",", "."))
     momento = datetime.combine(b.HOJE, datetime.min.time()).replace(hour=6, minute=15).isoformat(timespec="seconds")
     (PASTA / "_atualizacoes.json").write_text(
         json.dumps({n: momento for n in tabelas}, ensure_ascii=False, indent=2), encoding="utf-8"
