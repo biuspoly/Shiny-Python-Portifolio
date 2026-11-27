@@ -20,7 +20,7 @@ visao_geral = function(){
       cor       = "primary",
       print     = "prints/shiny_py_comercial.webp",
       link      = paste0(posit_py, "comercial/"),
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Acompanhamento Logístico ----------------------------------------------
@@ -32,7 +32,7 @@ visao_geral = function(){
       cor       = "info",
       print     = "prints/shiny_r_logistico.webp",
       link      = paste0(posit_r, "?painel=logistico"),
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # TCC: gráficos de controle no TRF5 -------------------------------------
@@ -43,8 +43,8 @@ visao_geral = function(){
       selos     = "Estatística;R Markdown",
       cor       = "success",
       print     = "prints/ufpe.png",
-      link      = "https://repositorio.ufpe.br/handle/123456789/47526",
-      modo      = "externo"
+      link      = paste0(caminho_www, "docs/tcc_marlon_amaral.pdf"),   # a cópia do PDF do Repositório da UFPE
+      modo      = "pdf"
     ),
 
     # Pipelines de dados ----------------------------------------------------

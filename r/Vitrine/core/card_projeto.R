@@ -8,9 +8,29 @@
 #   link   -> um endereço por versão
 #   rotulo -> o texto do botão de cada versão  ("" usa o texto padrão)
 #   modo   -> o modo de cada versão; um valor só vale para todas:
-#             "app" (abre no modal), "repo" (GitHub em nova aba),
+#             "app" (abre no modal), "pdf" (o PDF sozinho no modal), "repo" (GitHub em nova aba),
 #             "externo" (site em nova aba), "em_breve" ou "sem_link"
 #             (só a explicação: o card fica com o botão Detalhes e mais nada)
+
+# O modal grande com o projeto num iframe (agora que a vitrine roda no Posit, e não no Shinylive, o navegador
+# deixa abrir outro site dentro dela). O PDF aparece sozinho, ajustado à largura (#view=FitH). No rodapé, o mesmo
+# endereço numa aba nova, para quem preferir.
+modal_do_projeto = function(titulo, link, pdf = FALSE){
+  showModal(
+    modalDialog(
+      title = titulo,
+      size = "xl",
+      easyClose = TRUE,
+      footer = tagList(
+        tags$a(icon("up-right-from-square"), " Abrir em nova aba", href = link, target = "_blank",
+               class = "btn btn-outline-secondary btn-sm"),
+        modalButton("Fechar")
+      ),
+      tags$iframe(src = if (pdf) paste0(link, "#view=FitH") else link, class = "modal-projeto-iframe",
+                  frameborder = "0")
+    )
+  )
+}
 
 card_projeto = function(projetos, id_projeto){
 
@@ -28,19 +48,11 @@ card_projeto = function(projetos, id_projeto){
 
   # SERVER ------------------------------------------------------------------
 
-  # Versão no modo app: o botão abre o app num modal
+  # Versão no modo app ou pdf: o botão abre o projeto no modal grande
   abrir_modal = function(posicao){
-    if (versoes >= posicao && modos[posicao] == "app") {
+    if (versoes >= posicao && modos[posicao] %in% c("app", "pdf")) {
       observeEvent(input[[paste0("bt_ver_", id_projeto, "_", posicao)]], {
-        showModal(
-          modalDialog(
-            title = projeto$titulo,
-            size = "xl",
-            easyClose = TRUE,
-            footer = modalButton("Fechar"),
-            tags$iframe(src = links[posicao], width = "100%", style = "height: 75vh;", frameborder = "0")
-          )
-        )
+        modal_do_projeto(projeto$titulo, links[posicao], pdf = modos[posicao] == "pdf")
       })
     }
   }
@@ -62,11 +74,11 @@ card_projeto = function(projetos, id_projeto){
     if (modo == "sem_link") return(NULL)
     id_bt  = paste0("bt_ver_", id_projeto, "_", posicao)
 
-    if (modo == "app") {
+    if (modo %in% c("app", "pdf")) {
       botao = actionButton(
         id_bt,
-        label = if (rotulo == "") "Ver projeto" else rotulo,
-        icon = icon("up-right-from-square"),
+        label = if (rotulo != "") rotulo else if (modo == "pdf") "Ver PDF" else "Ver projeto",
+        icon = icon(if (modo == "pdf") "file-pdf" else "up-right-from-square"),
         status = "primary",
         size = "sm",
         width = "100%"

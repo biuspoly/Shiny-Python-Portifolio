@@ -41,7 +41,7 @@ analise_dados = function(item){
         posit_py, "logistico/"
       ),
       rotulo    = "Frotas (Power BI);Custos (Power BI);Devoluções (Power BI);Shiny R;Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Acompanhamento Comercial ----------------------------------------------
@@ -55,7 +55,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_comercial.webp",
       link      = paste0(posit_r, "?painel=comercial;", posit_py, "comercial/"),
       rotulo    = "Shiny R;Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Acompanhamento Financeiro ---------------------------------------------
@@ -69,7 +69,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_financeiro.webp",
       link      = paste0(posit_py, "financeiro/"),
       rotulo    = "Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Apuração Fiscal -------------------------------------------------------
@@ -83,7 +83,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_apuracao.webp",
       link      = paste0(posit_py, "apuracao/"),
       rotulo    = "Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Fiscal (o substituto do Qive) ------------------------------------------
@@ -97,7 +97,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_fiscal.webp",
       link      = paste0(posit_py, "fiscal/"),
       rotulo    = "Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Monitoramento ---------------------------------------------------------
@@ -111,7 +111,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_monitoramento.webp",
       link      = paste0(posit_py, "monitoramento/"),
       rotulo    = "Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Acessos ---------------------------------------------------------------
@@ -125,7 +125,7 @@ analise_dados = function(item){
       print     = "prints/shiny_py_acessos.webp",
       link      = paste0(posit_r, "?painel=acessos;", posit_py, "acessos/"),
       rotulo    = "Shiny R;Shiny Python",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Primeiros painéis em Shiny --------------------------------------------
@@ -139,7 +139,7 @@ analise_dados = function(item){
       print     = "prints/shiny_r_primeiros_paineis.png",
       link      = "https://marlonufpe.shinyapps.io/VENDAS/;https://marlonufpe.shinyapps.io/demanda/",
       rotulo    = "Vendas;Demandas",
-      modo      = "externo"
+      modo      = "app"
     )
   )
 
@@ -157,7 +157,7 @@ analise_dados = function(item){
       print     = "prints/pbi_secoge.png",
       link      = paste0(powerbi, "eyJrIjoiZTc3ZTc0MjItZDVjMy00MTg5LTgyMDQtZGE4NDM1Yjk5YWNhIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
       rotulo    = "",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Dengue e Chikungunya no Recife ----------------------------------------
@@ -171,7 +171,7 @@ analise_dados = function(item){
       print     = "prints/pbi_dengue.png",
       link      = paste0(powerbi, "eyJrIjoiY2QyMTBkMjgtZmIxZS00ZWJjLWI1NzgtNmJkOTE4YjMxNDY5IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
       rotulo    = "",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Painel de performance -------------------------------------------------
@@ -185,7 +185,7 @@ analise_dados = function(item){
       print     = "prints/pbi_performance.png",
       link      = paste0(powerbi, "eyJrIjoiZDJkYzJiMGQtNDQ1ZS00ZmIxLWEzYjMtMDliMjZjYTdkMDM2IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
       rotulo    = "",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Dashboard de vendas ---------------------------------------------------
@@ -199,7 +199,7 @@ analise_dados = function(item){
       print     = "prints/pbi_vendas.png",
       link      = paste0(powerbi, "eyJrIjoiMzg4NGIyNDMtODQ1Ny00YmY3LTkwZTUtNmU3YmY0ODZjNTE3IiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
       rotulo    = "",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Mercado de ações ------------------------------------------------------
@@ -213,7 +213,7 @@ analise_dados = function(item){
       print     = "prints/pbi_acoes.png",
       link      = paste0(powerbi, "eyJrIjoiMDYwODRmZDctYmU4NS00M2Y4LThiZGUtZjhhOThjNGVmNWFhIiwidCI6ImUyZjc3ZDAwLTAxNjMtNGNmNi05MmIwLTQ4NGJhZmY5ZGY3ZCJ9"),
       rotulo    = "",
-      modo      = "externo"
+      modo      = "app"
     )
   )
 

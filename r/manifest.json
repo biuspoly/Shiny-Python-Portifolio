@@ -4195,13 +4195,13 @@
       "checksum": "186a3a381711257dc02b63a7b502cee7"
     },
     "Vitrine/app.R": {
-      "checksum": "d537b033113b62bcd0a7edd003780559"
+      "checksum": "7aeeded6574ec49da940b29e92c80d97"
     },
     "Vitrine/core/card_destaque.R": {
-      "checksum": "7de9c7d949a9c73f443f90b1b46a6d8b"
+      "checksum": "e781ebec78a5a54d44394fc78db65afc"
     },
     "Vitrine/core/card_projeto.R": {
-      "checksum": "f528ef7ac41f7eeecc58969d1614be36"
+      "checksum": "d281ff31706af22f358ee5808cd3c96f"
     },
     "Vitrine/core/faixa_etapas.R": {
       "checksum": "6edd94c80a9d8db2bf93aaaeb0b015a8"
@@ -4213,16 +4213,16 @@
       "checksum": "e0323ce8933c31a417f526d9af0a4521"
     },
     "Vitrine/pages/analise_dados/analise_dados.R": {
-      "checksum": "eac84ba738ea6089ad588b55a23ada38"
+      "checksum": "90f73579ee2510c8d56fa1ca167e8a19"
     },
     "Vitrine/pages/apps_mobile/apps_mobile.R": {
-      "checksum": "eba7dd34f2cba933e12c0f2081684380"
+      "checksum": "83fc082f2d08c6fd9d0d2eb36939eabe"
     },
     "Vitrine/pages/automacoes/automacoes.R": {
       "checksum": "3c001bc987338b905a9a6f246c92d907"
     },
     "Vitrine/pages/ciencia_dados/ciencia_dados.R": {
-      "checksum": "b6ac250d7d3f768b832fa8c175cbc4e0"
+      "checksum": "5dae77b6fab5fffc8bd4362a3b1cbdff"
     },
     "Vitrine/pages/dev_open_source/dev_open_source.R": {
       "checksum": "3e7f0995d80ab1b1b2409d26b32767cb"
@@ -4234,7 +4234,7 @@
       "checksum": "42ab07cb9959a384f66b8c786b9bf326"
     },
     "Vitrine/pages/visao_geral/visao_geral.R": {
-      "checksum": "6684d691c67c4a5848b8ef367993b592"
+      "checksum": "1ec397144398432d1ff2e1872e74ee54"
     },
     "Vitrine/www/appsheet.svg": {
       "checksum": "a4d196d426d62fa9106953d6bdb927b4"
@@ -4263,8 +4263,11 @@
     "Vitrine/www/cpp_white.svg": {
       "checksum": "af87091c4c2d581fcdae9f170229dbe9"
     },
+    "Vitrine/www/docs/tcc_marlon_amaral.pdf": {
+      "checksum": "9320ba23858e1ce6970bb84d4b15183f"
+    },
     "Vitrine/www/estilo.css": {
-      "checksum": "3f2b14d80460ebc20c466ba29d6245bf"
+      "checksum": "dd12c46d999578dcd1657e70b9c8d6f5"
     },
     "Vitrine/www/excel.svg": {
       "checksum": "d910ceddb9cf99f5854ccebbb60fa2fa"

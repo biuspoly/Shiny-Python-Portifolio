@@ -106,7 +106,7 @@ ui = dashboardPage(
     )
   ),
   body = dashboardBody(
-    tags$head(tags$link(rel = "stylesheet", href = paste0(caminho_www, "estilo.css?v=18"))),
+    tags$head(tags$link(rel = "stylesheet", href = paste0(caminho_www, "estilo.css?v=19"))),
 
     # No celular o menu lateral abre POR CIMA da página e não fecha sozinho: depois de tocar num item,
     # a página trocava atrás do menu e parecia que só a Visão Geral existia. Fecha o menu após o toque.

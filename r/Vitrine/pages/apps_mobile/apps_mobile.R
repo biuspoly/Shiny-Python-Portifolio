@@ -41,7 +41,7 @@ apps_mobile = function(){
       print     = "prints/mobile_entregas.png",
       link      = "https://marlonufpe.shinyapps.io/entregas/;https://www.appsheet.com/start/d9697071-b7a0-4d71-ae9f-a4e324abf156",
       rotulo    = "Shiny R;AppSheet",
-      modo      = "externo"
+      modo      = "app"
     ),
 
     # Portfólio antigo ------------------------------------------------------
@@ -55,7 +55,7 @@ apps_mobile = function(){
       print     = "prints/mobile_portfolio_appsheet.png",
       link      = "https://marlonheslypro.wixsite.com/portfolio/inicio;https://www.appsheet.com/start/a5cc10cd-9090-4c3c-9883-788712d4da13",
       rotulo    = "Site (Wix);App (AppSheet)",
-      modo      = "externo"
+      modo      = "app"
     )
   )
 

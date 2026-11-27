@@ -4,7 +4,8 @@
 # Colunas esperadas no data.frame:
 #   id, titulo, descricao, cor, print, link
 #   selos -> um ou dois textos separados por ";" (ex.: "Shiny Python;Polars")
-#   modo  -> "app" (abre no modal), "repo" (abre o GitHub em nova aba) ou "externo" (abre o site em nova aba)
+#   modo  -> "app" (abre no modal), "pdf" (o PDF sozinho no modal), "repo" (abre o GitHub em nova aba) ou
+#            "externo" (abre o site em nova aba)
 
 card_destaque = function(projetos, id_projeto){
 
@@ -13,25 +14,17 @@ card_destaque = function(projetos, id_projeto){
 
   # SERVER ------------------------------------------------------------------
 
-  if (projeto$modo == "app") {
+  if (projeto$modo %in% c("app", "pdf")) {
     observeEvent(input[[paste0("bt_destaque_", id_projeto)]], {
-      showModal(
-        modalDialog(
-          title = projeto$titulo,
-          size = "xl",
-          easyClose = TRUE,
-          footer = modalButton("Fechar"),
-          tags$iframe(src = projeto$link, width = "100%", style = "height: 75vh;", frameborder = "0")
-        )
-      )
+      modal_do_projeto(projeto$titulo, projeto$link, pdf = projeto$modo == "pdf")   # em core/card_projeto.R
     })
   }
 
-  if (projeto$modo == "app") {
+  if (projeto$modo %in% c("app", "pdf")) {
     botao_ver = actionButton(
       paste0("bt_destaque_", id_projeto),
-      label = "Ver projeto",
-      icon = icon("up-right-from-square"),
+      label = if (projeto$modo == "pdf") "Ver PDF" else "Ver projeto",
+      icon = icon(if (projeto$modo == "pdf") "file-pdf" else "up-right-from-square"),
       status = "primary",
       size = "sm"
     )

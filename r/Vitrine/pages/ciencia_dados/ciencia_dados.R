@@ -22,9 +22,9 @@ ciencia_dados = function(){
       logo      = "r.svg",
       cor       = "info",
       print     = "prints/ufpe.png",
-      link      = "https://repositorio.ufpe.br/handle/123456789/47526",
+      link      = paste0(caminho_www, "docs/tcc_marlon_amaral.pdf"),   # a cópia do PDF do Repositório da UFPE
       rotulo    = "Ver no repositório",
-      modo      = "externo"
+      modo      = "pdf"
     ),
 
     # Congestionamento no TRF5 ----------------------------------------------
@@ -39,7 +39,7 @@ ciencia_dados = function(){
       # endereço do documento que o RPubs mostra por dentro da página dele
       link      = "https://rstudio-pubs-static.s3.amazonaws.com/1018240_6c09a7b337324a8cbedadc9ffd9bc670.html",
       rotulo    = "",
-      modo      = "externo"
+      modo      = "app"
     )
   )
 
