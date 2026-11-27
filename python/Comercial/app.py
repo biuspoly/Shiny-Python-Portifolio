@@ -24,9 +24,11 @@ from core.cores import (  # noqa: E402
     TEXTO_INPUTS,
 )
 from core.forca_style import forca_style  # noqa: E402
+from pages.Clientes import pag_clientes_server, pag_clientes_ui  # noqa: E402
 from pages.Curva_ABC.pag_curva_abc import pag_curva_abc_server, pag_curva_abc_ui  # noqa: E402
 from pages.Diario_Venda.pag_diario_venda import pag_diario_venda_server, pag_diario_venda_ui  # noqa: E402
 from pages.Mapa_Comercial import pag_mapa_comercial_server, pag_mapa_comercial_ui  # noqa: E402
+from pages.Markup import pag_markup_server, pag_markup_ui  # noqa: E402
 
 PASTA_APP = Path(__file__).parent
 PASTA_BD_COMERCIAL = PASTA_APP / "data" / "bd_comercial"
@@ -40,17 +42,21 @@ TABELA_DA_PAGINA = {
     "ven": "tb_diario_venda",
     "cabc": f"tb_curva_abc_{CNPJ_PADRAO}_atual",
     "mco": "tb_mapa_pot",
+    "cli": "tb_carteira",
+    "mkp": "tb_markup",
 }
 
 
-# Mesmos ícones e mesma ordem do menu do app original (Mapa antes da Curva ABC).
+# Mesmos ícones e mesma ordem do menu do app original (Clientes logo abaixo do Diário; Mapa antes da Curva ABC).
 def _menu() -> list:
     return [
         ui.input_action_button("bt_diario_venda", "Diário de Vendas", icon=icon_svg("house"), class_="selecionado"),
+        ui.input_action_button("bt_clientes", "Clientes", icon=icon_svg("users")),
         ui.input_action_button(
             "bt_mapa_comercial", "Mapa Comercial", icon=ui.tags.img(src="img/mapa-light.png", height="18em")
         ),
         ui.input_action_button("bt_curva_abc", "Curva ABC", icon=icon_svg("chart-line")),
+        ui.input_action_button("bt_markup", "Markup", icon=icon_svg("percent")),
     ]
 
 
@@ -66,6 +72,8 @@ app_ui = ui.page_sidebar(
         ui.nav_panel(None, pag_diario_venda_ui(), value="ven"),
         ui.nav_panel(None, pag_curva_abc_ui(None), value="cabc"),
         ui.nav_panel(None, pag_mapa_comercial_ui(), value="mco"),
+        ui.nav_panel(None, pag_clientes_ui(), value="cli"),
+        ui.nav_panel(None, pag_markup_ui(), value="mkp"),
         id="conteudo_tabs",
         selected="ven",
     ),
@@ -116,6 +124,8 @@ def server(input, output, session):
     # O mapa só monta na 1ª visita à página (é a consulta mais pesada).
     mapa_comercial_solicitado = reactive.value(0, name="mapa_comercial_solicitado")
     pag_mapa_comercial_server(mapa_comercial_solicitado, versao_cache)
+    pag_clientes_server()
+    pag_markup_server()
 
     @render.ui
     def cabecalho_dias():
@@ -142,6 +152,16 @@ def server(input, output, session):
     @reactive.event(input.bt_curva_abc)
     def _():
         ui.update_navset("conteudo_tabs", selected="cabc")
+
+    @reactive.effect
+    @reactive.event(input.bt_clientes)
+    def _():
+        ui.update_navset("conteudo_tabs", selected="cli")
+
+    @reactive.effect
+    @reactive.event(input.bt_markup)
+    def _():
+        ui.update_navset("conteudo_tabs", selected="mkp")
 
     @reactive.effect
     @reactive.event(input.bt_mapa_comercial)

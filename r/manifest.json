@@ -3649,10 +3649,10 @@
       "checksum": "3b76bb97c1f0581cd2818591c03172b8"
     },
     "app.R": {
-      "checksum": "8a5b1ced0a12c629628a0267ba7f453e"
+      "checksum": "8d2a7ee86957d785ece7284a0e767769"
     },
     "Comercial/app.R": {
-      "checksum": "802c408d35fa47f01822dfbd7866f6d9"
+      "checksum": "61a413db2079159388eebc41d678b89b"
     },
     "Comercial/Cache/Diario de venda/cache_diario_venda.R": {
       "checksum": "f37f9933d596fb9b07e568b4059fba5b"
@@ -3661,85 +3661,94 @@
       "checksum": "85a6885bca08d1f2eb364a39017bf548"
     },
     "Comercial/data/bd_comercial/_atualizacoes.json": {
-      "checksum": "2bbb79a457174cf88c22577cc8b1de6e"
+      "checksum": "d16eed336dd2ce568c4cb87059aabb83"
+    },
+    "Comercial/data/bd_comercial/tb_carteira.parquet": {
+      "checksum": "6b1a2b99e3d57c6db69e1797bb57e4bc"
     },
     "Comercial/data/bd_comercial/tb_cidades_rev.parquet": {
       "checksum": "240d5d78f494cf7b7c109bea09a2f1d4"
     },
     "Comercial/data/bd_comercial/tb_cli_ativos.parquet": {
-      "checksum": "2b5e7e762a264e0faf2c0bbc715f85ab"
+      "checksum": "e4a32f97bf0fda7d1a810542c13b6e1d"
     },
     "Comercial/data/bd_comercial/tb_cli_inativos.parquet": {
-      "checksum": "362d0e5b71e1c1ee7f53629a159b4082"
+      "checksum": "e8b18b772b9a51de284ab7c21f9dd7a7"
     },
     "Comercial/data/bd_comercial/tb_cmv.parquet": {
       "checksum": "1b41b3165cc547f135c2bbd8904f9c9f"
     },
     "Comercial/data/bd_comercial/tb_cob_categ.parquet": {
-      "checksum": "35a182275b77166ea3c5da28cea8e48b"
+      "checksum": "53b5848933c859805e718cf79dcba08d"
     },
     "Comercial/data/bd_comercial/tb_cob_categ_ga.parquet": {
-      "checksum": "eb08e7abe3d043860fda3906ae6ae591"
+      "checksum": "b704895558d2b21b8924f1747517385f"
     },
     "Comercial/data/bd_comercial/tb_cob_categ_rev.parquet": {
-      "checksum": "f9efd0056447e6b8ace91962151daded"
+      "checksum": "a70cf9316a7f092570c4e1162ba07471"
     },
     "Comercial/data/bd_comercial/tb_cob_cid.parquet": {
-      "checksum": "640dc58ad3992faebd9637bf84e23336"
+      "checksum": "f0b626070fb093e69b2fdf211cef234d"
     },
     "Comercial/data/bd_comercial/tb_cob_cli.parquet": {
-      "checksum": "a4b5f3363bb2a6a944577d0ad7393c2c"
+      "checksum": "e56c6ee17654bc310c8765693024d4c3"
     },
     "Comercial/data/bd_comercial/tb_cob_cli_ativo.parquet": {
-      "checksum": "fcaeddf4e7bc3d2f3ef00b5d531062b1"
+      "checksum": "016d7b566481f5fbe200fd5e81d41a91"
     },
     "Comercial/data/bd_comercial/tb_cob_prod.parquet": {
-      "checksum": "8bf88ff9b3536b2e0ea6fbbae1eb35e5"
+      "checksum": "09ad8af3dbfbea1ed8eb1df56da50ad7"
     },
     "Comercial/data/bd_comercial/tb_cob_prod_ga.parquet": {
-      "checksum": "026f7ec5e356db470a353e3a05f4a07d"
+      "checksum": "0c4f23e56ba26acdeb50a39bb0448417"
     },
     "Comercial/data/bd_comercial/tb_cob_prod_rev.parquet": {
-      "checksum": "f0d5d3dc50d111a19e59a8ba3e1aa39d"
+      "checksum": "e7d0fb177640a588204a482153356677"
     },
     "Comercial/data/bd_comercial/tb_cob_rev.parquet": {
-      "checksum": "dd772c1f2744de5f46089b259dcf3bec"
+      "checksum": "6b3fdb61e17c9470c644020914ea02e0"
     },
     "Comercial/data/bd_comercial/tb_compra_prod.parquet": {
-      "checksum": "6cc8c7ca09842ee16e8233b1820b3b58"
+      "checksum": "8961bd4075386b90de94890fe9e2474c"
     },
     "Comercial/data/bd_comercial/tb_curva_abc_00000000000100_antepenultimo.parquet": {
-      "checksum": "897cb6b241af45a241b79a232f56afc5"
+      "checksum": "1e0cb5d401bb1e5eb1f0aa96e60cdf75"
     },
     "Comercial/data/bd_comercial/tb_curva_abc_00000000000100_atual.parquet": {
-      "checksum": "949a7bb7b769102182c7b4cdac6df41b"
+      "checksum": "5c7727fecb3d3a657671396ca77feb51"
     },
     "Comercial/data/bd_comercial/tb_curva_abc_00000000000100_historico.parquet": {
-      "checksum": "1a6e70436669ab90809578c6bd995fea"
+      "checksum": "f09b472c8af759bc6c3f9c77620f495c"
     },
     "Comercial/data/bd_comercial/tb_curva_abc_00000000000100_penultimo.parquet": {
-      "checksum": "ea8412394c0e606a710d7b268287e8e0"
+      "checksum": "a7bb6187ce40e5b937a606549a3595cf"
     },
     "Comercial/data/bd_comercial/tb_curva_abc_00000000000100_ultimo.parquet": {
-      "checksum": "b32f4c3d53f615a7cb34316c96644122"
+      "checksum": "1c3cdfe9f8ef2afc87ed3cc6ae04c8fe"
     },
     "Comercial/data/bd_comercial/tb_diario_venda.parquet": {
-      "checksum": "b26393787ce0f9c5ea992fafa7feb446"
+      "checksum": "a0d4501101426a62c09145cd47fc9881"
     },
     "Comercial/data/bd_comercial/tb_exig_fds.parquet": {
-      "checksum": "44147c488c65724d2e06fed79d6058ad"
+      "checksum": "f6f6b502277335aa41004ac35bc3ef01"
     },
     "Comercial/data/bd_comercial/tb_mapa_pot.parquet": {
-      "checksum": "cda3f154da11e75dff9b2c13aceb2a8d"
+      "checksum": "eed9c241ea7100abf5f86ace4634bb94"
+    },
+    "Comercial/data/bd_comercial/tb_markup.parquet": {
+      "checksum": "f37ecdf3c3dd5233a7de17253cf59ca8"
     },
     "Comercial/data/bd_comercial/TB_META_ABP.parquet": {
-      "checksum": "ceb36d04528f729c677fd26b420a24a3"
+      "checksum": "5c655e4abe9d86f0b7fb175a6c25694b"
     },
     "Comercial/data/bd_comercial/tb_meta_fabrica.parquet": {
       "checksum": "c998acdef6d1067f4e5c6016c60d4e2a"
     },
     "Comercial/data/bd_comercial/tb_meta_revenda.parquet": {
-      "checksum": "6709687c502824ca6c48bcf0d35fd877"
+      "checksum": "4db81a69bd88ce845d0766e5831c5ab3"
+    },
+    "Comercial/pages/Clientes/pag_clientes.R": {
+      "checksum": "bfb8c9c488c831c453fa3eb7a43bea16"
     },
     "Comercial/pages/Diario de venda/Dados/atualiza_meta_fabrica.R": {
       "checksum": "2243c01e0c15466c1c4e9dab21ee6afd"
@@ -3787,7 +3796,7 @@
       "checksum": "d396b96eea5b45d0820f59a2d3feea54"
     },
     "Comercial/pages/lazy_loader.R": {
-      "checksum": "70f983afb3b86cad06a3fea717727730"
+      "checksum": "182727c08f43bf6f12210371644c7b41"
     },
     "Comercial/pages/Mapa comercial/Dados/dados_mapa_comercial.R": {
       "checksum": "4f92e15042025a5ab11b9f622fa2d054"
@@ -3797,6 +3806,9 @@
     },
     "Comercial/pages/Mapa comercial/pag_mapa_comercial_novo.R": {
       "checksum": "191dc55ed1c62e6118ababbfd67c0cd7"
+    },
+    "Comercial/pages/Markup/pag_markup.R": {
+      "checksum": "a6800c2648a19b4937aefb35b534cdaa"
     },
     "Comercial/www/img/home-light.png": {
       "checksum": "2dae55fca08b2d3527ef5acd2529abd3"
@@ -4201,7 +4213,7 @@
       "checksum": "e0323ce8933c31a417f526d9af0a4521"
     },
     "Vitrine/pages/analise_dados/analise_dados.R": {
-      "checksum": "d53ce5bc65d76daebbfe6bddb120e169"
+      "checksum": "6295304f277fba4211feb364572dbc2b"
     },
     "Vitrine/pages/apps_mobile/apps_mobile.R": {
       "checksum": "eba7dd34f2cba933e12c0f2081684380"
@@ -4290,6 +4302,9 @@
     "Vitrine/www/powerbi_white.svg": {
       "checksum": "db3813273fe9fce7e901e9da15e1dfa7"
     },
+    "Vitrine/www/prints/automacao_tv_powerbi.png": {
+      "checksum": "d90c75b6c99fc67c3648183d00a5ad03"
+    },
     "Vitrine/www/prints/cpp_pekka_kana.png": {
       "checksum": "e544f191dc4973f491862c8782dffeb6"
     },
@@ -4301,6 +4316,12 @@
     },
     "Vitrine/www/prints/mobile_comodato_r.png": {
       "checksum": "65fee42d71f8b49639c4999e9a193002"
+    },
+    "Vitrine/www/prints/mobile_entregas.png": {
+      "checksum": "ee3413a02d73ae0e62ac0f608e3e1d16"
+    },
+    "Vitrine/www/prints/mobile_portfolio_appsheet.png": {
+      "checksum": "ba76a8698d4f76310cfe944b86082615"
     },
     "Vitrine/www/prints/pbi_acoes.png": {
       "checksum": "8cca227e2bf405337aa1f36d37c005d0"
@@ -4386,8 +4407,14 @@
     "Vitrine/www/prints/shiny_r_logistico.webp": {
       "checksum": "207d180f2b7594280b467b0aae01a414"
     },
+    "Vitrine/www/prints/shiny_r_primeiros_paineis.png": {
+      "checksum": "072a5e916c4bc71e73d8057087a63568"
+    },
     "Vitrine/www/prints/ufpe.png": {
       "checksum": "49e3fac7d70f3218399c8484b556fe76"
+    },
+    "Vitrine/www/prints/vitrine_r.png": {
+      "checksum": "5a0c80b001372eec71808840a06b3496"
     },
     "Vitrine/www/python.svg": {
       "checksum": "b19fd2040b2912a31a6e53affcea8e1b"
@@ -4418,21 +4445,6 @@
     },
     "www/icone.svg": {
       "checksum": "92c1d5cd1afbc22dcac7cf5b59af11d5"
-    },
-    "Vitrine/www/prints/mobile_entregas.png": {
-      "checksum": "ee3413a02d73ae0e62ac0f608e3e1d16"
-    },
-    "Vitrine/www/prints/mobile_portfolio_appsheet.png": {
-      "checksum": "ba76a8698d4f76310cfe944b86082615"
-    },
-    "Vitrine/www/prints/shiny_r_primeiros_paineis.png": {
-      "checksum": "072a5e916c4bc71e73d8057087a63568"
-    },
-    "Vitrine/www/prints/automacao_tv_powerbi.png": {
-      "checksum": "d90c75b6c99fc67c3648183d00a5ad03"
-    },
-    "Vitrine/www/prints/vitrine_r.png": {
-      "checksum": "5a0c80b001372eec71808840a06b3496"
     }
   },
   "users": null

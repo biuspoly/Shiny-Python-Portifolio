@@ -11,7 +11,9 @@ setup_lazy_modules <- function(output, diretorio, server_env) {
 
   modulos <- list(
     list(id = "conteudo_diario_venda",          script = "Diario de venda/pag_diario_venda_novo.R",           fn = "pag_diario_vendas"),
-    list(id = "conteudo_mapa_com",               script = "Mapa comercial/pag_mapa_comercial_novo.R",         fn = "pag_mapa_comercial_novo")
+    list(id = "conteudo_mapa_com",               script = "Mapa comercial/pag_mapa_comercial_novo.R",         fn = "pag_mapa_comercial_novo"),
+    list(id = "conteudo_clientes",               script = "Clientes/pag_clientes.R",                         fn = "pag_clientes"),
+    list(id = "conteudo_markup",                 script = "Markup/pag_markup.R",                             fn = "pag_markup")
   )
 
   for (m in modulos) {

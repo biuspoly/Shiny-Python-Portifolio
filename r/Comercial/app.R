@@ -136,7 +136,9 @@ comercial_ui <-
       sidebarMenu(
         id = "tabs",
         menuItemOutput("menu_diario_venda"),
-        menuItemOutput("menu_mapa_comercial")
+        menuItemOutput("menu_clientes"),
+        menuItemOutput("menu_mapa_comercial"),
+        menuItemOutput("menu_markup")
       )
       # br(),
       # div(
@@ -174,6 +176,15 @@ comercial_ui <-
         tabItem(
           tabName = "id_mapa_com",
           withSpinner(uiOutput("conteudo_mapa_com"), type = 8)
+        ),
+        # Portfólio: Clientes e Markup, telas enxutas escritas para o portfólio (não existiam no original em R).
+        tabItem(
+          tabName = "id_clientes",
+          withSpinner(uiOutput("conteudo_clientes"), type = 8)
+        ),
+        tabItem(
+          tabName = "id_markup",
+          withSpinner(uiOutput("conteudo_markup"), type = 8)
         )
         # tabItem(
         #   tabName = "id_comod_acomp_ref_com",
@@ -234,7 +245,7 @@ comercial_server <- function(input, output, session) {
 
   # Portfólio: no lugar da planilha de usuários, o visitante com as abas do portfólio.
   usuarios <- reactive({
-    data.frame(user = "visitante", abas_comercial = "ven,mco", dark_mode = "N")
+    data.frame(user = "visitante", abas_comercial = "ven,cli,mco,mkp", dark_mode = "N")
   })
 
   # usuarios <- reactive({
@@ -278,6 +289,18 @@ comercial_server <- function(input, output, session) {
   })
 
 
+
+  output$menu_clientes <- renderMenu({
+    if (session$userData$usuario %in% usuarios()[str_detect(usuarios()$abas_comercial, "cli") %in% TRUE, ]$user) {
+      menuItem("Clientes", tabName = "id_clientes", icon = icon("users"))
+    }
+  })
+
+  output$menu_markup <- renderMenu({
+    if (session$userData$usuario %in% usuarios()[str_detect(usuarios()$abas_comercial, "mkp") %in% TRUE, ]$user) {
+      menuItem("Markup", tabName = "id_markup", icon = icon("percent"))
+    }
+  })
 
   output$menu_mapa_comercial <- renderMenu({
     if (((length(revenda_query()) == 0) || (revenda_query() %in% empresas_mco)) && session$userData$usuario %in% usuarios()[str_detect(usuarios()$abas_comercial, "mco") %in% TRUE, ]$user) {

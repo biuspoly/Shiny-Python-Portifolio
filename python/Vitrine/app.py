@@ -22,8 +22,10 @@ APPS_PYTHON = [
         "resumo": "Vendas do mês contra a meta, por categoria, produto e cliente.",
         "telas": [
             "Diário de Vendas: tendência, meta, cobertura e histórico de 24 meses no gráfico",
+            "Clientes: a carteira, com faturamento do mês e de 12 meses, devolução e ativos parados",
             "Curva ABC de clientes com filtros em cascata",
             "Mapa Comercial: potencial e cobertura por município, sobre a malha e a população do IBGE",
+            "Markup por produto: o real contra o sugerido, com o saldo",
         ],
     },
     {
@@ -98,10 +100,11 @@ APPS_R = [
         "nome": "Comercial (R)",
         "cor": "#06825d",
         "imagem": "r_comercial.webp",
-        "resumo": "O Diário de Venda e o Mapa Comercial originais.",
+        "resumo": "O Diário de Venda e o Mapa Comercial originais, mais Clientes e Markup.",
         "telas": [
             "Diário de Venda com metas, tendência, cobertura, indicadores e os gráficos de histórico",
             "Mapa Comercial: potencial e cobertura por município com Leaflet e sf",
+            "Clientes e Markup: versões enxutas escritas em R para o portfólio",
         ],
     },
     {

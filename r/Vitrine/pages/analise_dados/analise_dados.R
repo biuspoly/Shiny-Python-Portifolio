@@ -48,8 +48,8 @@ analise_dados = function(item){
     data.frame(
       id        = "comercial",
       titulo    = "Acompanhamento Comercial",
-      descricao = "Diário de vendas, curva ABC de clientes e mapa comercial.",
-      detalhes  = "Primeiro em Shiny R e hoje em Shiny for Python. Meta, tendência, cobertura e histórico por categoria e produto; curva ABC de clientes; potencial e cobertura por município sobre a malha e a população do IBGE.",
+      descricao = "Diário de vendas, clientes, markup, curva ABC e mapa comercial.",
+      detalhes  = "Primeiro em Shiny R e hoje em Shiny for Python. Meta, tendência, cobertura e histórico por categoria e produto; carteira de clientes; markup real contra o sugerido; curva ABC de clientes; potencial e cobertura por município sobre a malha e a população do IBGE.",
       logo      = "r.svg;python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_comercial.webp",

@@ -32,9 +32,10 @@ paineis <- list(
   ),
   comercial = list(
     pasta = "Comercial", nome = "Comercial", cor = "#06825d", imagem = "shiny_r_comercial.webp",
-    resumo = "O Diário de Venda e o Mapa Comercial originais.",
+    resumo = "O Diário de Venda e o Mapa Comercial originais, mais Clientes e Markup.",
     telas = c("Diário de Venda com meta, tendência, cobertura, indicadores e os gráficos de histórico",
-              "Mapa Comercial: potencial e cobertura por município, com Leaflet e sf")
+              "Mapa Comercial: potencial e cobertura por município, com Leaflet e sf",
+              "Clientes e Markup: versões enxutas escritas em R para o portfólio")
   ),
   logistico = list(
     pasta = "Logistico", nome = "Logístico", cor = "#254d71", imagem = "shiny_r_logistico.webp",

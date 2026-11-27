@@ -70,7 +70,7 @@ Para rodar localmente: `shiny run python/app.py` e `shiny::runApp("r")`.
 
 | App | Telas |
 |---|---|
-| **Comercial** | Diário de Vendas (meta, tendência, cobertura e histórico por categoria e produto), Curva ABC de clientes, Mapa Comercial (potencial e cobertura por município sobre a malha e a população do IBGE) |
+| **Comercial** | Diário de Vendas (meta, tendência, cobertura e histórico por categoria e produto), Clientes (carteira: faturamento do mês e de 12 meses, devolução, markup e ativos parados), Markup por produto (real contra o sugerido, com o saldo), Curva ABC de clientes, Mapa Comercial (potencial e cobertura por município sobre a malha e a população do IBGE) |
 | **Logístico** | Frota (Geral, Entrada e Saída: débitos, multas, restrições, combustível e mapa), Comodatos (Solicitação, Comodatos e Vasilhames: travas do cliente, pedido ao ERP, documentos do CEV, recolha e distrato), Planilha de Entregas, Devoluções (Detalhes, Caixas, Devoluções e Gráficos) |
 | **Financeiro** | Diário Financeiro (saldos dos bancos, composição financeira do dia e Contas a Pagar com auditoria, marcação e envio), Pagamentos, Dados Manuais, Fluxo Financeiro (posição com a fábrica e empréstimos entre revendas, com histórico diário), Empréstimos, Juros, Extratos bancários |
 | **Fiscal** | Apuração (ICMS, livro fiscal item a item, PIS/COFINS), Demonstrativo de Faturamento em PDF |
@@ -85,7 +85,7 @@ nem precisou de adaptação: o código de produção já tem um caminho para qua
 ## A versão original em R
 
 Antes do Python, o sistema existiu em R Shiny (bs4Dash, reactable, DuckDB). Em `r/` estão três desses apps
-com o código original: **Comercial** (Diário de Venda e Mapa Comercial), **Logístico** (Frota, Planilha de
+com o código original: **Comercial** (Diário de Venda e Mapa Comercial; Clientes e Markup foram escritas em R para o portfólio, em versão enxuta), **Logístico** (Frota, Planilha de
 Entregas, Devoluções e Comodato) e **Acessos**. Eles são publicados no Posit Connect Cloud (o `r/app.R`) e, enquanto não estão lá, rodam no navegador pelo
 [Shinylive para R](https://posit-dev.github.io/r-shinylive/) (webR), em `site/r/`.
 

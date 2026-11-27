@@ -1697,6 +1697,121 @@ def _mapa(clientes: list[dict], compras: pl.DataFrame) -> dict[str, pl.DataFrame
     }
 
 
+MESES_MARKUP = 13  # o mês corrente e os 12 anteriores
+
+
+def _custo_por_caixa(catalogo: pl.DataFrame) -> pl.DataFrame:
+    """Custo (CMV) de cada produto em cada mês: uma fração do preço de tabela, com a mesma inflação da venda.
+    Cada produto tem a sua fração e o seu % de markup sugerido, para uns venderem acima e outros abaixo."""
+    r = b.rng("comercial-markup")
+    linhas = []
+    for p in catalogo.select("CODRED", "PRECO").to_dicts():
+        fracao = r.uniform(0.70, 0.80)
+        sugerido = round(r.uniform(0.24, 0.36), 3)
+        for m in range(MESES):
+            mes = b.meses_atras(b.HOJE, m)
+            inflacao = 1 + 0.0045 * (MESES - 1 - m)
+            linhas.append((mes.strftime("%Y%m"), p["CODRED"], round(p["PRECO"] * fracao * inflacao, 4), sugerido))
+    return pl.DataFrame(linhas, schema=["MES", "CODRED", "CUSTO_CX", "PCT_SUG"], orient="row")
+
+
+def _markup(compras: pl.DataFrame, custo: pl.DataFrame) -> pl.DataFrame:
+    """Markup por produto e mês: grandezas somáveis (a tela faz as razões)."""
+    meses = [b.meses_atras(b.HOJE, m).strftime("%Y%m") for m in range(MESES_MARKUP)]
+    return (
+        compras.filter(pl.col("MES").is_in(meses))
+        .join(custo, on=["MES", "CODRED"])
+        .group_by("MES", "CODRED", "PRODUTO", "MARCA", "PCT_SUG")
+        .agg(
+            pl.col("QTD").sum().cast(pl.Float64).alias("QTD"),
+            pl.col("VALOR").sum().round(2).alias("FAT"),
+            (pl.col("QTD") * pl.col("CUSTO_CX")).sum().round(2).alias("CMV"),
+        )
+        .with_columns((pl.col("CMV") * (1 + pl.col("PCT_SUG"))).round(2).alias("FAT_SUG"))
+        .sort("MES", "FAT", descending=[False, True])
+    )
+
+
+def _carteira(clientes: list[dict], compras: pl.DataFrame, custo: pl.DataFrame) -> pl.DataFrame:
+    """Uma linha por cliente: faturamento do mês e de 12 meses, devolução, markup e última compra."""
+    r = b.rng("comercial-carteira")
+    mes_atual = b.HOJE.strftime("%Y%m")
+    meses_12 = [b.meses_atras(b.HOJE, m).strftime("%Y%m") for m in range(12)]
+    # Como no Mapa: quem para de comprar segue ativo no cadastro por INATIVA_APOS_MESES.
+    ativos = {
+        c["CODCLI"]
+        for c in clientes
+        if c["inicio"] <= b.HOJE and not (c["parou"] and c["parou"] <= b.meses_atras(b.HOJE, INATIVA_APOS_MESES))
+    }
+    por_cliente = (
+        compras.filter(pl.col("MES").is_in(meses_12))
+        .join(custo.select("MES", "CODRED", "CUSTO_CX"), on=["MES", "CODRED"])
+        .group_by("CODCLI")
+        .agg(
+            pl.col("VALOR").filter(pl.col("MES") == mes_atual).sum().alias("FAT_MES"),
+            pl.col("VALOR").sum().alias("FAT_12M"),
+            (pl.col("QTD") * pl.col("CUSTO_CX")).sum().alias("CMV_12M"),
+            pl.col("MES").n_unique().alias("MESES_COMPRANDO"),
+        )
+    )
+    ultima_geral = compras.group_by("CODCLI").agg(
+        (pl.col("MES") + pl.col("DIA").cast(pl.String).str.zfill(2)).max().alias("_ULTIMA_GERAL")
+    )
+    cadastro = pl.DataFrame(
+        [
+            {
+                "CODCLI": c["CODCLI"],
+                "CLIENTE": c["FANTASIA"],
+                "VEN": c["VEN"],
+                "GA": c["GA"],
+                "CANAL": c["CANAL_CLI"],
+                "CIDADE": c["CIDADE"],
+                "PORTE": c["PORTE"],
+                "ATIVO": c["CODCLI"] in ativos,
+                # Devolução fictícia: a maioria devolve pouco, alguns devolvem bem mais.
+                "_TAXA_DEV": min(r.betavariate(1.1, 55) * (4 if r.random() < 0.06 else 1), 0.25),
+                "_DEV_NO_MES": r.random() < 0.3,
+            }
+            for c in clientes
+        ]
+    )
+    return (
+        cadastro.join(por_cliente, on="CODCLI", how="left")
+        .join(ultima_geral, on="CODCLI", how="left")
+        .with_columns(
+            pl.col("FAT_MES", "FAT_12M", "CMV_12M").fill_null(0.0).round(2),
+            pl.col("MESES_COMPRANDO").fill_null(0).cast(pl.Int32),
+        )
+        .with_columns(
+            pl.when(pl.col("_DEV_NO_MES"))
+            .then(pl.col("FAT_MES") * pl.col("_TAXA_DEV") * 1.6)
+            .otherwise(0.0)
+            .round(2)
+            .alias("DEV_MES"),
+            (pl.col("FAT_12M") * pl.col("_TAXA_DEV")).round(2).alias("DEV_12M"),
+            pl.col("_ULTIMA_GERAL").str.strptime(pl.Date, "%Y%m%d").alias("ULTIMA_COMPRA"),
+        )
+        .select(
+            "CODCLI",
+            "CLIENTE",
+            "VEN",
+            "GA",
+            "CANAL",
+            "CIDADE",
+            "PORTE",
+            "ATIVO",
+            "FAT_MES",
+            "DEV_MES",
+            "FAT_12M",
+            "DEV_12M",
+            "CMV_12M",
+            "MESES_COMPRANDO",
+            "ULTIMA_COMPRA",
+        )
+        .sort("FAT_12M", descending=True)
+    )
+
+
 def gerar() -> None:
     print("Comercial")
     catalogo = _catalogo()
@@ -1722,6 +1837,9 @@ def gerar() -> None:
         gravar(df, f"tb_curva_abc_{CNPJ}_{janela}")
     for nome, df in _mapa(clientes, compras).items():
         gravar(df, nome)
+    custo = _custo_por_caixa(catalogo)
+    gravar(_markup(compras, custo), "tb_markup")
+    gravar(_carteira(clientes, compras, custo), "tb_carteira")
     gravar(_metas(diario, catalogo), "tb_meta_revenda")
     gravar(_compra_prod(diario, catalogo), "tb_compra_prod")
     gravar(
@@ -1736,7 +1854,10 @@ def gerar() -> None:
     momento = datetime.combine(b.HOJE, datetime.min.time()).replace(hour=5, minute=12).isoformat(timespec="seconds")
     (pasta / "_atualizacoes.json").write_text(
         json.dumps(
-            {n: momento for n in ("tb_diario_venda", f"tb_curva_abc_{CNPJ}_atual", "tb_mapa_pot")},
+            {
+                n: momento
+                for n in ("tb_diario_venda", f"tb_curva_abc_{CNPJ}_atual", "tb_mapa_pot", "tb_markup", "tb_carteira")
+            },
             ensure_ascii=False,
             indent=2,
         ),
