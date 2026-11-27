@@ -56,16 +56,29 @@ APPS_PYTHON = [
         ],
     },
     {
-        "pasta": "Fiscal",
-        "nome": "Fiscal",
+        "pasta": "Apuracao",
+        "nome": "Apuração Fiscal",
         "cor": "#2e2b6b",
-        "imagem": "fiscal.webp",
+        "imagem": "apuracao.webp",
         "resumo": "Apuração dos livros fiscais e relatórios.",
         "telas": [
             "Apuração do ICMS por CFOP e por operação",
             "Livro fiscal item a item, com filtros e exportação",
             "Receita bruta e PIS/COFINS mês a mês",
             "Demonstrativo de Faturamento em PDF",
+        ],
+    },
+    {
+        "pasta": "Fiscal",
+        "nome": "Fiscal",
+        "cor": "#1f5f6b",
+        "imagem": "fiscal.webp",
+        "resumo": "As notas que chegam, do XML ao livro de entradas: o substituto do Qive feito em casa.",
+        "telas": [
+            "Painel: o que chegou no mês e o que está pendente de manifestar e de escriturar",
+            "NF-e recebidas com etapa, itens e o XML para ver e baixar",
+            "CT-e recebidos, ligados às notas que transportam",
+            "Escrituração: o livro de entradas, com CFOP e natureza, e o que falta lançar",
         ],
     },
     {

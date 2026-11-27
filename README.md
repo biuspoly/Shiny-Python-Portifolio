@@ -1,7 +1,7 @@
 # Portfólio Marlon Amaral — painéis de gestão em Shiny for Python e R Shiny
 
-Telas de um sistema que desenvolvo e mantenho em produção numa distribuidora de bebidas: seis aplicações
-(comercial, logística, financeiro, fiscal, monitoramento e acessos) em Shiny for Python, e a versão original
+Telas de um sistema que desenvolvo e mantenho em produção numa distribuidora de bebidas: sete aplicações
+(comercial, logística, financeiro, apuração fiscal, fiscal, monitoramento e acessos) em Shiny for Python, e a versão original
 de três delas em R Shiny. O código de cada tela é o do sistema real; os dados são **fictícios**, gerados nas
 mesmas colunas e formatos da produção, com alguns dados públicos de verdade (IBGE).
 
@@ -16,9 +16,9 @@ mesmas colunas e formatos da produção, com alguns dados públicos de verdade (
 
 ```
 python/                 Shiny for Python
-├── app.py              os seis apps num servidor só (para o Posit Connect Cloud)
+├── app.py              os sete apps num servidor só (para o Posit Connect Cloud)
 ├── requirements.txt    as dependências dele (a união das de cada app)
-├── Comercial/ Logistico/ Financeiro/ Fiscal/ Monitoramento/ Acessos/
+├── Comercial/ Logistico/ Financeiro/ Apuracao/ Fiscal/ Monitoramento/ Acessos/
 └── Vitrine/            a página de entrada do site
 r/                      R Shiny, a versão original
 ├── app.R               os três apps num servidor só (para o Posit Connect Cloud)
@@ -44,7 +44,7 @@ Cada app é independente e roda sozinho (`shiny run python/Comercial/app.py`,
 
 | | Arquivo principal | Endereços |
 |---|---|---|
-| Python | `python/app.py` | `/` (página principal), `/comercial/`, `/logistico/`, `/financeiro/`, `/fiscal/`, `/monitoramento/`, `/acessos/` |
+| Python | `python/app.py` | `/` (página principal), `/comercial/`, `/logistico/`, `/financeiro/`, `/apuracao/`, `/fiscal/`, `/monitoramento/`, `/acessos/` |
 | R | `r/app.R` | `/` (página principal), `/?painel=vitrine` (o portfólio em bs4Dash), `/?painel=comercial`, `/?painel=logistico`, `/?painel=acessos` (aceita também `&REVENDA=`) |
 
 Como funcionam os dois apps unificados:
@@ -73,7 +73,8 @@ Para rodar localmente: `shiny run python/app.py` e `shiny::runApp("r")`.
 | **Comercial** | Diário de Vendas (meta, tendência, cobertura e histórico por categoria e produto), Clientes (carteira: faturamento do mês e de 12 meses, devolução, markup e ativos parados), Markup por produto (real contra o sugerido, com o saldo), Curva ABC de clientes, Mapa Comercial (potencial e cobertura por município sobre a malha e a população do IBGE) |
 | **Logístico** | Frota (Geral, Entrada e Saída: débitos, multas, restrições, combustível e mapa), Comodatos (Solicitação, Comodatos e Vasilhames: travas do cliente, pedido ao ERP, documentos do CEV, recolha e distrato), Planilha de Entregas, Devoluções (Detalhes, Caixas, Devoluções e Gráficos) |
 | **Financeiro** | Diário Financeiro (saldos dos bancos, composição financeira do dia e Contas a Pagar com auditoria, marcação e envio), Pagamentos, Dados Manuais, Fluxo Financeiro (posição com a fábrica e empréstimos entre revendas, com histórico diário), Empréstimos, Juros, Extratos bancários |
-| **Fiscal** | Apuração (ICMS, livro fiscal item a item, PIS/COFINS), Demonstrativo de Faturamento em PDF |
+| **Apuração Fiscal** | Apuração (ICMS, livro fiscal item a item, PIS/COFINS), Demonstrativo de Faturamento em PDF |
+| **Fiscal** | O substituto do Qive (antigo Arquivei), em versão enxuta: Painel (o que chegou e o que está pendente), NF-e recebidas (etapa, manifestação, itens e o XML para ver e baixar), CT-e recebidos (ligados às NF-e que transportam) e Escrituração (livro de entradas por CFOP e o que falta lançar). No sistema real, trocar o Qive por um app próprio foi o pontapé do [RNFe](https://github.com/biuspoly/RNFe), o pacote de R para NF-e. Documentos fictícios, com chave de acesso no formato oficial; o XML é montado na hora a partir dos dados |
 | **Monitoramento** | Visão geral, usuários conectados, erros, desempenho e rotinas, lidos dos logs de telemetria |
 | **Acessos** | Acesso por painel, visão geral de uso e histórico de acessos |
 

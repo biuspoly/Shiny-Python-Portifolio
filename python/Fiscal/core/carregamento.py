@@ -2,6 +2,7 @@ from shiny import ui
 
 
 def com_carregamento(conteudo) -> ui.Tag:
+
     return ui.div(
         ui.div(
             ui.div(
@@ -14,8 +15,3 @@ def com_carregamento(conteudo) -> ui.Tag:
         conteudo,
         class_="pagina-modulo",
     )
-
-
-def aguardando_dados(mensagem: str | None = None) -> ui.Tag:
-    atributos = {"data-mensagem": mensagem} if mensagem else {}
-    return ui.div(class_="pagina-aguardando-dados d-none", **atributos)

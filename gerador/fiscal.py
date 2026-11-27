@@ -9,10 +9,10 @@ import polars as pl
 from gerador import base as b
 from gerador import comercial
 
-PASTA = b.PY / "Fiscal" / "data" / "bd_fiscal"
+PASTA = b.PY / "Apuracao" / "data" / "bd_fiscal"
 MESES = 24
 
-# (nome, CNPJ, porte relativo). Os CNPJs batem com Fiscal/config/empresas.json.
+# (nome, CNPJ, porte relativo). Os CNPJs batem com Apuracao/config/empresas.json.
 EMPRESAS = [
     ("Natal", "00000000000100", 1.0),
     ("Fortaleza", "00000000000280", 1.35),
@@ -189,7 +189,7 @@ def _livro_itens(fat: pl.DataFrame, r) -> tuple[dict[str, pl.DataFrame], dict[st
 
 
 def gerar() -> None:
-    print("Fiscal")
+    print("Apuração Fiscal")
     r = b.rng("fiscal")
     PASTA.mkdir(parents=True, exist_ok=True)
     for antigo in PASTA.glob("*.parquet"):

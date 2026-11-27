@@ -1,11 +1,14 @@
+import json
 import uuid
 
 from pyecharts.charts.base import Base
 
 
-def renderizar(chart: Base, altura: str = "360px") -> str:
+def renderizar(chart: Base, altura: str = "360px", mapas: dict[str, dict] | None = None) -> str:
+
     id_grafico = f"echarts-{uuid.uuid4().hex}"
     opcoes = chart.dump_options()
+    mapas_json = json.dumps(mapas or {}, ensure_ascii=False, separators=(",", ":"))
     return f"""
     <div id="{id_grafico}" style="width:100%; height:{altura};"></div>
     <script>
@@ -13,6 +16,10 @@ def renderizar(chart: Base, altura: str = "360px") -> str:
         var elemento = document.getElementById("{id_grafico}");
         if (!elemento || typeof echarts === "undefined") return;
         var instancia = echarts.init(elemento);
+        var mapas = {mapas_json};
+        Object.keys(mapas).forEach(function (nome) {{
+            echarts.registerMap(nome, mapas[nome]);
+        }});
         var opcoes = {opcoes};
         // Fonte do app, nunca a que o echarts impoe no Windows (ver o
         // comentario do modulo). Object.assign preserva o que o grafico tiver
@@ -24,12 +31,13 @@ def renderizar(chart: Base, altura: str = "360px") -> str:
         instancia.setOption(opcoes);
         // ResizeObserver sempre dispara 1 callback inicial (so' reportando
         // o tamanho que o elemento ja tem, mesmo sem ter mudado de
-        // verdade) -- confirmado com Playwright (Acompanhamento Comercial,
-        // mesma ponte): "resize()" rodava ~70ms depois do "setOption()", e
-        // esse metodo redesenha na hora sem reanimar, cortando a animacao
-        // de entrada quase no comeco. Ignorar so' essa 1a chamada resolve,
-        // sem perder o resize de verdade quando o container mudar de
-        // tamanho depois.
+        // verdade) -- pego confirmado medindo com Playwright: "resize()"
+        // rodava ~70ms depois do "setOption()", e o metodo resize() do
+        // echarts redesenha na hora, sem reanimar, cortando a animacao de
+        // entrada quase no comeco (o grafico "aparecia ja pronto", achado
+        // real do usuario no hover do Diario de Venda). Ignorar so' essa
+        // 1a chamada resolve, sem perder o resize de verdade quando o
+        // container mudar de tamanho depois (ex: filtro lateral abrindo).
         var primeiroResize = true;
         new ResizeObserver(function () {{
             if (primeiroResize) {{ primeiroResize = false; return; }}

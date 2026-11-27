@@ -72,12 +72,26 @@ analise_dados = function(item){
       modo      = "externo"
     ),
 
-    # Acompanhamento Fiscal -------------------------------------------------
+    # Apuração Fiscal -------------------------------------------------------
+    data.frame(
+      id        = "apuracao",
+      titulo    = "Apuração Fiscal",
+      descricao = "Apuração de ICMS e PIS/COFINS e demonstrativo de faturamento em PDF.",
+      detalhes  = "A parte de análise do fiscal: apuração de ICMS com livro fiscal item a item, PIS/COFINS e demonstrativo de faturamento gerado em PDF.",
+      logo      = "python.svg",
+      cor       = "primary",
+      print     = "prints/shiny_py_apuracao.webp",
+      link      = paste0(posit_py, "apuracao/"),
+      rotulo    = "Shiny Python",
+      modo      = "externo"
+    ),
+
+    # Fiscal (o substituto do Qive) ------------------------------------------
     data.frame(
       id        = "fiscal",
-      titulo    = "Acompanhamento Fiscal",
-      descricao = "Apuração de ICMS e PIS/COFINS e demonstrativo de faturamento em PDF.",
-      detalhes  = "Apuração de ICMS com livro fiscal item a item, PIS/COFINS e demonstrativo de faturamento gerado em PDF.",
+      titulo    = "Fiscal",
+      descricao = "As notas que chegam, do XML ao livro de entradas: NF-e e CT-e recebidos, manifestação e escrituração.",
+      detalhes  = "No sistema real, este app substituiu o Qive (antigo Arquivei): a coleta das NF-e e CT-e na Receita, a manifestação, a conferência e a escrituração passaram a ser feitas em casa. Foi essa troca o pontapé do RNFe, o pacote de R para NF-e. No portfólio, a versão enxuta: painel do que chegou e do que está pendente, NF-e com itens e XML, CT-e ligados às notas que transportam e o livro de entradas por CFOP. Documentos fictícios, com chave de acesso no formato oficial.",
       logo      = "python.svg",
       cor       = "primary",
       print     = "prints/shiny_py_fiscal.webp",
@@ -213,6 +227,7 @@ analise_dados = function(item){
       fluidRow(card_projeto(paineis_gestao, "logistico")),
       fluidRow(card_projeto(paineis_gestao, "comercial")),
       fluidRow(card_projeto(paineis_gestao, "financeiro")),
+      fluidRow(card_projeto(paineis_gestao, "apuracao")),
       fluidRow(card_projeto(paineis_gestao, "fiscal")),
       fluidRow(card_projeto(paineis_gestao, "monitoramento")),
       fluidRow(card_projeto(paineis_gestao, "acessos")),

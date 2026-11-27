@@ -8,7 +8,7 @@ from shiny import ui
 
 from gerador.base import PY
 
-APPS = ["Comercial", "Logistico", "Financeiro", "Fiscal", "Monitoramento", "Acessos"]
+APPS = ["Comercial", "Logistico", "Financeiro", "Apuracao", "Fiscal", "Monitoramento", "Acessos"]
 
 
 def gerar() -> None:

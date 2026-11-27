@@ -1,4 +1,4 @@
-# Gerado por publicar/preparar_posit.py: a união dos requirements.txt dos seis apps.
+# Gerado por publicar/preparar_posit.py: a união dos requirements.txt dos apps.
 # O Posit instala este para o python/app.py. Não edite à mão.
 shiny==1.9.0
 polars==1.18.0

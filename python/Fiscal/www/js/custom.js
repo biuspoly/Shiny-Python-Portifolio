@@ -1,15 +1,3 @@
-jQuery(document).one("shiny:connected", function () {
-  var app = window.Shiny && window.Shiny.shinyapp;
-  if (!app || typeof app.sendInput !== "function") return;
-  var enviar = app.sendInput;
-  app.sendInput = function (valores) {
-    if (valores && typeof valores === "object" && Object.keys(valores).length === 0) {
-      return;
-    }
-    return enviar.call(this, valores);
-  };
-});
-
 document.addEventListener("DOMContentLoaded", function () {
   window.setTimeout(function () {
     document.body.classList.add("pronto");
@@ -31,7 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   var valoresRecebidos = new WeakSet();
-  jQuery(document).on("shiny:value shiny:error", function (evento) {
+  jQuery(document).on("shiny:value", function (evento) {
     if (evento.target) valoresRecebidos.add(evento.target);
   });
 
@@ -47,21 +35,12 @@ document.addEventListener("DOMContentLoaded", function () {
     var timerOcioso = null;
 
     function tudoPronto() {
-
-      var aguardando = modulo.querySelector(".pagina-aguardando-dados");
-      if (aguardando) {
-
-        var mensagem = aguardando.getAttribute("data-mensagem");
-        if (mensagem) {
-          var texto = modulo.querySelector(".pagina-carregando-texto");
-          if (texto && texto.textContent !== mensagem) texto.textContent = mensagem;
-        }
-        return false;
-      }
       var outputs = modulo.querySelectorAll(".shiny-bound-output");
       if (outputs.length === 0) return false;
       for (var i = 0; i < outputs.length; i++) {
         var el = outputs[i];
+        // Saída numa aba fechada só renderiza quando a aba abre: não segura o carregamento.
+        if (el.closest(".tab-pane:not(.active)")) continue;
         if (el.classList.contains("recalculating")) return false;
         if (!valoresRecebidos.has(el)) return false;
       }
@@ -79,12 +58,12 @@ document.addEventListener("DOMContentLoaded", function () {
       timerOcioso = window.setTimeout(function () {
         if (!tudoPronto()) return;
         esconder(modulo);
-        jQuery(document).off("shiny:value shiny:error", reavaliar);
+        jQuery(document).off("shiny:value", reavaliar);
         observador.disconnect();
       }, ESPERA_OCIOSO_MS);
     }
 
-    jQuery(document).on("shiny:value shiny:error", reavaliar);
+    jQuery(document).on("shiny:value", reavaliar);
     var observador = new MutationObserver(reavaliar);
     observador.observe(modulo, {
       childList: true,
@@ -99,20 +78,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".pagina-modulo").forEach(prepararModulo);
   }
 
-  var varreduraAgendada = false;
-  function agendarVarredura() {
-    if (varreduraAgendada) return;
-    varreduraAgendada = true;
-    window.requestAnimationFrame(function () {
-      varreduraAgendada = false;
-      varrerModulos();
-    });
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
     varrerModulos();
 
-    new MutationObserver(agendarVarredura).observe(document.body, {
+    new MutationObserver(varrerModulos).observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
@@ -131,307 +100,17 @@ jQuery(document).on("shiny:value", function (evento) {
   }, 250);
 });
 
-(function () {
-
-  var alvo = "";
-  var caixaAnterior = null;
-  var assinaturaAnterior = "";
-
-  function assinaturaDa(caixa) {
-    return [
-      caixa.querySelectorAll(".chat-flutuante-bolha-bot:not(.chat-flutuante-pensando)").length,
-      caixa.querySelectorAll(".chat-flutuante-bolha-usuario").length,
-      caixa.querySelectorAll(".chat-flutuante-grupo").length,
-      caixa.querySelector(".chat-flutuante-grupo.aberto") ? 1 : 0,
-      caixa.querySelector(".chat-flutuante-contatos") ? 1 : 0,
-      caixa.querySelector(".chat-flutuante-pensando") ? 1 : 0,
-      caixa.querySelector(".chat-flutuante-vazio") ? 1 : 0,
-    ].join("|");
-  }
-
-  function decidirAlvo(antes, agora) {
-    var a = antes.split("|");
-    var b = agora.split("|");
-    var eraVazio = antes === "";
-
-    if (eraVazio) return b[6] === "1" ? "topo" : "fim";
-    if (b[5] === "1" && a[5] !== "1") return "fim";
-    if (b[0] > a[0]) return "pergunta";
-    if (b[3] === "1" && a[3] !== "1") return "grupo";
-    if (b[4] === "1" && a[4] !== "1") return "fim";
-    if (b[2] > a[2]) return "fim";
-    return alvo;
-  }
-
-  function aplicarAlvo(caixa) {
-    if (alvo === "topo") {
-      caixa.scrollTop = 0;
-      alvo = "";
-      return;
-    }
-    if (alvo === "fim") {
-      caixa.scrollTop = caixa.scrollHeight;
-      return;
-    }
-    if (alvo === "grupo") {
-      var grupo = caixa.querySelector(".chat-flutuante-grupo.aberto");
-      if (grupo) {
-
-        caixa.scrollTop +=
-          grupo.getBoundingClientRect().top - caixa.getBoundingClientRect().top - 8;
-      }
-      return;
-    }
-    if (alvo === "pergunta") {
-
-      var perguntas = caixa.querySelectorAll(".chat-flutuante-bolha-usuario");
-      if (perguntas.length) {
-        var ultima = perguntas[perguntas.length - 1];
-        caixa.scrollTop +=
-          ultima.getBoundingClientRect().top - caixa.getBoundingClientRect().top;
-      }
-    }
-  }
-
-  function rolarChatParaBaixo() {
-    var caixa = document.querySelector(".chat-flutuante-mensagens");
-    if (!caixa) {
-
-      if (!document.getElementById("chat_flutuante_painel")) {
-        assinaturaAnterior = "";
-        alvo = "";
-      }
-      return;
-    }
-    var agora = assinaturaDa(caixa);
-    var caixaNova = caixa !== caixaAnterior;
-    caixaAnterior = caixa;
-    if (agora === assinaturaAnterior) {
-
-      if (caixaNova) aplicarAlvo(caixa);
-      return;
-    }
-    alvo = decidirAlvo(assinaturaAnterior, agora);
-    assinaturaAnterior = agora;
-    aplicarAlvo(caixa);
-
-    window.requestAnimationFrame(function () {
-      var atual = document.querySelector(".chat-flutuante-mensagens");
-      if (atual) aplicarAlvo(atual);
+document.addEventListener(
+  "scroll",
+  function (evento) {
+    if (evento.target === document) return;
+    document.querySelectorAll("select.selectized").forEach(function (select) {
+      var instancia = select.selectize;
+      if (instancia && instancia.isOpen) instancia.positionDropdown();
     });
-  }
-
-  new MutationObserver(rolarChatParaBaixo).observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  document.addEventListener("keydown", function (evento) {
-    if (evento.key !== "Enter" || evento.shiftKey) return;
-    if (!evento.target || evento.target.id !== "chat_pergunta") return;
-    evento.preventDefault();
-    var botaoEnviar = document.getElementById("chat_enviar");
-    if (!botaoEnviar || botaoEnviar.disabled) return;
-
-    if (window.Shiny && Shiny.setInputValue) {
-      Shiny.setInputValue("chat_pergunta", evento.target.value, { priority: "event" });
-    }
-    botaoEnviar.click();
-  });
-
-  document.addEventListener("mousedown", function (evento) {
-    if (!document.getElementById("chat_flutuante_painel")) return;
-    var alvo = evento.target;
-    if (!alvo || !alvo.closest) return;
-
-    if (alvo.closest("#chat_flutuante_painel")) return;
-    if (alvo.closest(".chat-flutuante-botao")) return;
-    if (alvo.closest(".modal")) return;
-    var fechar = document.getElementById("chat_fechar");
-    if (fechar) fechar.click();
-  });
-})();
-
-(function () {
-  var HTML_PENSANDO =
-    '<div class="chat-flutuante-bolha chat-flutuante-bolha-bot chat-flutuante-pensando" ' +
-    'id="chat-flutuante-pensando-js"><span>Pensando</span>' +
-    '<span class="chat-flutuante-pontos">' +
-    '<span class="chat-flutuante-ponto"></span>' +
-    '<span class="chat-flutuante-ponto"></span>' +
-    '<span class="chat-flutuante-ponto"></span>' +
-    "</span></div>";
-
-  function mostrarPensando() {
-    var pergunta = document.getElementById("chat_pergunta");
-    if (!pergunta || !pergunta.value.trim()) return;
-    var caixa = document.querySelector(".chat-flutuante-mensagens");
-    if (!caixa || document.getElementById("chat-flutuante-pensando-js")) return;
-    caixa.insertAdjacentHTML("beforeend", HTML_PENSANDO);
-    caixa.scrollTop = caixa.scrollHeight;
-  }
-
-  document.addEventListener("click", function (evento) {
-    var botao = evento.target.closest("#chat_enviar");
-    if (!botao || botao.disabled) return;
-    mostrarPensando();
-  });
-
-  var MS_POR_PALAVRA = 40;
-  var DURACAO_MIN_MS = 400;
-  var DURACAO_MAX_MS = 2600;
-  var respostasReveladas = 0;
-  var animacao = null;
-
-  function acompanharRolagem() {
-    var caixa = document.querySelector(".chat-flutuante-mensagens");
-    if (caixa) caixa.scrollTop = caixa.scrollHeight;
-  }
-
-  function nosDeTexto(bolha) {
-    var nos = [];
-    var caminho = document.createTreeWalker(bolha, NodeFilter.SHOW_TEXT, {
-      acceptNode: function (no) {
-
-        if (no.parentElement.closest(".chat-flutuante-tabela, .chat-flutuante-grafico, .chat-flutuante-imagens, .chat-flutuante-arquivos")) {
-          return NodeFilter.FILTER_REJECT;
-        }
-        return no.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
-      },
-    });
-    var no;
-    while ((no = caminho.nextNode())) nos.push(no);
-    return nos;
-  }
-
-  function revelarPalavraPorPalavra(bolha) {
-    var nos = nosDeTexto(bolha);
-    if (!nos.length) return;
-
-    var extras = bolha.querySelectorAll(
-      ".chat-flutuante-tabela, .chat-flutuante-grafico, .chat-flutuante-imagens, .chat-flutuante-arquivos"
-    );
-    var i;
-    for (i = 0; i < extras.length; i++) extras[i].style.visibility = "hidden";
-
-    var filas = nos.map(function (no) {
-
-      var partes = no.nodeValue.match(/\s*\S+\s*/g) || [];
-      no.nodeValue = "";
-      return { no: no, partes: partes, proxima: 0 };
-    });
-    var total = filas.reduce(function (soma, fila) {
-      return soma + fila.partes.length;
-    }, 0);
-    var duracao = Math.min(DURACAO_MAX_MS, Math.max(DURACAO_MIN_MS, total * MS_POR_PALAVRA));
-
-    var atual = 0;
-    var reveladas = 0;
-
-    function terminar() {
-      animacao = null;
-      filas.forEach(function (fila) {
-        fila.no.nodeValue = fila.partes.join("");
-      });
-      for (var j = 0; j < extras.length; j++) extras[j].style.visibility = "";
-      acompanharRolagem();
-    }
-
-    var inicio = performance.now();
-    function quadro(agora) {
-
-      if (!bolha.isConnected) {
-        animacao = null;
-        return;
-      }
-      var progresso = Math.min(1, (agora - inicio) / duracao);
-      var alvo = Math.ceil(progresso * total);
-      while (reveladas < alvo) {
-        var fila = filas[atual];
-        while (fila && fila.proxima >= fila.partes.length) fila = filas[++atual];
-        if (!fila) break;
-        fila.no.nodeValue += fila.partes[fila.proxima++];
-        reveladas++;
-      }
-      acompanharRolagem();
-      if (progresso < 1) {
-        animacao = { id: window.requestAnimationFrame(quadro), terminar: terminar };
-      } else {
-        terminar();
-      }
-    }
-    animacao = { id: window.requestAnimationFrame(quadro), terminar: terminar };
-  }
-
-  function revelarRespostaNova() {
-    var caixa = document.querySelector(".chat-flutuante-mensagens");
-    if (!caixa) {
-      respostasReveladas = 0;
-      return;
-    }
-    var bolhas = caixa.querySelectorAll(
-      ".chat-flutuante-bolha-bot:not(.chat-flutuante-pensando)"
-    );
-    if (bolhas.length <= respostasReveladas) {
-      respostasReveladas = bolhas.length;
-      return;
-    }
-    respostasReveladas = bolhas.length;
-
-    if (animacao) {
-      window.cancelAnimationFrame(animacao.id);
-      animacao.terminar();
-    }
-    revelarPalavraPorPalavra(bolhas[bolhas.length - 1]);
-  }
-
-  new MutationObserver(revelarRespostaNova).observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  function prepararLinkZap(alvo) {
-    var enviar = alvo && alvo.closest ? alvo.closest(".chat-flutuante-enviar-zap") : null;
-    if (!enviar) return;
-    var base = enviar.dataset.base || "";
-    if (!base) return;
-    var campo = document.getElementById("chat_pergunta");
-    var texto = campo ? campo.value.trim() : "";
-    enviar.href = base.replace(
-      "__MENSAGEM__",
-      encodeURIComponent(texto || "(sem mensagem escrita)")
-    );
-  }
-
-  document.addEventListener("mousedown", function (evento) {
-    prepararLinkZap(evento.target);
-  });
-  document.addEventListener("click", function (evento) {
-    prepararLinkZap(evento.target);
-  });
-
-  document.addEventListener("click", function (evento) {
-    if (!window.Shiny || !Shiny.setInputValue) return;
-
-    var contato = evento.target.closest(".chat-flutuante-contato[data-canal]");
-    if (contato) {
-      if (!contato.classList.contains("desativado")) {
-        Shiny.setInputValue("chat_canal", contato.dataset.canal, { priority: "event" });
-      }
-      return;
-    }
-    var grupo = evento.target.closest(".chat-flutuante-grupo");
-    if (grupo) {
-      Shiny.setInputValue("chat_grupo", grupo.dataset.grupo, { priority: "event" });
-      return;
-    }
-    var chip = evento.target.closest(".chat-flutuante-sugestao");
-    if (chip) {
-      Shiny.setInputValue("chat_tema", chip.textContent.trim(), { priority: "event" });
-    }
-  });
-
-})();
+  },
+  true,
+);
 
 (function () {
   function porExtenso(horas) {
@@ -530,90 +209,6 @@ jQuery(document).on("shiny:value", function (evento) {
 })();
 
 (function () {
-  var MARGEM = 8, MINIMO_EMBAIXO = 120;
-
-  function naTela(instancia) {
-    var lista = instancia.$dropdown && instancia.$dropdown[0];
-    var controle = instancia.$control && instancia.$control[0];
-    if (!lista || !controle || instancia.settings.dropdownParent !== "body") return;
-    var largura = document.documentElement.clientWidth;
-    var altura = window.innerHeight || document.documentElement.clientHeight;
-    lista.style.maxWidth = (largura - 2 * MARGEM) + "px";
-    var caixa = lista.getBoundingClientRect();
-    if (caixa.right > largura - MARGEM) {
-      lista.style.left = (Math.max(MARGEM, largura - MARGEM - caixa.width) + window.pageXOffset) + "px";
-    }
-    var conteudo = lista.querySelector(".selectize-dropdown-content");
-    if (!conteudo) return;
-    conteudo.style.maxHeight = "";
-    var campo = controle.getBoundingClientRect();
-    var embaixo = altura - campo.bottom - MARGEM, emcima = campo.top - MARGEM;
-    var precisa = lista.getBoundingClientRect().height;
-    if (precisa <= embaixo) return;
-    if (embaixo < MINIMO_EMBAIXO && emcima > embaixo) {
-      conteudo.style.maxHeight = Math.max(80, emcima - 4) + "px";
-      lista.style.top = (campo.top + window.pageYOffset - lista.getBoundingClientRect().height) + "px";
-    } else {
-      conteudo.style.maxHeight = Math.max(80, embaixo - 4) + "px";
-    }
-  }
-
-  function ajustarPrototipo(instancia) {
-    var proto = Object.getPrototypeOf(instancia);
-    if (!proto || proto.__fisNaTela || typeof proto.positionDropdown !== "function") return;
-    var original = proto.positionDropdown;
-    proto.positionDropdown = function () {
-      original.apply(this, arguments);
-      try { naTela(this); } catch (e) {  }
-    };
-    proto.__fisNaTela = true;
-  }
-
-  function semDono() {
-    var vivas = new Set();
-    document.querySelectorAll(".selectized").forEach(function (campo) {
-      if (campo.selectize && campo.selectize.$dropdown) vivas.add(campo.selectize.$dropdown[0]);
-    });
-    document.querySelectorAll("body > .selectize-dropdown").forEach(function (lista) {
-      if (!vivas.has(lista)) lista.remove();
-    });
-  }
-
-  function seguir(instancia) {
-    var ultima = null;
-    function quadro() {
-      if (!instancia.isOpen && !instancia.isFocused) {
-        instancia.__fisSeguindo = false;
-        return;
-      }
-      if (instancia.isOpen && instancia.$control) {
-        var c = instancia.$control[0].getBoundingClientRect();
-        var posicao = Math.round(c.left) + ":" + Math.round(c.bottom) + ":" + Math.round(c.width);
-        if (posicao !== ultima) {
-          ultima = posicao;
-          instancia.positionDropdown();
-        }
-      } else {
-        ultima = null;
-      }
-      requestAnimationFrame(quadro);
-    }
-    instancia.__fisSeguindo = true;
-    requestAnimationFrame(quadro);
-  }
-
-  document.addEventListener("focusin", function (evento) {
-    var controle = evento.target.closest && evento.target.closest(".selectize-control");
-    var campo = controle && controle.previousElementSibling;
-    var instancia = campo && campo.selectize;
-    if (!instancia) return;
-    ajustarPrototipo(instancia);
-    semDono();
-    if (!instancia.__fisSeguindo) seguir(instancia);
-  }, true);
-})();
-
-(function () {
   function instanciaDo(dropdown) {
 
     var achada = null;
@@ -654,177 +249,4 @@ jQuery(document).on("shiny:value", function (evento) {
     },
     true
   );
-})();
-
-(function () {
-  function rolar(recado) {
-    var fim = Date.now() + 8000;
-    var ultimo = null;
-    var parado = 0;
-    (function tentar() {
-      var alvo = document.getElementById(recado && recado.id);
-      if (alvo && alvo.offsetParent !== null) {
-        alvo.scrollIntoView({ block: "start" });
-        var topo = Math.round(alvo.getBoundingClientRect().top);
-        if (topo === ultimo) {
-          if (++parado >= 6) return;
-        } else {
-          parado = 0;
-          ultimo = topo;
-        }
-      }
-      if (Date.now() < fim) window.setTimeout(tentar, 50);
-    })();
-  }
-  if (window.Shiny && Shiny.addCustomMessageHandler) {
-    Shiny.addCustomMessageHandler("rolarAte", rolar);
-  }
-})();
-
-(function () {
-  function abrir(mensagem) {
-    var botao = document.getElementById(mensagem.link);
-    if (!botao) return;
-    botao.click();
-    if (mensagem.entrada) {
-      Shiny.setInputValue(mensagem.entrada, mensagem.pedido || {}, { priority: "event" });
-    }
-  }
-  if (window.Shiny && Shiny.addCustomMessageHandler) {
-    Shiny.addCustomMessageHandler("fis_abrir_tela", abrir);
-  }
-})();
-
-(function ajustarCalendario(tentativas) {
-  var $ = window.jQuery;
-  var plugin = $ && $.fn && ($.fn.bsDatepicker || $.fn.datepicker);
-  var Picker = plugin && plugin.Constructor;
-  if (!Picker) {
-    if ((tentativas || 0) < 150) {
-      window.setTimeout(function () { ajustarCalendario((tentativas || 0) + 1); }, 200);
-    }
-    return;
-  }
-  if (Picker.prototype._placeDoPacote) return;
-  Picker.prototype._placeDoPacote = Picker.prototype.place;
-  Picker.prototype.place = function () {
-    var orientacao = this.o && this.o.orientation;
-    if (this.isInline || !orientacao || orientacao.y !== "auto") {
-      return this._placeDoPacote.apply(this, arguments);
-    }
-    var campo = (this.component || this.element)[0].getBoundingClientRect();
-    var altura = this.picker.outerHeight();
-    var embaixo = window.innerHeight - campo.bottom;
-    var emCima = campo.top;
-
-    orientacao.y = (embaixo >= altura || emCima < altura) ? "bottom" : "top";
-    try {
-      return this._placeDoPacote.apply(this, arguments);
-    } finally {
-      orientacao.y = "auto";
-    }
-  };
-})();
-
-(function () {
-  var caixaEmFoco = null;
-  var CAMPOS_DE_TEXTO = "textarea, select, [contenteditable=''], [contenteditable='true'], " +
-    "input:not([type]), input[type='text'], input[type='search'], input[type='number'], " +
-    "input[type='date'], input[type='email'], input[type='tel'], input[type='password']";
-
-  document.addEventListener("mousedown", function (evento) {
-    var caixa = evento.target.closest && evento.target.closest(".bslib-card");
-    caixaEmFoco = (caixa && caixa.querySelector(".paginacao-tabela")) ? caixa : null;
-  }, true);
-
-  document.addEventListener("keydown", function (evento) {
-    if (evento.key !== "ArrowLeft" && evento.key !== "ArrowRight") return;
-    if (evento.altKey || evento.ctrlKey || evento.metaKey || evento.shiftKey) return;
-    if (!caixaEmFoco || !document.body.contains(caixaEmFoco) || caixaEmFoco.offsetParent === null) return;
-    var ativo = document.activeElement;
-    if (ativo && ativo.matches && ativo.matches(CAMPOS_DE_TEXTO)) return;
-    if (document.querySelector(".modal.show")) return;
-    var sufixo = evento.key === "ArrowRight" ? "_pag_prox" : "_pag_ant";
-    var botao = caixaEmFoco.querySelector(".paginacao-tabela button[id$='" + sufixo + "']");
-    if (!botao || botao.disabled) return;
-    evento.preventDefault();
-    botao.click();
-  });
-})();
-
-document.addEventListener("input", function (evento) {
-  var campo = evento.target;
-  if (!campo || !campo.closest || !campo.closest(".shiny-date-input, .shiny-date-range-input")) return;
-  var digitos = /^(\d{2})(\d{2})(\d{4})$/.exec(campo.value.trim());
-  if (!digitos) return;
-  var formato = campo.getAttribute("data-date-format") || "dd/mm/yyyy";
-  campo.value = formato.replace("yyyy", digitos[3]).replace("mm", digitos[2]).replace("dd", digitos[1]);
-}, true);
-
-document.addEventListener("click", function (evento) {
-  var alvo = evento.target;
-  if (!alvo || !alvo.closest) return;
-  if (alvo.closest(".popover, .selectize-dropdown, .datepicker")) return;
-  var dono = alvo.closest("bslib-popover");
-  document.querySelectorAll("bslib-popover").forEach(function (menu) {
-    if (menu !== dono && menu.visible && typeof menu._hide === "function") menu._hide();
-  });
-});
-
-(function () {
-  var permissaoPedida = false;
-  var pendentes = 0;
-  var tituloOriginal = document.title;
-
-  function suportado() {
-    return typeof window.Notification !== "undefined";
-  }
-
-  function pedirPermissao() {
-    if (permissaoPedida || !suportado()) return;
-    permissaoPedida = true;
-    if (Notification.permission === "default") {
-      Notification.requestPermission();
-    }
-  }
-
-  ["click", "keydown"].forEach(function (evento) {
-    document.addEventListener(evento, pedirPermissao, { once: true });
-  });
-
-  document.addEventListener("visibilitychange", function () {
-    if (document.visibilityState !== "visible" || !pendentes) return;
-    pendentes = 0;
-    document.title = tituloOriginal;
-  });
-
-  function mostrar(notificacao) {
-    if (document.visibilityState === "visible") return;
-    if (!pendentes) tituloOriginal = document.title;
-    pendentes += 1;
-    document.title = "(" + pendentes + ") " + tituloOriginal;
-    if (!suportado() || Notification.permission !== "granted") return;
-    try {
-      var aviso = new Notification(notificacao.titulo || "Fiscal", {
-        body: notificacao.corpo || "",
-
-        tag: "fiscal-notificacao",
-        requireInteraction: false,
-      });
-      aviso.onclick = function () {
-        window.focus();
-        aviso.close();
-
-        if (notificacao.abrir && window.Shiny && Shiny.setInputValue) {
-          Shiny.setInputValue(notificacao.abrir, Date.now(), { priority: "event" });
-        }
-      };
-    } catch (erro) {
-
-    }
-  }
-
-  if (window.Shiny && Shiny.addCustomMessageHandler) {
-    Shiny.addCustomMessageHandler("fisNotificacao", mostrar);
-  }
 })();

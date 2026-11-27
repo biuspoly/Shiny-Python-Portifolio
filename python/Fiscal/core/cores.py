@@ -1,31 +1,26 @@
-SIDEBAR_BG = "#2E2B6B"
-DESTAQUE = "#5A55C4"
-CLARO = "#C7C5EE"
-MAIS_CLARO = "#E1E0F7"
-FUNDO = "#F6F6FB"
+SIDEBAR_BG = "#1f5f6b"
+DESTAQUE = "#6aa3ad"
 TEXTO = "#FFF"
+
 TEXTO_INPUTS = "#1a1a1a"
 INPUTS_BG = "#fff"
 
-TABELA_FUNDO_CLARO = "#fff"
-TABELA_TEXTO_ESCURO = "#1a1a1a"
-TABELA_CABECALHO_BG = "#fff"
-TABELA_CABECALHO_TEXTO = "#1a1a1a"
+CARD_FUNDO_CLARO = "#fff"
+CARD_TEXTO_ESCURO = "#1a1a1a"
+CARD_CABECALHO_BG = "#fff"
+CARD_CABECALHO_TEXTO = "#1a1a1a"
 
-BTN_CONFIRMAR = "#2E2B6B"
-BTN_CONFIRMAR_HOVER = "#211E52"
-BTN_CANCELAR = "#b23b3b"
-BTN_CANCELAR_HOVER = "#8f2f2f"
+# Mesma regra do Diário de Vendas: vermelho só no texto, para o que pede atenção.
+COR_ALERTA = "#B3262D"
+ALERTA = {"color": COR_ALERTA, "font-weight": "600"}
 
-FAROL_OK = "#2e7d32"
-FAROL_ATENCAO = "#d7962e"
-FAROL_CRITICO = "#c62828"
-
-CAIXA_NEUTRA = "#F1F2F5"
-CAIXA_AZUL = "#EEF2FF"
-CAIXA_AMARELA = "#FFF8E8"
-CAIXA_VERMELHA = "#FDEEEE"
-CAIXA_VERDE = "#EAF6EE"
-
-APURACAO_ESCURO = "#085151"
-APURACAO_VERDE = "#4EBD96"
+# Cor de cada etapa do documento (selo na tabela e barras do painel).
+CORES_ETAPA = {
+    "Recebida": "#D9730D",
+    "Recebido": "#D9730D",
+    "Manifestada": "#2B6CB0",
+    "Escriturada": "#087F5B",
+    "Escriturado": "#087F5B",
+    "Recusada": "#B3262D",
+    "Desacordo": "#B3262D",
+}

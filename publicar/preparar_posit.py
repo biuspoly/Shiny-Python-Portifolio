@@ -5,7 +5,7 @@ O Posit publica direto da main:
     r/app.R         (R Shiny)          -> instala os pacotes do r/manifest.json
 
 Os dois arquivos de dependência são gerados aqui:
-- python/requirements.txt: a união dos requirements.txt dos seis apps;
+- python/requirements.txt: a união dos requirements.txt dos apps;
 - r/manifest.json: o rsconnect::writeManifest() da pasta r/ (precisa dos pacotes de R instalados).
 
 Rode depois de mudar as dependências de um app, ou de criar/apagar arquivo num app em R, e faça commit
@@ -30,7 +30,7 @@ sys.stderr.reconfigure(encoding="utf-8")
 RAIZ = Path(__file__).resolve().parent.parent
 PY = RAIZ / "python"
 R_APPS = RAIZ / "r"
-APPS_PYTHON = ("Comercial", "Logistico", "Financeiro", "Fiscal", "Monitoramento", "Acessos")
+APPS_PYTHON = ("Comercial", "Logistico", "Financeiro", "Apuracao", "Fiscal", "Monitoramento", "Acessos")
 REQUIREMENTS = PY / "requirements.txt"
 MANIFEST = R_APPS / "manifest.json"
 
@@ -44,7 +44,7 @@ def requirements_unificado() -> str:
             if linha and not linha.startswith("#"):
                 vistos.setdefault(linha.split("==")[0].strip().lower(), linha)
     cabecalho = (
-        "# Gerado por publicar/preparar_posit.py: a união dos requirements.txt dos seis apps.\n"
+        "# Gerado por publicar/preparar_posit.py: a união dos requirements.txt dos apps.\n"
         "# O Posit instala este para o python/app.py. Não edite à mão.\n"
     )
     return cabecalho + "\n".join(vistos.values()) + "\n"

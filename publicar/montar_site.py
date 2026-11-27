@@ -22,6 +22,7 @@ APPS = {
     "Comercial": "comercial",
     "Logistico": "logistico",
     "Financeiro": "financeiro",
+    "Apuracao": "apuracao",
     "Fiscal": "fiscal",
     "Monitoramento": "monitoramento",
     "Acessos": "acessos",

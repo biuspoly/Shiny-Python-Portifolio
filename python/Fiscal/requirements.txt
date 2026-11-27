@@ -4,11 +4,7 @@ pyarrow==18.1.0
 pandas==2.2.3
 faicons
 loguru
-fpdf2
-Pillow
-fonttools
-defusedxml
 pyecharts
 simplejson
 prettytable
-xlsxwriter
+jinja2

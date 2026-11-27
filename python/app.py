@@ -57,6 +57,7 @@ PAINEIS = [
     Painel("Comercial", "comercial"),
     Painel("Logistico", "logistico"),
     Painel("Financeiro", "financeiro"),
+    Painel("Apuracao", "apuracao"),
     Painel("Fiscal", "fiscal"),
     Painel("Monitoramento", "monitoramento"),
     Painel("Acessos", "acessos"),

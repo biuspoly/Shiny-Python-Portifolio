@@ -4213,7 +4213,7 @@
       "checksum": "e0323ce8933c31a417f526d9af0a4521"
     },
     "Vitrine/pages/analise_dados/analise_dados.R": {
-      "checksum": "6295304f277fba4211feb364572dbc2b"
+      "checksum": "eac84ba738ea6089ad588b55a23ada38"
     },
     "Vitrine/pages/apps_mobile/apps_mobile.R": {
       "checksum": "eba7dd34f2cba933e12c0f2081684380"
@@ -4383,6 +4383,9 @@
     "Vitrine/www/prints/shiny_py_acessos.webp": {
       "checksum": "0f0f46f6953761c19c11ca98cfa07337"
     },
+    "Vitrine/www/prints/shiny_py_apuracao.webp": {
+      "checksum": "73d171fcbf46d02015bca7106cd849f0"
+    },
     "Vitrine/www/prints/shiny_py_comercial.webp": {
       "checksum": "53da706c7c51ff3f0cbb4565ffb6b0ba"
     },
@@ -4390,7 +4393,7 @@
       "checksum": "64153172dd89f2ebd5ad0e373dad3b23"
     },
     "Vitrine/www/prints/shiny_py_fiscal.webp": {
-      "checksum": "73d171fcbf46d02015bca7106cd849f0"
+      "checksum": "bf796439d336c8c8345e4e566919cbd6"
     },
     "Vitrine/www/prints/shiny_py_logistico.webp": {
       "checksum": "a969fd14a949f296d4bc51f53817dc81"
