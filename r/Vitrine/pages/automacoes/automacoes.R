@@ -66,9 +66,9 @@ automacoes = function(){
       logo      = "r.svg;powerbi.svg",
       cor       = "primary",
       print     = "prints/automacao_tv_powerbi.png",
-      link      = "https://marlonheslypro.wixsite.com/portfolio/automacaor",
+      link      = "",
       rotulo    = "Ver demonstração",
-      modo      = "externo"
+      modo      = "sem_link"
     )
   )
 

@@ -9,7 +9,8 @@
 #   rotulo -> o texto do botão de cada versão  ("" usa o texto padrão)
 #   modo   -> o modo de cada versão; um valor só vale para todas:
 #             "app" (abre no modal), "repo" (GitHub em nova aba),
-#             "externo" (site em nova aba) ou "em_breve"
+#             "externo" (site em nova aba), "em_breve" ou "sem_link"
+#             (só a explicação: o card fica com o botão Detalhes e mais nada)
 
 card_projeto = function(projetos, id_projeto){
 
@@ -58,6 +59,7 @@ card_projeto = function(projetos, id_projeto){
 
     rotulo = rotulos[posicao]
     modo   = modos[posicao]
+    if (modo == "sem_link") return(NULL)
     id_bt  = paste0("bt_ver_", id_projeto, "_", posicao)
 
     if (modo == "app") {
